@@ -10,7 +10,7 @@ import MySpinalHardware._
 
 
 //Hardware definition
-class VIP(val divideBy: BigInt) extends Component {
+class Quest(val divideBy: BigInt) extends Component {
     val io = new Bundle {
         val reset = in Bool()
         val video = out Bool()

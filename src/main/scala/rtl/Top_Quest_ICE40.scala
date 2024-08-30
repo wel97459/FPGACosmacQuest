@@ -99,7 +99,7 @@ class Top_Quest_ICE40(val withLcd: Boolean, val ramFile: String, val romFile: St
         pro.io.keys.ready := keyReady.fall()
 
 
-        val seg7 = SevenSegmentDriver(5, 2 ms)
+        val seg7 = SevenSegmentDriver(5, 500 us)
         io.seven.seg := seg7.segments(6 downto 0) 
         io.seven.dis := seg7.displays(5 downto 0)
         seg7.setDecPoint(0);
@@ -109,24 +109,23 @@ class Top_Quest_ICE40(val withLcd: Boolean, val ramFile: String, val romFile: St
 
         //Dived the 17.625Mhz by 10 = 1.7625Mhz
         val areaDiv = new SlowArea(10) {
-            var cosmacVIP = new VIP(10)
-                cosmacVIP.io.reset := !pro.io.FlagOut(0)
-                cosmacVIP.io.Start := !pro.io.FlagOut(1)
-                cosmacVIP.io.Wait := !pro.io.FlagOut(2)
-                cosmacVIP.io.ram.din := Ram.io.douta
+            var questElf = new Quest(10)
+                questElf.io.reset := !pro.io.FlagOut(0)
+                questElf.io.Start := !pro.io.FlagOut(1)
+                questElf.io.Wait := !pro.io.FlagOut(2)
+                questElf.io.ram.din := Ram.io.douta
 
             val Rom = new RamInit(romFile, log2Up(0x1ff))
                 Rom.io.ena := True
                 Rom.io.wea := 0
                 Rom.io.dina := 0x00
-                Rom.io.addra := cosmacVIP.io.rom.addr
-                cosmacVIP.io.rom.data := Rom.io.douta
+                Rom.io.addra := questElf.io.rom.addr
+                questElf.io.rom.data := Rom.io.douta
 
-            
-            //io.sync := cosmacVIP.io.sync
-            //io.video := cosmacVIP.io.video
-            io.led_red := cosmacVIP.io.q
-            cosmacVIP.io.keypad.col := 0xF
+            //io.sync := questElf.io.sync
+            //io.video := questElf.io.video
+            io.led_red := questElf.io.q
+            questElf.io.keypad.col := 0xF
         }
 
         val segData = B"00000000"
@@ -145,18 +144,18 @@ class Top_Quest_ICE40(val withLcd: Boolean, val ramFile: String, val romFile: St
             segData := segDataReg
             segAddr := pro.io.RamInterface.Address
         }otherwise{
-            Ram.io.dina := areaDiv.cosmacVIP.io.ram.dout
-            Ram.io.wea := areaDiv.cosmacVIP.io.ram.wr.asBits
-            Ram.io.addra := areaDiv.cosmacVIP.io.ram.addr
-            segData := areaDiv.cosmacVIP.io.CPU.DataOut
-            segAddr := areaDiv.cosmacVIP.io.CPU.Addr16
+            Ram.io.dina := areaDiv.questElf.io.ram.dout
+            Ram.io.wea := areaDiv.questElf.io.ram.wr.asBits
+            Ram.io.addra := areaDiv.questElf.io.ram.addr
+            segData := areaDiv.questElf.io.CPU.DataOut
+            segAddr := areaDiv.questElf.io.CPU.Addr16
         }
 
         // val lcd = ifGen(withLcd) (new Area(){  
-        //     val startFrame = !areaDiv.cosmacVIP.io.Pixie.INT
-        //     val startLine = !areaDiv.cosmacVIP.io.Pixie.DMAO
-        //     val dataClk = (areaDiv.cosmacVIP.io.CPU.TPB && areaDiv.cosmacVIP.io.CPU.SC === 2)
-        //     val data = areaDiv.cosmacVIP.io.CPU.DataOut
+        //     val startFrame = !areaDiv.questElf.io.Pixie.INT
+        //     val startLine = !areaDiv.questElf.io.Pixie.DMAO
+        //     val dataClk = (areaDiv.questElf.io.CPU.TPB && areaDiv.questElf.io.CPU.SC === 2)
+        //     val data = areaDiv.questElf.io.CPU.DataOut
         // })
     }
 

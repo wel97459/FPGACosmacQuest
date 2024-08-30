@@ -1,5 +1,5 @@
-# FPGACosmacVIP
-Is a implementation of the COSMAC VIP computer system from mid to late 1970s implemented in an FPGA.
+# FPGACosmacQuest
+Is a implementation of the Super Quset Elf computer system from mid to late 1970s implemented in an FPGA.
 
 The computer system is built around a [RCA CDP1802](https://en.wikipedia.org/wiki/RCA_1802) by [Joseph Weisbecker](http://www.cosmacelf.com/history/joseph-weisbecker.html). For a Video Display Controller it uses a [RCA CDP1861](https://en.wikipedia.org/wiki/RCA_CDP1861) also known as the Pixie.  It has a max resoluton of 64x128.
 

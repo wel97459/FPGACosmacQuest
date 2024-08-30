@@ -18,7 +18,7 @@ object VIPGen {
     def main(args: Array[String]) {
 
         CommacSpinalConfig.generateVerilog({
-            val dut = new VIP(0);
+            val dut = new Quest(0);
             dut.Cpu.OP.simPublic();
             dut.Cpu.D.simPublic();
             dut.Cpu.R(0).simPublic();
@@ -45,7 +45,7 @@ object VIPGen {
 object VIPSim {
     def main(args: Array[String]) {
         SimConfig.withWave.compile{
-            val dut = new VIP(0)
+            val dut = new Quest(0)
             dut.Cpu.OP.simPublic();
             dut.Cpu.io.Addr16.simPublic();
             dut.Cpu.io.MWR.simPublic();
