@@ -22,10 +22,11 @@ class Top_Quest_ICE40(val withLcd: Boolean, val ramFile: String, val romFile: St
         val serial_rxd = in Bool()
 
         val led_red = out Bool()
-        // val keypad = new Bundle {
-        //     val col = in Bits(4 bits)
-        //     val row = out Bits(4 bits)
-        // }
+        val keypad = new Bundle {
+            val col = in Bits(6 bits)
+            val row = out Bits(4 bits)
+        }
+
         // val lcd = new Bundle {
         //     val sck = ifGen(withLcd) (out Bool())
         //     val rst = ifGen(withLcd) (out Bool())
@@ -98,6 +99,9 @@ class Top_Quest_ICE40(val withLcd: Boolean, val ramFile: String, val romFile: St
         val keyReady = False
         pro.io.keys.ready := keyReady.fall()
 
+        val keyScanner = new KeypadScanner(6, 4, 100)
+        io.keypad.row := ~keyScanner.io.KeypadRow
+        keyScanner.io.KeypadCol := ~io.keypad.col
 
         val seg7 = SevenSegmentDriver(5, 500 us)
         io.seven.seg := seg7.segments(6 downto 0) 
@@ -131,10 +135,15 @@ class Top_Quest_ICE40(val withLcd: Boolean, val ramFile: String, val romFile: St
         val segData = B"00000000"
         val segAddr = B"0000000000000000"
         val segDataReg = RegNextWhen(pro.io.RamInterface.DataOut, pro.io.RamInterface.Write)
-        seg7.setDigits(0, segData.asUInt);
-        seg7.setDigits(2, segAddr(7 downto 0).asUInt);
-        seg7.setDigits(4, segAddr(15 downto 8).asUInt);
-
+        //seg7.setDigits(0, segData);
+        //seg7.setDigits(2, segAddr(7 downto 0).asUInt);
+        //seg7.setDigits(4, segAddr(15 downto 8).asUInt);
+        seg7.setDigit(0, keyScanner.io.KeysOut(3 downto 0))
+        seg7.setDigit(1, keyScanner.io.KeysOut(7 downto 4))
+        seg7.setDigit(2, keyScanner.io.KeysOut(11 downto 8))
+        seg7.setDigit(3, keyScanner.io.KeysOut(15 downto 12))
+        seg7.setDigit(4, keyScanner.io.KeysOut(19 downto 16))
+        seg7.setDigit(5, keyScanner.io.KeysOut(23 downto 20))
         pro.io.RamInterface.DataIn := Ram.io.douta
         when(pro.io.FlagOut(2))
         {
