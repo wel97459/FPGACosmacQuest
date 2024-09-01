@@ -8,6 +8,72 @@ import Spinal1802._
 import Spinal1861._
 import MySpinalHardware._
 
+class QuestControlLogic() extends Component{
+    val io = new Bundle {
+        val Keys = new Bundle {
+            val R = in Bool()
+            val G = in Bool()
+            val S = in Bool()
+            val W = in Bool()
+
+            val M = in Bool()
+            val P = in Bool()
+            val I = in Bool()
+            val L = in Bool()
+        }
+        val CPU = new Bundle {
+            val TPA = in Bool()
+            val TPB = in Bool()
+            val SC1 = in Bool()
+            val MWR = in Bool()
+        }
+        val ROMs_ = out Bool()
+        val MW_ = out Bool()
+        val WAIT_ = out Bool()
+        val CLEAR_ = out Bool()
+        val EF4_ = out Bool()
+        val DMA_In_ = out Bool()
+    }
+
+    val Roms = Reg(Bool()) init(False)   
+    val RamP = Reg(Bool()) init(False)   
+    val Load = Reg(Bool()) init(False)   
+    val I = Reg(Bool()) init(False)
+    val Run = Reg(Bool()) init(False)
+    val Step = Reg(Bool()) init(False)
+    val Wait = Reg(Bool()) init(False)
+    
+    io.EF4_ := io.Keys.I
+    when(io.Keys.I.rise()){
+        I := True
+    }elsewhen(Wait || io.CPU.SC1){
+        I := Flase
+    }
+
+    when(io.Keys.L){
+        Load := True
+    }elsewhen(io.Keys.R){
+        Load := False
+    }
+
+    when(io.Keys.P){
+        RamP := True
+    }elsewhen(io.Keys.R || io.Keys.W){
+        RamP := False
+    }
+
+    when(io.Keys.P){
+        Roms := True
+    }elsewhen(io.Keys.R){
+        Roms := False
+    }
+
+    when(io.Keys.G.rise()){
+        Run := True
+    } elsewhen(io.Keys.R){
+        Run := False
+    }
+}    
 
 //Hardware definition
 class Quest(val divideBy: BigInt) extends Component {
@@ -29,11 +95,6 @@ class Quest(val divideBy: BigInt) extends Component {
             val din = in Bits(8 bits)
             val dout = out Bits(8 bits)
             val wr = out Bool()
-        }
-
-        val keypad = new Bundle {
-            val col = in Bits(4 bits)
-            val row = out Bits(4 bits)
         }
 
         val Pixie = new Bundle {

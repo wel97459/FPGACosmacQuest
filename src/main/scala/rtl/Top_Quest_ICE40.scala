@@ -99,9 +99,22 @@ class Top_Quest_ICE40(val withLcd: Boolean, val ramFile: String, val romFile: St
         val keyReady = False
         pro.io.keys.ready := keyReady.fall()
 
-        val keyScanner = new KeypadScanner(6, 4, 100)
+        val keyScanner = new KeypadScanner(6, 4, 1000)
         io.keypad.row := ~keyScanner.io.KeypadRow
         keyScanner.io.KeypadCol := ~io.keypad.col
+
+        val keyDecoder = new KeypadHexDecoder()
+        keyDecoder.io.KeysIn :=
+            keyScanner.io.KeysOut(3) ## //f
+            keyScanner.io.KeysOut(9) ## //e
+            keyScanner.io.KeysOut(15) ## //d
+            keyScanner.io.KeysOut(21) ## //c
+            keyScanner.io.KeysOut(2) ## //b
+            keyScanner.io.KeysOut(0) ## //a
+            keyScanner.io.KeysOut(8 downto 6) ## 
+            keyScanner.io.KeysOut(14 downto 12) ## 
+            keyScanner.io.KeysOut(20 downto 18) ## 
+            keyScanner.io.KeysOut(1)
 
         val seg7 = SevenSegmentDriver(5, 500 us)
         io.seven.seg := seg7.segments(6 downto 0) 
@@ -138,8 +151,9 @@ class Top_Quest_ICE40(val withLcd: Boolean, val ramFile: String, val romFile: St
         //seg7.setDigits(0, segData);
         //seg7.setDigits(2, segAddr(7 downto 0).asUInt);
         //seg7.setDigits(4, segAddr(15 downto 8).asUInt);
-        seg7.setDigit(0, keyScanner.io.KeysOut(3 downto 0))
-        seg7.setDigit(1, keyScanner.io.KeysOut(7 downto 4))
+        seg7.setDigit(0, keyDecoder.io.HexOut)
+        seg7.setDigit(1, keyDecoder.io.HexOutLast)
+
         seg7.setDigit(2, keyScanner.io.KeysOut(11 downto 8))
         seg7.setDigit(3, keyScanner.io.KeysOut(15 downto 12))
         seg7.setDigit(4, keyScanner.io.KeysOut(19 downto 16))
