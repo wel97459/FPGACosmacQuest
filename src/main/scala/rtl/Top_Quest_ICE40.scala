@@ -115,7 +115,7 @@ class Top_Quest_ICE40(val withLcd: Boolean, val ramFile: String, val romFile: St
             keyScanner.io.KeysOut(14 downto 12) ## 
             keyScanner.io.KeysOut(20 downto 18) ## 
             keyScanner.io.KeysOut(1)
-
+        
         val seg7 = SevenSegmentDriver(5, 500 us)
         io.seven.seg := seg7.segments(6 downto 0) 
         io.seven.dis := seg7.displays(5 downto 0)
@@ -132,6 +132,16 @@ class Top_Quest_ICE40(val withLcd: Boolean, val ramFile: String, val romFile: St
                 questElf.io.Wait := !pro.io.FlagOut(2)
                 questElf.io.ram.din := Ram.io.douta
 
+                questElf.io.Keys.W := keyScanner.io.KeysOut(4)
+                questElf.io.Keys.I := keyScanner.io.KeysOut(5)
+                questElf.io.Keys.G := keyScanner.io.KeysOut(10)
+                questElf.io.Keys.P := keyScanner.io.KeysOut(11)
+                questElf.io.Keys.R := keyScanner.io.KeysOut(16)
+                questElf.io.Keys.S := keyScanner.io.KeysOut(17)
+                questElf.io.Keys.L := keyScanner.io.KeysOut(22)
+                questElf.io.Keys.M := keyScanner.io.KeysOut(23)
+                questElf.io.DI := keyDecoder.io.HexOutLast ## keyDecoder.io.HexOut
+
             val Rom = new RamInit(romFile, log2Up(0x1ff))
                 Rom.io.ena := True
                 Rom.io.wea := 0
@@ -142,22 +152,17 @@ class Top_Quest_ICE40(val withLcd: Boolean, val ramFile: String, val romFile: St
             //io.sync := questElf.io.sync
             //io.video := questElf.io.video
             io.led_red := questElf.io.q
-            questElf.io.keypad.col := 0xF
         }
 
         val segData = B"00000000"
         val segAddr = B"0000000000000000"
         val segDataReg = RegNextWhen(pro.io.RamInterface.DataOut, pro.io.RamInterface.Write)
-        //seg7.setDigits(0, segData);
-        //seg7.setDigits(2, segAddr(7 downto 0).asUInt);
-        //seg7.setDigits(4, segAddr(15 downto 8).asUInt);
-        seg7.setDigit(0, keyDecoder.io.HexOut)
-        seg7.setDigit(1, keyDecoder.io.HexOutLast)
+        val segDataBus = RegNextWhen(areaDiv.questElf.io.CPU.DataOut, areaDiv.questElf.io.DE)
 
-        seg7.setDigit(2, keyScanner.io.KeysOut(11 downto 8))
-        seg7.setDigit(3, keyScanner.io.KeysOut(15 downto 12))
-        seg7.setDigit(4, keyScanner.io.KeysOut(19 downto 16))
-        seg7.setDigit(5, keyScanner.io.KeysOut(23 downto 20))
+        seg7.setDigits(0, segData);
+        seg7.setDigits(2, segAddr(7 downto 0));
+        seg7.setDigits(4, segAddr(15 downto 8));
+
         pro.io.RamInterface.DataIn := Ram.io.douta
         when(pro.io.FlagOut(2))
         {
@@ -170,7 +175,7 @@ class Top_Quest_ICE40(val withLcd: Boolean, val ramFile: String, val romFile: St
             Ram.io.dina := areaDiv.questElf.io.ram.dout
             Ram.io.wea := areaDiv.questElf.io.ram.wr.asBits
             Ram.io.addra := areaDiv.questElf.io.ram.addr
-            segData := areaDiv.questElf.io.CPU.DataOut
+            segData := segDataBus
             segAddr := areaDiv.questElf.io.CPU.Addr16
         }
 
