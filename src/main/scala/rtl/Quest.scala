@@ -32,6 +32,7 @@ class QuestControlLogic() extends Component{
             val MWR = in Bool()
             val MRD = in Bool()
             val N = in Bits(3 bits)
+            val A15 = in Bool() //mod for running supermon
         }
 
         val ROMs_ = out Bool()
@@ -59,7 +60,7 @@ class QuestControlLogic() extends Component{
     val Wait = Reg(Bool()) init(False)
 
     val LoadN2 = Load || io.CPU.N === 2
-    val GRise = io.Keys.G.rise()
+    val GRise = io.Keys.G.rise()// || io.Keys.M.rise()
 
     when(io.WAIT_ || io.CPU.SC1){
         I := False
@@ -81,7 +82,7 @@ class QuestControlLogic() extends Component{
 
     when(io.Keys.M){
         Roms := True
-    }elsewhen(io.Keys.R){
+    }elsewhen(io.Keys.R || io.CPU.A15){
         Roms := False
     }
 
@@ -91,11 +92,14 @@ class QuestControlLogic() extends Component{
         Run := False
     }
 
-    when(!Run){
+    // when(!Run && !Run2){
+    //     Run1 := True
+    // } else
+    when(!Run) {
         Run1 := True
     } elsewhen(!Run2) {
         Run1 := False
-    } elsewhen((io.CPU.TPB || !GRise).rise()){
+    } elsewhen((io.CPU.TPB || io.Keys.G.fall()).rise()){
         Run1 := True
     }
 
@@ -121,11 +125,17 @@ class QuestControlLogic() extends Component{
     io.ROMs_ := !Roms
     io.MW_ := io.CPU.MWR || RamP
     io.DMA_In_ := !I
-    io.CLEAR_ := !(!Run || Load)
-    io.WAIT_ := !(!(!Run2 || !Step) || Wait || Load)
 
-    io.DE := !((!io.CPU.MRD && io.CPU.TPB && LoadN2) && Step)
-    io.IE := io.CPU.MRD && LoadN2 
+    io.CLEAR_ := !(!Run || Load)
+
+    val w1 = Step && Run2
+    val w2 = w1 || Wait 
+    io.WAIT_ := !(Load || w2)
+
+    val d1 = io.CPU.MRD && io.CPU.TPB && LoadN2
+    io.DE := d1 || Step
+    
+    io.IE := io.CPU.MRD && LoadN2 && !RamP
 
     io.Debug.regs := Cat(io.WAIT_, io.CLEAR_, Roms,    RamP, Load, I, Run,   Run1, Run2, Step, Wait)
 }    
@@ -133,10 +143,9 @@ class QuestControlLogic() extends Component{
 //Hardware definition
 class Quest(val divideBy: BigInt) extends Component {
     val io = new Bundle {
-        val reset = in Bool()
-        val Start = in Bool()
-        val Wait = in Bool()
-
+        val Clear_ = in Bool()
+        val Wait_ = in Bool()
+        val ModeCon = in Bool() 
         val video = out Bool()
         val sync = out Bool()
         val q = out Bool()
@@ -144,12 +153,19 @@ class Quest(val divideBy: BigInt) extends Component {
         val DI = in Bits(8 bits)
 
         val rom = new Bundle {
-            val addr = out Bits(9 bits)
+            val addr = out Bits(10 bits)
             val data = in Bits(8 bits)
         }
 
         val ram = new Bundle {
             val addr = out Bits(13 bits)
+            val din = in Bits(8 bits)
+            val dout = out Bits(8 bits)
+            val wr = out Bool()
+        }
+
+        val ram255 = new Bundle {
+            val addr = out Bits(8 bits)
             val din = in Bits(8 bits)
             val dout = out Bits(8 bits)
             val wr = out Bool()
@@ -192,8 +208,8 @@ class Quest(val divideBy: BigInt) extends Component {
         io.DE := QLogic.io.DE
 
     val Cpu = new Spinal1802()
-        Cpu.io.Wait_n := !(!io.Wait || !QLogic.io.WAIT_)
-        Cpu.io.Clear_n := !(io.reset || !QLogic.io.CLEAR_)
+        Cpu.io.Wait_n := io.ModeCon ? io.Wait_ | QLogic.io.WAIT_
+        Cpu.io.Clear_n := io.ModeCon ? io.Clear_ | QLogic.io.CLEAR_ 
         Cpu.io.DMA_In_n := QLogic.io.DMA_In_
         io.CPU.TPB := Cpu.io.TPB
         io.CPU.SC := Cpu.io.SC
@@ -206,6 +222,7 @@ class Quest(val divideBy: BigInt) extends Component {
         QLogic.io.CPU.MWR := Cpu.io.MWR
         QLogic.io.CPU.MRD := Cpu.io.MRD
         QLogic.io.CPU.N := Cpu.io.N
+        QLogic.io.CPU.A15 := Cpu.io.Addr16(15) && Cpu.io.MRD
 
     val Pixie = new Spinal1861(divideBy)
         //Connection to Pixie
@@ -215,7 +232,7 @@ class Quest(val divideBy: BigInt) extends Component {
         Pixie.io.TPB := Cpu.io.TPB
         Pixie.io.Disp_On := (Cpu.io.N === 0 && Cpu.io.TPB && !Cpu.io.MWR)
         Pixie.io.Disp_Off := (Cpu.io.N === 1 && Cpu.io.TPB && !Cpu.io.MRD)
-        Pixie.io.Reset_ := io.reset && QLogic.io.CLEAR_
+        Pixie.io.Reset_ := QLogic.io.CLEAR_
 
         io.Pixie.VSync := Pixie.io.VSync
         io.Pixie.HSync := Pixie.io.HSync
@@ -226,38 +243,39 @@ class Quest(val divideBy: BigInt) extends Component {
     Cpu.io.Interrupt_n := Pixie.io.INT
     Cpu.io.DMA_Out_n := Pixie.io.DMAO
     
-    io.rom.addr := Cpu.io.Addr16(8 downto 0)
+    val ramSel = Cpu.io.Addr16.asUInt < 0x2000
+    val romSel = (Cpu.io.Addr16.asUInt >= 0x8000 && Cpu.io.Addr16.asUInt <= 0x83ff)
+    val ram255Sel = (Cpu.io.Addr16.asUInt >= 0x9800 && Cpu.io.Addr16.asUInt <= 0x98ff)
+
+    io.rom.addr := Cpu.io.Addr16(9 downto 0)
     
-    io.ram.wr := !QLogic.io.MW_
+    io.ram.wr := !QLogic.io.MW_ && ramSel
     io.ram.dout := Cpu.io.DataOut
     io.ram.addr := Cpu.io.Addr16(12 downto 0)
 
-    val romBootLatch = Reg(Bool) init (False)
-        //When reset, clear the latch so system boots from ROM. 
-        when(!Pixie.io.Clear) {
-            romBootLatch := False
-        //The ROM contains the monitor program which uses a 64h instruction to pulse the N2 line.
-        } elsewhen (Cpu.io.N === 4) {
-            romBootLatch := True
-        }
-        when(QLogic.io.IE){
-            Cpu.io.DataIn := io.DI
-        }elsewhen(!romBootLatch || Cpu.io.Addr16.asUInt >= 0x8000 && Cpu.io.Addr16.asUInt <= 0x81ff) {
-            Cpu.io.DataIn := io.rom.data
-        }elsewhen(Cpu.io.Addr16.asUInt < 0x2000) {
-            Cpu.io.DataIn := io.ram.din
-        }otherwise{
-            Cpu.io.DataIn := 0x00
-        }
+    io.ram255.wr := !QLogic.io.MW_ && ram255Sel
+    io.ram255.dout := Cpu.io.DataOut
+    io.ram255.addr := Cpu.io.Addr16(7 downto 0)
+
+    when(QLogic.io.IE){
+        Cpu.io.DataIn := io.DI
+    }elsewhen(!QLogic.io.ROMs_ || romSel) {
+        Cpu.io.DataIn := io.rom.data
+    }elsewhen(ram255Sel) {
+        Cpu.io.DataIn := io.ram255.din
+    }elsewhen(ramSel) {
+        Cpu.io.DataIn := io.ram.din
+    }otherwise{
+        Cpu.io.DataIn := 0x00
+    }
 
     Cpu.io.EF_n := Cat(QLogic.io.EF4_,  B"1", B"1", Pixie.io.EFx)
 
     //Good beeper sounds
-    val beeper = CounterFreeRun(1000)
     io.sync := Pixie.io.CompSync_
     io.video := Pixie.io.Video
 
-    io.q := !(Cpu.io.Q & beeper < 100)
+    io.q := !Cpu.io.Q
 }
 
 object Quest_Test {
@@ -277,28 +295,40 @@ object Quest_Test {
             dut.io.Keys.P #= false
             dut.io.Keys.R #= true 
 
-            dut.io.reset #= false
-            dut.io.Wait #= true
+            dut.io.Clear_ #= false
+            dut.io.Wait_ #= true
+            dut.io.ModeCon #= false
             dut.clockDomain.waitRisingEdge()
             var c = 0;
 
             val loop = new Breaks;
             loop.breakable {
                 while (true) {
+                    if(dut.io.ram.addr.toInt == 0x0000){
+                        dut.io.ram.din #= 0xe0
+                    }else if(dut.io.ram.addr.toInt == 0x0001){
+                        dut.io.ram.din #= 0x6A
+                    }else if(dut.io.ram.addr.toInt == 0x0002){
+                        dut.io.ram.din #= 0x55
+                    }else if(dut.io.ram.addr.toInt == 0x0003){
+                        dut.io.ram.din #= 0x30
+                    }else if(dut.io.ram.addr.toInt == 0x0004){
+                        dut.io.ram.din #= 0x03
+                    }
+
                     if(c < 20){
                         dut.io.Keys.R #= true
-                    }else if(c>=20 && c < 30) {
-                        dut.io.Keys.S #= true
+                    }else if(c >= 20 && c < 30) {
                         dut.io.Keys.R #= false
-                    }else if(c>=30 && (c % 20) == 0) {
-                        dut.io.Keys.S #= false
                         dut.io.Keys.G #= true
-                    }else{
+                    // }else if(c>=30 && (c % 50) < 10) {
+                    //     dut.io.Keys.G #= 
+                    } else {
                         dut.io.Keys.G #= false
                     }
 
                     c+=1
-                    if(c == 500) loop.break()
+                    if(c == 2000) loop.break()
                     dut.clockDomain.waitRisingEdge()
                 }
             }

@@ -127,9 +127,9 @@ class Top_Quest_ICE40(val withLcd: Boolean, val ramFile: String, val romFile: St
         //Dived the 17.625Mhz by 10 = 1.7625Mhz
         val areaDiv = new SlowArea(10) {
             var questElf = new Quest(10)
-                questElf.io.reset := !pro.io.FlagOut(0)
-                questElf.io.Start := !pro.io.FlagOut(1)
-                questElf.io.Wait := !pro.io.FlagOut(2)
+                questElf.io.Clear_ := !pro.io.FlagOut(0)
+                questElf.io.Wait_ := !pro.io.FlagOut(1)
+                questElf.io.ModeCon := pro.io.FlagOut(2)
                 questElf.io.ram.din := Ram.io.douta
 
                 questElf.io.Keys.W := keyScanner.io.KeysOut(4)
@@ -142,13 +142,19 @@ class Top_Quest_ICE40(val withLcd: Boolean, val ramFile: String, val romFile: St
                 questElf.io.Keys.M := keyScanner.io.KeysOut(23)
                 questElf.io.DI := keyDecoder.io.HexOutLast ## keyDecoder.io.HexOut
 
-            val Rom = new RamInit(romFile, log2Up(0x1ff))
+            val Rom = new RamInit(romFile, log2Up(0x3ff))
                 Rom.io.ena := True
                 Rom.io.wea := 0
                 Rom.io.dina := 0x00
                 Rom.io.addra := questElf.io.rom.addr
                 questElf.io.rom.data := Rom.io.douta
 
+            val Ram255 = new Ram(8) // 255 ram
+                Ram255.io.wea := questElf.io.ram255.wr
+                Ram255.io.ena := True
+                Ram255.io.addra := questElf.io.ram255.addr
+                questElf.io.ram255.din := Ram255.io.douta
+                Ram255.io.dina := questElf.io.ram255.dout
             //io.sync := questElf.io.sync
             //io.video := questElf.io.video
             io.led_red := questElf.io.q
@@ -210,5 +216,5 @@ class Top_Quest_ICE40(val withLcd: Boolean, val ramFile: String, val romFile: St
 }
 
 object Top_Quest_ICE40_Verilog extends App {
-  Config.spinal.generateVerilog(new Top_Quest_ICE40(false, "./data/test_1861.bin", "./data/vip.rom"))
+  Config.spinal.generateVerilog(new Top_Quest_ICE40(false, "./data/test_1861.bin", "./data/SUPRMON-v1.1-2708.bin"))
 }
