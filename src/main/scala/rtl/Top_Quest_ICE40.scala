@@ -193,7 +193,7 @@ class Top_Quest_ICE40(val withLcd: Boolean, val ramFile: String, val romFile: St
         // })
     }
 
-    val lcd = ifGen(withLcd) (new Area(){    
+    val lcd = ifGen(withLcd) (new Area(){ 
         // val Core48 = new ClockingArea(clk48Domain) {
             
         //     //Clock Crossing

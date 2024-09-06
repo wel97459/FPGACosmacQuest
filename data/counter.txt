@@ -1,0 +1,28 @@
+a0000
+w90
+wBA
+wF8
+w20
+wAA
+wEA
+w7A :06
+wF8
+w10
+wB1
+w21 :0A
+w91
+w3A
+w0A
+w31
+w06
+w7B
+wF0
+wFC
+w01
+w5A
+w62
+w2A
+w30
+w07
+
+f00

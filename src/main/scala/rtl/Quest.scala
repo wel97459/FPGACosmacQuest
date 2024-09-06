@@ -58,8 +58,8 @@ class QuestControlLogic() extends Component{
     val Run2 = Reg(Bool()) init(False)
     val Step = Reg(Bool()) init(False)
     val Wait = Reg(Bool()) init(False)
-
-    val LoadN2 = Load || io.CPU.N === 2
+    val N2 = io.CPU.N === 2
+    val LoadN2 = Load || N2
     val GRise = io.Keys.G.rise()// || io.Keys.M.rise()
 
     when(io.WAIT_ || io.CPU.SC1){
@@ -132,8 +132,8 @@ class QuestControlLogic() extends Component{
     val w2 = w1 || Wait 
     io.WAIT_ := !(Load || w2)
 
-    val d1 = io.CPU.MRD && io.CPU.TPB && LoadN2
-    io.DE := d1 || Step
+    val d1 = !io.CPU.MRD && !io.CPU.TPB && N2
+    io.DE := d1 || Step || Load
     
     io.IE := io.CPU.MRD && LoadN2 && !RamP
 
@@ -307,7 +307,7 @@ object Quest_Test {
                     if(dut.io.ram.addr.toInt == 0x0000){
                         dut.io.ram.din #= 0xe0
                     }else if(dut.io.ram.addr.toInt == 0x0001){
-                        dut.io.ram.din #= 0x6A
+                        dut.io.ram.din #= 0x62
                     }else if(dut.io.ram.addr.toInt == 0x0002){
                         dut.io.ram.din #= 0x55
                     }else if(dut.io.ram.addr.toInt == 0x0003){
