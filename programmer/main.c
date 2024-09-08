@@ -117,11 +117,7 @@ int main(int argc, char **argv)
     char ch[256], c[16];
  
     printf("Resetting System!\r\n");
-    write (fd, "f01", 3);
-    waitOk(fd);
-
-    printf("Halting System!\r\n");
-    write (fd, "f04", 3);
+    write (fd, "f06", 3);
     waitOk(fd);
 
     write (fd, "a0000", 6);

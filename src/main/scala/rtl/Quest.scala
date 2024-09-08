@@ -58,9 +58,11 @@ class QuestControlLogic() extends Component{
     val Run2 = Reg(Bool()) init(False)
     val Step = Reg(Bool()) init(False)
     val Wait = Reg(Bool()) init(False)
-    val N2 = io.CPU.N === 2
-    val LoadN2 = Load || N2
-    val GRise = io.Keys.G.rise()// || io.Keys.M.rise()
+    val N4 = io.CPU.N === 4
+    val LoadN4 = Load || N4
+    val GRise = io.Keys.G.rise() || io.Keys.M.fall()
+
+    val RomTimer = new Timeout(200)
 
     when(io.WAIT_ || io.CPU.SC1){
         I := False
@@ -80,9 +82,10 @@ class QuestControlLogic() extends Component{
         RamP := False
     }
 
-    when(io.Keys.M){
+    when(io.Keys.M.fall()){
         Roms := True
-    }elsewhen(io.Keys.R || io.CPU.A15){
+        RomTimer.clear()
+    }elsewhen(io.Keys.R || RomTimer){
         Roms := False
     }
 
@@ -132,10 +135,10 @@ class QuestControlLogic() extends Component{
     val w2 = w1 || Wait 
     io.WAIT_ := !(Load || w2)
 
-    val d1 = !io.CPU.MRD && !io.CPU.TPB && N2
+    val d1 = !io.CPU.MRD && !io.CPU.TPB && N4
     io.DE := d1 || Step || Load
     
-    io.IE := io.CPU.MRD && LoadN2 && !RamP
+    io.IE := io.CPU.MRD && LoadN4 && !RamP
 
     io.Debug.regs := Cat(io.WAIT_, io.CLEAR_, Roms,    RamP, Load, I, Run,   Run1, Run2, Step, Wait)
 }    
@@ -154,7 +157,7 @@ class Quest(val divideBy: BigInt) extends Component {
 
         val rom = new Bundle {
             val addr = out Bits(10 bits)
-            val data = in Bits(8 bits)
+            val din = in Bits(8 bits)
         }
 
         val ram = new Bundle {
@@ -230,8 +233,8 @@ class Quest(val divideBy: BigInt) extends Component {
         Pixie.io.SC := Cpu.io.SC
         Pixie.io.TPA := Cpu.io.TPA
         Pixie.io.TPB := Cpu.io.TPB
-        Pixie.io.Disp_On := (Cpu.io.N === 0 && Cpu.io.TPB && !Cpu.io.MWR)
-        Pixie.io.Disp_Off := (Cpu.io.N === 1 && Cpu.io.TPB && !Cpu.io.MRD)
+        Pixie.io.Disp_On := (Cpu.io.N === 1 && Cpu.io.TPB && !Cpu.io.MRD)
+        Pixie.io.Disp_Off := (Cpu.io.N === 2 && Cpu.io.TPB && !Cpu.io.MRD)
         Pixie.io.Reset_ := QLogic.io.CLEAR_
 
         io.Pixie.VSync := Pixie.io.VSync
@@ -260,7 +263,7 @@ class Quest(val divideBy: BigInt) extends Component {
     when(QLogic.io.IE){
         Cpu.io.DataIn := io.DI
     }elsewhen(!QLogic.io.ROMs_ || romSel) {
-        Cpu.io.DataIn := io.rom.data
+        Cpu.io.DataIn := io.rom.din
     }elsewhen(ram255Sel) {
         Cpu.io.DataIn := io.ram255.din
     }elsewhen(ramSel) {
@@ -301,34 +304,42 @@ object Quest_Test {
             dut.clockDomain.waitRisingEdge()
             var c = 0;
 
+            var ram255 = new Memory(0xff)
+            var ram = new Memory(0x1ffff)
+            var rom = new Memory(0x3ff)
+            rom.loadBin(0x000, "./data/SUPRMON-v1.1-2708.bin")
+            ram.loadBin(0x000, "./data/counter.bin")
+            
             val loop = new Breaks;
             loop.breakable {
                 while (true) {
-                    if(dut.io.ram.addr.toInt == 0x0000){
-                        dut.io.ram.din #= 0xe0
-                    }else if(dut.io.ram.addr.toInt == 0x0001){
-                        dut.io.ram.din #= 0x62
-                    }else if(dut.io.ram.addr.toInt == 0x0002){
-                        dut.io.ram.din #= 0x55
-                    }else if(dut.io.ram.addr.toInt == 0x0003){
-                        dut.io.ram.din #= 0x30
-                    }else if(dut.io.ram.addr.toInt == 0x0004){
-                        dut.io.ram.din #= 0x03
-                    }
+                    dut.io.ram.din #= ram.read(dut.io.ram.addr.toInt)
+                    dut.io.ram255.din #= ram255.read(dut.io.ram255.addr.toInt)
+                    dut.io.rom.din #= rom.read(dut.io.rom.addr.toInt)
+                    
+                    if(dut.io.ram.wr.toBoolean)
+                        ram.write(dut.io.ram.addr.toInt, dut.io.ram.dout.toInt)
+
+                    if(dut.io.ram255.wr.toBoolean)
+                        ram255.write(dut.io.ram255.addr.toInt, dut.io.ram255.dout.toInt)
 
                     if(c < 20){
                         dut.io.Keys.R #= true
                     }else if(c >= 20 && c < 30) {
                         dut.io.Keys.R #= false
                         dut.io.Keys.G #= true
-                    // }else if(c>=30 && (c % 50) < 10) {
-                    //     dut.io.Keys.G #= 
+                    // }else if(c >= 30 && c < 40) {
+                    //     dut.io.Keys.G #= false
+                    // }else if(c >= 440 && c < 450) {
+                    //     dut.io.Keys.I #= true
+                    // }else if(c >= 435 && c < 460) {
+                    //     dut.io.Keys.I #= false
                     } else {
                         dut.io.Keys.G #= false
                     }
 
                     c+=1
-                    if(c == 2000) loop.break()
+                    if(c == 20000) loop.break()
                     dut.clockDomain.waitRisingEdge()
                 }
             }

@@ -103,18 +103,21 @@ class Top_Quest_ICE40(val withLcd: Boolean, val ramFile: String, val romFile: St
         io.keypad.row := ~keyScanner.io.KeypadRow
         keyScanner.io.KeypadCol := ~io.keypad.col
 
+        val debounce = Debounce(24, 10 ms)
+        debounce.write(keyScanner.io.KeysOut)
+
         val keyDecoder = new KeypadHexDecoder()
         keyDecoder.io.KeysIn :=
-            keyScanner.io.KeysOut(3) ## //f
-            keyScanner.io.KeysOut(9) ## //e
-            keyScanner.io.KeysOut(15) ## //d
-            keyScanner.io.KeysOut(21) ## //c
-            keyScanner.io.KeysOut(2) ## //b
-            keyScanner.io.KeysOut(0) ## //a
-            keyScanner.io.KeysOut(8 downto 6) ## 
-            keyScanner.io.KeysOut(14 downto 12) ## 
-            keyScanner.io.KeysOut(20 downto 18) ## 
-            keyScanner.io.KeysOut(1)
+            debounce(3) ## //f
+            debounce(9) ## //e
+            debounce(15) ## //d
+            debounce(21) ## //c
+            debounce(2) ## //b
+            debounce(0) ## //a
+            debounce(8 downto 6) ## 
+            debounce(14 downto 12) ## 
+            debounce(20 downto 18) ## 
+            debounce(1)
         
         val seg7 = SevenSegmentDriver(5, 500 us)
         io.seven.seg := seg7.segments(6 downto 0) 
@@ -132,14 +135,14 @@ class Top_Quest_ICE40(val withLcd: Boolean, val ramFile: String, val romFile: St
                 questElf.io.ModeCon := pro.io.FlagOut(2)
                 questElf.io.ram.din := Ram.io.douta
 
-                questElf.io.Keys.W := keyScanner.io.KeysOut(4)
-                questElf.io.Keys.I := keyScanner.io.KeysOut(5)
-                questElf.io.Keys.G := keyScanner.io.KeysOut(10)
-                questElf.io.Keys.P := keyScanner.io.KeysOut(11)
-                questElf.io.Keys.R := keyScanner.io.KeysOut(16)
-                questElf.io.Keys.S := keyScanner.io.KeysOut(17)
-                questElf.io.Keys.L := keyScanner.io.KeysOut(22)
-                questElf.io.Keys.M := keyScanner.io.KeysOut(23)
+                questElf.io.Keys.W := debounce(4)
+                questElf.io.Keys.I := debounce(5)
+                questElf.io.Keys.G := debounce(10)
+                questElf.io.Keys.P := debounce(11)
+                questElf.io.Keys.R := debounce(16)
+                questElf.io.Keys.S := debounce(17)
+                questElf.io.Keys.L := debounce(22)
+                questElf.io.Keys.M := debounce(23)
                 questElf.io.DI := keyDecoder.io.HexOutLast ## keyDecoder.io.HexOut
 
             val Rom = new RamInit(romFile, log2Up(0x3ff))
@@ -147,7 +150,7 @@ class Top_Quest_ICE40(val withLcd: Boolean, val ramFile: String, val romFile: St
                 Rom.io.wea := 0
                 Rom.io.dina := 0x00
                 Rom.io.addra := questElf.io.rom.addr
-                questElf.io.rom.data := Rom.io.douta
+                questElf.io.rom.din := Rom.io.douta
 
             val Ram255 = new Ram(8) // 255 ram
                 Ram255.io.wea := questElf.io.ram255.wr
@@ -193,26 +196,26 @@ class Top_Quest_ICE40(val withLcd: Boolean, val ramFile: String, val romFile: St
         // })
     }
 
-    val lcd = ifGen(withLcd) (new Area(){ 
-        // val Core48 = new ClockingArea(clk48Domain) {
+    // val lcd = ifGen(withLcd) (new Area(){ 
+    //     val Core48 = new ClockingArea(clk48Domain) {
             
-        //     //Clock Crossing
-        //     val startFrame = BufferCC(Core17.lcd.startFrame, False)
-        //     val startLine = BufferCC(Core17.lcd.startLine, False)
-        //     val dataClkB = BufferCC(Core17.lcd.dataClk, False)
-        //     val dataClk = dataClkB.fall()
-        //     val dataClkD = RegNext(dataClk)
-        //     val data = RegNextWhen(Core17.lcd.data, dataClk) init(0)
+    //         //Clock Crossing
+    //         val startFrame = BufferCC(Core17.lcd.startFrame, False)
+    //         val startLine = BufferCC(Core17.lcd.startLine, False)
+    //         val dataClkB = BufferCC(Core17.lcd.dataClk, False)
+    //         val dataClk = dataClkB.fall()
+    //         val dataClkD = RegNext(dataClk)
+    //         val data = RegNextWhen(Core17.lcd.data, dataClk) init(0)
             
-        //     var LCD = LCD_Pixie(10 ms)
-        //     LCD.io.startFrame := startFrame
-        //     LCD.io.startLine := startLine
-        //     LCD.io.dataClk := dataClkD
-        //     LCD.io.data := data
+    //         var LCD = LCD_Pixie(10 ms)
+    //         LCD.io.startFrame := startFrame
+    //         LCD.io.startLine := startLine
+    //         LCD.io.dataClk := dataClkD
+    //         LCD.io.data := data
             
-        //     io.lcd <> LCD.io.lcd
-        // }
-    })
+    //         io.lcd <> LCD.io.lcd
+    //     }
+    // })
 }
 
 object Top_Quest_ICE40_Verilog extends App {
