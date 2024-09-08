@@ -93,8 +93,6 @@ class Top_Quest_ICE40(val withLcd: Boolean, val ramFile: String, val romFile: St
     val Core17 = new ClockingArea(clk17Domain) {
 
         val pro = new ProgrammingInterface(57600)
-        io.serial_txd := pro.io.UartTX
-        pro.io.UartRX := io.serial_rxd
         pro.io.FlagIn := 0x00
         val keyReady = False
         pro.io.keys.ready := keyReady.fall()
@@ -188,6 +186,12 @@ class Top_Quest_ICE40(val withLcd: Boolean, val ramFile: String, val romFile: St
             segAddr := areaDiv.questElf.io.CPU.Addr16
         }
 
+        when(pro.io.FlagOut(7)){
+            pro.io.UartRX := areaDiv.questElf.io.Q
+        }otherwise{
+            io.serial_txd := pro.io.UartTX
+            pro.io.UartRX := io.serial_rxd
+        }
         // val lcd = ifGen(withLcd) (new Area(){  
         //     val startFrame = !areaDiv.questElf.io.Pixie.INT
         //     val startLine = !areaDiv.questElf.io.Pixie.DMAO
