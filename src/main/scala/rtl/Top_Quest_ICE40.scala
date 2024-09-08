@@ -22,6 +22,11 @@ class Top_Quest_ICE40(val withLcd: Boolean, val ramFile: String, val romFile: St
         val serial_rxd = in Bool()
 
         val led_red = out Bool()
+        val tape = new Bundle {
+            val input = in Bool()
+            val output = out Bool()
+        }
+
         val keypad = new Bundle {
             val col = in Bits(6 bits)
             val row = out Bits(4 bits)
@@ -160,7 +165,8 @@ class Top_Quest_ICE40(val withLcd: Boolean, val ramFile: String, val romFile: St
                 Ram255.io.dina := questElf.io.ram255.dout
             //io.sync := questElf.io.sync
             //io.video := questElf.io.video
-            io.led_red := questElf.io.q
+            io.led_red := !questElf.io.q
+            io.tape.output := questElf.io.q
         }
 
         val segData = B"00000000"

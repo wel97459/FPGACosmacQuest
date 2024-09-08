@@ -278,7 +278,7 @@ class Quest(val divideBy: BigInt) extends Component {
     io.sync := Pixie.io.CompSync_
     io.video := Pixie.io.Video
 
-    io.q := !Cpu.io.Q
+    io.q := Cpu.io.Q
 }
 
 object Quest_Test {
