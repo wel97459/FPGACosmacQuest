@@ -62,6 +62,8 @@ set_io -nowarn seven_dis[3] 48
 set_io -nowarn seven_dis[4] 45
 set_io -nowarn seven_dis[5] 47
 
+set_io -nowarn tape_output 23
+
 #set_io -nowarn lcd_rst 18
 #set_io -nowarn lcd_dc 11
 #set_io -nowarn lcd_sdo 9
