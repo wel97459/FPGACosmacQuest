@@ -141,7 +141,7 @@ int main(int argc, char **argv)
     }
 
     printf("Put system in run mode.\r\n");
-    write (fd, "f00", 3);
+    write (fd, "fE0", 3);
     waitOk(fd);
  
 done:

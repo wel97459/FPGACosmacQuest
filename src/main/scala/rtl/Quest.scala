@@ -250,7 +250,7 @@ class Quest(val divideBy: BigInt) extends Component {
     Cpu.io.DMA_Out_n := Pixie.io.DMAO
     
     val ramSel = Cpu.io.Addr16.asUInt < 0x2000
-    val romSel = (Cpu.io.Addr16.asUInt >= 0x8000 && Cpu.io.Addr16.asUInt <= 0x8fff)
+    val romSel = (Cpu.io.Addr16.asUInt >= 0x8000 && Cpu.io.Addr16.asUInt <= 0x83ff)
     val ram255Sel = (Cpu.io.Addr16.asUInt >= 0x9800 && Cpu.io.Addr16.asUInt <= 0x98ff)
 
     io.rom.addr := Cpu.io.Addr16(9 downto 0)
@@ -275,7 +275,7 @@ class Quest(val divideBy: BigInt) extends Component {
         Cpu.io.DataIn := 0x00
     }
 
-    Cpu.io.EF_n := Cat(QLogic.io.EF4_,  io.TapeIn, io.SerialIn, Pixie.io.EFx)
+    Cpu.io.EF_n := Cat(io.SerialIn, io.TapeIn, True, Pixie.io.EFx)
 
     //Good beeper sounds
     io.sync := Pixie.io.CompSync_

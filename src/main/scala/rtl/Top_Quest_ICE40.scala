@@ -22,6 +22,9 @@ class Top_Quest_ICE40(val withLcd: Boolean, val ramFile: String, val romFile: St
         val serial_rxd = in Bool()
 
         val led_red = out Bool()
+        val led_green = out Bool()
+        val led_blue = out Bool()
+
         val tape = new Bundle {
             val input = in Bool()
             val output = out Bool()
@@ -97,6 +100,7 @@ class Top_Quest_ICE40(val withLcd: Boolean, val ramFile: String, val romFile: St
 
     val Core17 = new ClockingArea(clk17Domain) {
 
+        val glow = new LedGlow(23)
         val pro = new ProgrammingInterface(57600)
         pro.io.FlagIn := 0x00
         val keyReady = False
@@ -163,8 +167,10 @@ class Top_Quest_ICE40(val withLcd: Boolean, val ramFile: String, val romFile: St
                 Ram255.io.dina := questElf.io.ram255.dout
             //io.sync := questElf.io.sync
             //io.video := questElf.io.video
-            io.led_red := !questElf.io.q
+            io.led_red := !questElf.io.q 
             io.tape.output := questElf.io.q
+
+            questElf.io.TapeIn := True
         }
 
         val segData = B"00000000"
@@ -184,19 +190,26 @@ class Top_Quest_ICE40(val withLcd: Boolean, val ramFile: String, val romFile: St
             Ram.io.addra := pro.io.RamInterface.Address.resized
             segData := segDataReg
             segAddr := pro.io.RamInterface.Address
+            io.led_blue := !glow.io.led 
         }otherwise{
             Ram.io.dina := areaDiv.questElf.io.ram.dout
             Ram.io.wea := areaDiv.questElf.io.ram.wr.asBits
             Ram.io.addra := areaDiv.questElf.io.ram.addr
             segData := segDataBus
             segAddr := areaDiv.questElf.io.CPU.Addr16
+            io.led_blue := True
         }
 
         when(pro.io.FlagOut(7)){
-            pro.io.UartRX := areaDiv.questElf.io.Q
+            io.serial_txd :=  pro.io.FlagOut(6) ? !areaDiv.questElf.io.q | areaDiv.questElf.io.q
+            areaDiv.questElf.io.SerialIn := pro.io.FlagOut(5) ? !io.serial_rxd | io.serial_rxd
+            pro.io.UartRX := False
+            io.led_green := !(!io.serial_rxd && glow.io.led)
         }otherwise{
+            areaDiv.questElf.io.SerialIn := True
             io.serial_txd := pro.io.UartTX
             pro.io.UartRX := io.serial_rxd
+            io.led_green := True
         }
         // val lcd = ifGen(withLcd) (new Area(){  
         //     val startFrame = !areaDiv.questElf.io.Pixie.INT
