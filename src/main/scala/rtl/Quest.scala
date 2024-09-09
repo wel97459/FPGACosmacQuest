@@ -275,7 +275,7 @@ class Quest(val divideBy: BigInt) extends Component {
         Cpu.io.DataIn := 0x00
     }
 
-    Cpu.io.EF_n := Cat(io.SerialIn, io.TapeIn, True, Pixie.io.EFx)
+    Cpu.io.EF_n := Cat(QLogic.io.EF4_,  io.TapeIn, io.SerialIn, Pixie.io.EFx)
 
     //Good beeper sounds
     io.sync := Pixie.io.CompSync_
