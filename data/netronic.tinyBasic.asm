@@ -129,7 +129,7 @@ addr00b2:        DW       0000h  ; VAR. Y
 addr00b4:        DW       0000h  ; VAR. Z
 
 addr00b6:        plo R7         ; Put low register R7
-addr00b7:        lbdf  021ah     ; Long branch on DF=1
+addr00b7:        lbdf  addr021a     ; Long branch on DF=1
 addr00ba:        ghi RD         ; Get high register RD
 addr00bb:        KB_B  addr00e1        ; Short branch on EF3=1
 addr00bd:        SERIAL_B  addr00bb        ; Short branch on EF4=1
@@ -156,8 +156,8 @@ addr00de:        glo RE         ; Get low register RE
 addr00df:        smi  06h        ; Substract D,DF to value
 addr00e1:        phi RE         ; Put high register RE
 addr00e2:        ldi  0ch        ; Load D immediate
-addr00e4:        CALL   0a83h    ; Set P=R4 as program counter
-addr00e7:        lbr  0204h      ; Long branch
+addr00e4:        CALL   addr0a83    ; Set P=R4 as program counter
+addr00e7:        lbr  addr0204      ; Long branch
 addr00ea:        adi  00h        ; Add D,DF with value
 addr00ec:        ghi RE         ; Get high register RE
 addr00ed:        bnz  addr00f2       ; Short branch on D!=0
@@ -175,11 +175,11 @@ addr00fd:        bnz   -       ; Short branch on D!=0
 addr00ff:        RETURN         ; Set P=R5 as program counter
 
 addr0100:        nop            ; No operation
-addr0101:        br   +        ; Short branch
-addr0103:        lbr  01edh      ; Long branch
-addr0106:        lbr  0a5ah      ; Long branch
-addr0109:        lbr  0a83h      ; Long branch
-addr010c:        lbr  00eah      ; Long branch
+addr0101:        br   COLD        ; Short branch
+addr0103:        lbr  addr01ed      ; Long branch
+addr0106:        lbr  addr0a5a      ; Long branch
+addr0109:        lbr  addr0a83      ; Long branch
+addr010c:        lbr  addr00ea      ; Long branch
 addr010f:        ldn R8         ; Load D with (R8)
 addr0110:        inc RB         ; Increment (RB)
 addr0111:        idl            ; Idle or wait for interrupt or DMA request
@@ -203,7 +203,7 @@ addr0123:        phi RA         ; Put high register RA
 addr0124:        lda R8         ; Load D from (R8), increment R8
 addr0125:        RETURN         ; Set P=R5 as program counter
 
-addr0126:        lbr  0751h      ; Long branch
+addr0126:        lbr  addr0751      ; Long branch
 -                sep R3         ; Set P=R3 as program counter
 addr012a:        phi RF         ; Put high register RF
 addr012b:        sex R2         ; Set P=R2 as datapointer
@@ -290,7 +290,7 @@ addr0152:        br  -          ; Short branch
                  DW       0341h  ;LIT1
                  DW       02D3h  ;RETN
 
-+                ldi  0b3h        ; Load D immediate
+COLD:            ldi  0b3h        ; Load D immediate
 addr01b2:        plo R3         ; Put low register R3
 addr01b3:        ldi  01h        ; Load D immediate
 addr01b5:        phi R3         ; Put high register R3
@@ -355,7 +355,7 @@ addr01fb:        plo R4         ; Put low register R4
 addr01fc:        ldi  3ch        ; Load D immediate
 addr01fe:        plo R5         ; Put low register R5
 addr01ff:        ldi  4bh        ; Load D immediate
-addr0201:        lbr  00b6h      ; Long branch
+addr0201:        lbr  addr00b6      ; Long branch
 addr0204:        sep R7         ; Set P=R7 as program counter
 addr0205:        dec R0         ; Decrement (R0)
 addr0206:        phi RB         ; Put high register RB
@@ -388,7 +388,7 @@ addr0221:        glo R2         ; Get low register R2
 addr0222:        stxd           ; Store via X and devrement
 addr0223:        ghi R2         ; Get high register R2
 addr0224:        stxd           ; Store via X and devrement
-addr0225:        CALL   03cch    ; Set P=R4 as program counter
+addr0225:        CALL   addr03cc    ; Set P=R4 as program counter
 addr0228:        sep R7         ; Set P=R7 as program counter
 addr0229:        inc RE         ; Increment (RE)
 addr022a:        phi R9         ; Put high register R9
@@ -452,7 +452,7 @@ addr0273:        glo R9         ; Get low register R9
 addr0274:        stxd           ; Store via X and devrement
 addr0275:        ghi R9         ; Get high register R9
 addr0276:        stxd           ; Store via X and devrement
-addr0277:        CALL   0337h    ; Set P=R4 as program counter
+addr0277:        CALL   addr0337    ; Set P=R4 as program counter
 addr027a:        sep R7         ; Set P=R7 as program counter
 addr027b:        inc RE         ; Increment (RE)
 addr027c:        glo R6         ; Get low register R6
@@ -487,7 +487,7 @@ addr029c:        ghi R6         ; Get high register R6
 addr029d:        smbi  00h       ; Substract memory toh borrow, immediate
 addr029f:        skp            ; Skip next byte
 addr02a0:        ghi R6         ; Get high register R6
-addr02a1:        lbz  037fh      ; Long branch on D=0
+addr02a1:        lbz  addr037f      ; Long branch on D=0
 addr02a4:        phi R9         ; Put high register R9
 addr02a5:        glo R6         ; Get low register R6
 addr02a6:        plo R9         ; Put low register R9
@@ -502,7 +502,7 @@ addr02b2:        sdi  09h        ; Substract D,DF from value
 addr02b4:        ldn RB         ; Load D with (RB)
 addr02b5:        RETURN         ; Set P=R5 as program counter
 
-addr02b6:        CALL   02c5h    ; Set P=R4 as program counter
+addr02b6:        CALL   addr02c5    ; Set P=R4 as program counter
 addr02b9:        lda RD         ; Load D from (RD), increment RD
 addr02ba:        plo RD         ; Put low register RD
 addr02bb:        ghi RA         ; Get high register RA
@@ -511,8 +511,8 @@ addr02bd:        inc RD         ; Increment (RD)
 addr02be:        glo RA         ; Get low register RA
 addr02bf:        str RD         ; Store D to (RD)
 addr02c0:        br   +        ; Short branch
-addr02c2:        CALL   02c5h    ; Set P=R4 as program counter
-addr02c5:        CALL   02c9h    ; Set P=R4 as program counter
+addr02c2:        CALL   addr02c5    ; Set P=R4 as program counter
+addr02c5:        CALL   addr02c9    ; Set P=R4 as program counter
 addr02c8:        phi RA         ; Put high register RA
 +                sep R7         ; Set P=R7 as program counter
 addr02ca:        inc RA         ; Increment (RA)
@@ -525,11 +525,11 @@ addr02d1:        lda RD         ; Load D from (RD), increment RD
 addr02d2:        plo RA         ; Put low register RA
 addr02d3:        RETURN         ; Set P=R5 as program counter
 
-addr02d4:        CALL   02aah    ; Set P=R4 as program counter
+addr02d4:        CALL   addr02aa    ; Set P=R4 as program counter
 addr02d7:        xri  0dh        ; Logical XOR D with value
 addr02d9:        bz  addr022d        ; Short branch on D=0
 addr02db:        br  addr02a0        ; Short branch
-addr02dd:        CALL   02aah    ; Set P=R4 as program counter
+addr02dd:        CALL   addr02aa    ; Set P=R4 as program counter
 addr02e0:        smi  41h        ; Substract D,DF to value
 addr02e2:        bnf   addr02a0       ; Short branch on DF=0
 addr02e4:        smi  1ah        ; Substract D,DF to value
@@ -537,14 +537,14 @@ addr02e6:        bdf   addr02a0       ; Short branch on DF=1
 addr02e8:        inc RB         ; Increment (RB)
 addr02e9:        ghi RF         ; Get high register RF
 addr02ea:        shl            ; Shift left D
-addr02eb:        CALL   0359h    ; Set P=R4 as program counter
+addr02eb:        CALL   addr0359    ; Set P=R4 as program counter
 addr02ee:        br  addr022d        ; Short branch
-addr02f0:        CALL   02aah    ; Set P=R4 as program counter
+addr02f0:        CALL   addr02aa    ; Set P=R4 as program counter
 addr02f3:        bnf  addr02a0       ; Short branch on DF=0
 addr02f5:        ghi RD         ; Get high register RD
 addr02f6:        phi RA         ; Put high register RA
 addr02f7:        plo RA         ; Put low register RA
-addr02f8:        CALL   0354h    ; Set P=R4 as program counter
+addr02f8:        CALL   addr0354    ; Set P=R4 as program counter
 addr02fb:        lda RB         ; Load D from (RB), increment RB
 addr02fc:        ani  0fh        ; Logical AND D with value
 addr02fe:        plo RA         ; Put low register RA
@@ -569,14 +569,14 @@ addr0312:        str RD         ; Store D to (RD)
 addr0313:        inc RD         ; Increment (RD)
 addr0314:        glo RA         ; Get low register RA
 addr0315:        stxd           ; Store via X and devrement
-addr0316:        CALL   02aah    ; Set P=R4 as program counter
-addr0319:        lbdf  02fbh     ; Long branch on DF=1
-addr031c:        lbr  022dh      ; Long branch
+addr0316:        CALL   addr02aa    ; Set P=R4 as program counter
+addr0319:        lbdf  addr02fb     ; Long branch on DF=1
+addr031c:        lbr  addr022d      ; Long branch
 addr031f:        ghi RB         ; Get high register RB
 addr0320:        phi RA         ; Put high register RA
 addr0321:        glo RB         ; Get low register RB
 addr0322:        plo RA         ; Put low register RA
-addr0323:        CALL   02aah    ; Set P=R4 as program counter
+addr0323:        CALL   addr02aa    ; Set P=R4 as program counter
 addr0326:        inc RB         ; Increment (RB)
 addr0327:        str R2         ; Store D to (R2)
 addr0328:        lda R9         ; Load D from (R9), increment R9
@@ -588,7 +588,7 @@ addr0330:        ghi RA         ; Get high register RA
 addr0331:        phi RB         ; Put high register RB
 addr0332:        glo RA         ; Get low register RA
 addr0333:        plo RB         ; Put low register RB
-addr0334:        lbr  02a0h      ; Long branch
+addr0334:        lbr  addr02a0      ; Long branch
 addr0337:        sep R7         ; Set P=R7 as program counter
 addr0338:        dec R4         ; Decrement (R4)
 addr0339:        glo R2         ; Get low register R2
@@ -605,12 +605,12 @@ addr0344:        lda R9         ; Load D from (R9), increment R9
 addr0345:        phi RA         ; Put high register RA
 addr0346:        lda R9         ; Load D from (R9), increment R9
 addr0347:        br  addr0355        ; Short branch
-addr0349:        CALL   0625h    ; Set P=R4 as program counter
+addr0349:        CALL   addr0625    ; Set P=R4 as program counter
 addr034c:        br  addr0355        ; Short branch
-addr034e:        CALL   02c5h    ; Set P=R4 as program counter
-addr0351:        CALL   0354h    ; Set P=R4 as program counter
+addr034e:        CALL   addr02c5    ; Set P=R4 as program counter
+addr0351:        CALL   addr0354    ; Set P=R4 as program counter
 addr0354:        glo RA         ; Get low register RA
-addr0355:        CALL   0359h    ; Set P=R4 as program counter
+addr0355:        CALL   addr0359    ; Set P=R4 as program counter
 addr0358:        ghi RA         ; Get high register RA
 addr0359:        str R2         ; Store D to (R2)
 addr035a:        sep R7         ; Set P=R7 as program counter
@@ -625,7 +625,7 @@ addr0364:        ldn R2         ; Load D with (R2)
 addr0365:        str RD         ; Store D to (RD)
 addr0366:        RETURN         ; Set P=R5 as program counter
 
-addr0367:        CALL   02c9h    ; Set P=R4 as program counter
+addr0367:        CALL   addr02c9    ; Set P=R4 as program counter
 addr036a:        plo RD         ; Put low register RD
 addr036b:        lda RD         ; Load D from (RD), increment RD
 addr036c:        phi RA         ; Put high register RA
@@ -634,7 +634,7 @@ addr036e:        br  addr0355        ; Short branch
 addr0370:        xri  2fh        ; Logical XOR D with value
 addr0372:        bz  addr0366        ; Short branch on D=0
 addr0374:        xri  22h        ; Logical XOR D with value
-addr0376:        CALL   03f4h    ; Set P=R4 as program counter
+addr0376:        CALL   addr03f4    ; Set P=R4 as program counter
 addr0379:        lda RB         ; Load D from (RB), increment RB
 addr037a:        xri  0dh        ; Logical XOR D with value
 addr037c:        bnz  addr0370       ; Short branch on D!=0
@@ -642,9 +642,9 @@ addr037e:        dec R9         ; Decrement (R9)
 addr037f:        sep R7         ; Set P=R7 as program counter
 addr0380:        inc R8         ; Increment (R8)
 addr0381:        phi R8         ; Put high register R8
-addr0382:        CALL   03cch    ; Set P=R4 as program counter
+addr0382:        CALL   addr03cc    ; Set P=R4 as program counter
 addr0385:        ldi  21h        ; Load D immediate
-addr0387:        CALL   03f4h    ; Set P=R4 as program counter
+addr0387:        CALL   addr03f4    ; Set P=R4 as program counter
 addr038a:        sep R7         ; Set P=R7 as program counter
 addr038b:        inc RE         ; Increment (RE)
 addr038c:        glo R9         ; Get low register R9
@@ -654,23 +654,23 @@ addr038f:        ghi R9         ; Get high register R9
 addr0390:        dec RD         ; Decrement (RD)
 addr0391:        smb            ; Substract memory with borrow
 addr0392:        phi RA         ; Put high register RA
-addr0393:        CALL   0415h    ; Set P=R4 as program counter
+addr0393:        CALL   addr0415    ; Set P=R4 as program counter
 addr0396:        ghi R8         ; Get high register R8
 addr0397:        bz  addr03a9        ; Short branch on D=0
 addr0399:        ldi  0bdh        ; Load D immediate
 addr039b:        plo R9         ; Put low register R9
 addr039c:        ghi R3         ; Get high register R3
 addr039d:        phi R9         ; Put high register R9
-addr039e:        CALL   03c5h    ; Set P=R4 as program counter
+addr039e:        CALL   addr03c5    ; Set P=R4 as program counter
 addr03a1:        sep R7         ; Set P=R7 as program counter
 addr03a2:        dec R8         ; Decrement (R8)
 addr03a3:        phi RA         ; Put high register RA
 addr03a4:        lda RD         ; Load D from (RD), increment RD
 addr03a5:        plo RA         ; Put low register RA
-addr03a6:        CALL   0415h    ; Set P=R4 as program counter
+addr03a6:        CALL   addr0415    ; Set P=R4 as program counter
 addr03a9:        ldi  07h        ; Load D immediate
-addr03ab:        CALL   0109h    ; Set P=R4 as program counter
-addr03ae:        CALL   03d5h    ; Set P=R4 as program counter
+addr03ab:        CALL   addr0109    ; Set P=R4 as program counter
+addr03ae:        CALL   addr03d5    ; Set P=R4 as program counter
 addr03b1:        sep R7         ; Set P=R7 as program counter
 addr03b2:        inc RA         ; Increment (RA)
 addr03b3:        ghi RD         ; Get high register RD
@@ -680,13 +680,13 @@ addr03b6:        dec R6         ; Decrement (R6)
 addr03b7:        phi R2         ; Put high register R2
 addr03b8:        lda RD         ; Load D from (RD), increment RD
 addr03b9:        plo R2         ; Put low register R2
-addr03ba:        lbr  0228h      ; Long branch
+addr03ba:        lbr  addr0228      ; Long branch
 addr03bd:        dec R0         ; Decrement (R0)
 addr03be:        lda R1         ; Load D from (R1), increment R1
 addr03bf:        str R4         ; Store D to (R4)
 addr03c0:        dec R0         ; Decrement (R0)
 addr03c1:        plo R3         ; Put low register R3
-addr03c2:        CALL   03f2h    ; Set P=R4 as program counter
+addr03c2:        CALL   addr03f2    ; Set P=R4 as program counter
 addr03c5:        lda R9         ; Load D from (R9), increment R9
 addr03c6:        adi  80h        ; Add D,DF with value
 addr03c8:        bnf  addr03c2       ; Short branch on DF=0
@@ -707,7 +707,7 @@ addr03da:        sep R7         ; Set P=R7 as program counter
 addr03db:        inc R5         ; Increment (R5)
 addr03dc:        plo RA         ; Put low register RA
 addr03dd:        ldi  0dh        ; Load D immediate
-addr03df:        CALL   0109h    ; Set P=R4 as program counter
+addr03df:        CALL   addr0109    ; Set P=R4 as program counter
 addr03e2:        sep R7         ; Set P=R7 as program counter
 addr03e3:        inc RA         ; Increment (RA)
 addr03e4:        glo RA         ; Get low register RA
@@ -730,33 +730,33 @@ addr03fa:        adi  80h        ; Add D,DF with value
 addr03fc:        bnf  addr0366       ; Short branch on DF=0
 addr03fe:        str RD         ; Store D to (RD)
 addr03ff:        ghi RF         ; Get high register RF
-addr0400:        lbr  0109h      ; Long branch
+addr0400:        lbr  addr0109      ; Long branch
 addr0403:        ldi  20h        ; Load D immediate
-addr0405:        CALL   03f4h    ; Set P=R4 as program counter
+addr0405:        CALL   addr03f4    ; Set P=R4 as program counter
 addr0408:        sep R7         ; Set P=R7 as program counter
 addr0409:        inc RB         ; Increment (RB)
 addr040a:        ani  07h        ; Logical AND D with value
 addr040c:        bnz  addr0403       ; Short branch on D!=0
 addr040e:        RETURN         ; Set P=R5 as program counter
 
-addr040f:        CALL   03f4h    ; Set P=R4 as program counter
+addr040f:        CALL   addr03f4    ; Set P=R4 as program counter
 addr0412:        dec RA         ; Decrement (RA)
 addr0413:        br  addr040a        ; Short branch
-addr0415:        CALL   0354h    ; Set P=R4 as program counter
+addr0415:        CALL   addr0354    ; Set P=R4 as program counter
 addr0418:        sep R7         ; Set P=R7 as program counter
 addr0419:        inc RA         ; Increment (RA)
 addr041a:        plo RD         ; Put low register RD
-addr041b:        CALL   0513h    ; Set P=R4 as program counter
+addr041b:        CALL   addr0513    ; Set P=R4 as program counter
 addr041e:        bnf  addr0425       ; Short branch on DF=0
 addr0420:        ldi  2dh        ; Load D immediate
-addr0422:        CALL   03f4h    ; Set P=R4 as program counter
+addr0422:        CALL   addr03f4    ; Set P=R4 as program counter
 addr0425:        ghi RD         ; Get high register RD
 addr0426:        stxd           ; Store via X and devrement
 addr0427:        phi RA         ; Put high register RA
 addr0428:        ldi  0ah        ; Load D immediate
-addr042a:        CALL   0355h    ; Set P=R4 as program counter
+addr042a:        CALL   addr0355    ; Set P=R4 as program counter
 addr042d:        inc RD         ; Increment (RD)
-addr042e:        CALL   04e3h    ; Set P=R4 as program counter
+addr042e:        CALL   addr04e3    ; Set P=R4 as program counter
 addr0431:        glo RA         ; Get low register RA
 addr0432:        shr            ; Shift right D
 addr0433:        ori  30h        ; Logical OR D with value
@@ -770,8 +770,8 @@ addr043b:        dec RD         ; Decrement (RD)
 addr043c:        bnz  addr042e       ; Short branch on D!=0
 addr043e:        inc R2         ; Increment (R2)
 addr043f:        ldn R2         ; Load D with (R2)
-addr0440:        lbz  02c2h      ; Long branch on D=0
-addr0443:        CALL   03f4h    ; Set P=R4 as program counter
+addr0440:        lbz  addr02c2      ; Long branch on D=0
+addr0443:        CALL   addr03f4    ; Set P=R4 as program counter
 addr0446:        br  addr043e        ; Short branch
 addr0448:        sep R7         ; Set P=R7 as program counter
 addr0449:        dec RE         ; Decrement (RE)
@@ -807,15 +807,15 @@ addr0469:        glo R8         ; Get low register R8
 addr046a:        plo RB         ; Put low register RB
 addr046b:        RETURN         ; Set P=R5 as program counter
 
-addr046c:        CALL   02c5h    ; Set P=R4 as program counter
+addr046c:        CALL   addr02c5    ; Set P=R4 as program counter
 addr046f:        ghi RA         ; Get high register RA
 addr0470:        xri  80h        ; Logical XOR D with value
 addr0472:        stxd           ; Store via X and devrement
 addr0473:        glo RA         ; Get low register RA
 addr0474:        stxd           ; Store via X and devrement
-addr0475:        CALL   02c9h    ; Set P=R4 as program counter
+addr0475:        CALL   addr02c9    ; Set P=R4 as program counter
 addr0478:        plo RF         ; Put low register RF
-addr0479:        CALL   02c5h    ; Set P=R4 as program counter
+addr0479:        CALL   addr02c5    ; Set P=R4 as program counter
 addr047c:        inc R2         ; Increment (R2)
 addr047d:        glo RA         ; Get low register RA
 addr047e:        sm             ; Substract memory: DF,D=D-(R(X))
@@ -842,8 +842,8 @@ addr0495:        nop            ; No operation
 addr0496:        inc R9         ; Increment (R9)
 addr0497:        RETURN         ; Set P=R5 as program counter
 
-addr0498:        CALL   050eh    ; Set P=R4 as program counter
-addr049b:        CALL   02c5h    ; Set P=R4 as program counter
+addr0498:        CALL   addr050e    ; Set P=R4 as program counter
+addr049b:        CALL   addr02c5    ; Set P=R4 as program counter
 addr049e:        sex RD         ; Set P=RD as datapointer
 addr049f:        inc RD         ; Increment (RD)
 addr04a0:        glo RA         ; Get low register RA
@@ -854,7 +854,7 @@ addr04a4:        adc            ; Add with carry
 addr04a5:        str RD         ; Store D to (RD)
 addr04a6:        RETURN         ; Set P=R5 as program counter
 
-addr04a7:        CALL   02c5h    ; Set P=R4 as program counter
+addr04a7:        CALL   addr02c5    ; Set P=R4 as program counter
 addr04aa:        ldi  10h        ; Load D immediate
 addr04ac:        plo RF         ; Put low register RF
 addr04ad:        lda RD         ; Load D from (RD), increment RD
@@ -868,7 +868,7 @@ addr04b4:        dec RD         ; Decrement (RD)
 addr04b5:        ldn RD         ; Load D with (RD)
 addr04b6:        shlc           ; Shift left with carry
 addr04b7:        str RD         ; Store D to (RD)
-addr04b8:        CALL   0522h    ; Set P=R4 as program counter
+addr04b8:        CALL   addr0522    ; Set P=R4 as program counter
 addr04bb:        bnf  addr04c5       ; Short branch on DF=0
 addr04bd:        sex RD         ; Set P=RD as datapointer
 addr04be:        inc RD         ; Increment (RD)
@@ -884,7 +884,7 @@ addr04c7:        inc RD         ; Increment (RD)
 addr04c8:        bnz   addr04b1       ; Short branch on D!=0
 addr04ca:        RETURN         ; Set P=R5 as program counter
 
-addr04cb:        CALL   02c5h    ; Set P=R4 as program counter
+addr04cb:        CALL   addr02c5    ; Set P=R4 as program counter
 addr04ce:        ghi RA         ; Get high register RA
 addr04cf:        str R2         ; Store D to (R2)
 addr04d0:        glo RA         ; Get low register RA
@@ -893,10 +893,10 @@ addr04d2:        lbz  addr037f      ; Long branch on D=0
 addr04d5:        ldn RD         ; Load D with (RD)
 addr04d6:        xor            ; Logical exclusive OR  D with (R(X))
 addr04d7:        stxd           ; Store via X and devrement
-addr04d8:        CALL   0513h    ; Set P=R4 as program counter
+addr04d8:        CALL   addr0513    ; Set P=R4 as program counter
 addr04db:        dec RD         ; Decrement (RD)
 addr04dc:        dec RD         ; Decrement (RD)
-addr04dd:        CALL   0513h    ; Set P=R4 as program counter
+addr04dd:        CALL   addr0513    ; Set P=R4 as program counter
 addr04e0:        inc RD         ; Increment (RD)
 addr04e1:        ghi RD         ; Get high register RD
 addr04e2:        lskp           ; Long skip
@@ -928,10 +928,10 @@ addr04fd:        shlc           ; Shift left with carry
 addr04fe:        stxd           ; Store via X and devrement
 addr04ff:        glo RA         ; Get low register RA
 addr0500:        shlc           ; Shift left with carry
-addr0501:        CALL   0524h    ; Set P=R4 as program counter
+addr0501:        CALL   addr0524    ; Set P=R4 as program counter
 addr0504:        dec RF         ; Decrement (RF)
 addr0505:        glo RF         ; Get low register RF
-addr0506:        lbnz  04eah     ; Long branch on D!=0
+addr0506:        lbnz  addr04ea     ; Long branch on D!=0
 addr0509:        inc R2         ; Increment (R2)
 addr050a:        ldn R2         ; Load D with (R2)
 addr050b:        shl            ; Shift left D
@@ -964,13 +964,13 @@ addr0528:        RETURN         ; Set P=R5 as program counter
 
 addr0529:        sep R7         ; Set P=R7 as program counter
 addr052a:        inc R8         ; Increment (R8)
-addr052b:        lbz  03b1h      ; Long branch on D=0
+addr052b:        lbz  addr03b1      ; Long branch on D=0
 addr052e:        lda RB         ; Load D from (RB), increment RB
 addr052f:        xri  0dh        ; Logical XOR D with value
 addr0531:        bnz  addr052e       ; Short branch on D!=0
-addr0533:        CALL   0698h    ; Set P=R4 as program counter
+addr0533:        CALL   addr0698    ; Set P=R4 as program counter
 addr0536:        bz  addr054b        ; Short branch on D=0
-addr0538:        CALL   010ch    ; Set P=R4 as program counter
+addr0538:        CALL   addr010c    ; Set P=R4 as program counter
 addr053b:        bdf  addr0546       ; Short branch on DF=1
 addr053d:        sep R7         ; Set P=R7 as program counter
 addr053e:        inc RC         ; Increment (RC)
@@ -987,13 +987,13 @@ addr0547:        inc RE         ; Increment (RE)
 addr0548:        phi R9         ; Put high register R9
 addr0549:        lda RD         ; Load D from (RD), increment RD
 addr054a:        plo R9         ; Put low register R9
-addr054b:        lbr  037fh      ; Long branch
+addr054b:        lbr  addr037f      ; Long branch
 addr054e:        sep R7         ; Set P=R7 as program counter
 addr054f:        dec R0         ; Decrement (R0)
 addr0550:        phi RB         ; Put high register RB
 addr0551:        lda RD         ; Load D from (RD), increment RD
 addr0552:        plo RB         ; Put low register RB
-addr0553:        CALL   0698h    ; Set P=R4 as program counter
+addr0553:        CALL   addr0698    ; Set P=R4 as program counter
 addr0556:        bz  addr054b        ; Short branch on D=0
 addr0558:        sep R7         ; Set P=R7 as program counter
 addr0559:        inc RC         ; Increment (RC)
@@ -1002,7 +1002,7 @@ addr055b:        stxd           ; Store via X and devrement
 addr055c:        ghi R9         ; Get high register R9
 addr055d:        str RD         ; Store D to (RD)
 addr055e:        br  addr0542        ; Short branch
-addr0560:        CALL   05feh    ; Set P=R4 as program counter
+addr0560:        CALL   addr05fe    ; Set P=R4 as program counter
 addr0563:        bz  addr0538        ; Short branch on D=0
 addr0565:        sep R7         ; Set P=R7 as program counter
 addr0566:        dec R8         ; Decrement (R8)
@@ -1011,7 +1011,7 @@ addr0568:        stxd           ; Store via X and devrement
 addr0569:        ghi RA         ; Get high register RA
 addr056a:        str RD         ; Store D to (RD)
 addr056b:        br  addr054b        ; Short branch
-addr056d:        CALL   058bh    ; Set P=R4 as program counter
+addr056d:        CALL   addr058b    ; Set P=R4 as program counter
 addr0570:        lda R2         ; Load D from (R2), increment R2
 addr0571:        phi RA         ; Put high register RA
 addr0572:        ldn R2         ; Load D with (R2)
@@ -1022,15 +1022,15 @@ addr0576:        glo R2         ; Get low register R2
 addr0577:        stxd           ; Store via X and devrement
 addr0578:        ghi R2         ; Get high register R2
 addr0579:        stxd           ; Store via X and devrement
-addr057a:        CALL   0601h    ; Set P=R4 as program counter
+addr057a:        CALL   addr0601    ; Set P=R4 as program counter
 addr057d:        bnz  addr0565       ; Short branch on D!=0
 addr057f:        br  addr0588        ; Short branch
-addr0581:        CALL   058bh    ; Set P=R4 as program counter
+addr0581:        CALL   addr058b    ; Set P=R4 as program counter
 addr0584:        lda R2         ; Load D from (R2), increment R2
 addr0585:        phi R9         ; Put high register R9
 addr0586:        ldn R2         ; Load D with (R2)
 addr0587:        plo R9         ; Put low register R9
-addr0588:        lbr  022dh      ; Long branch
+addr0588:        lbr  addr022d      ; Long branch
 addr058b:        sep R7         ; Set P=R7 as program counter
 addr058c:        dec R2         ; Decrement (R2)
 addr058d:        inc R2         ; Increment (R2)
@@ -1060,10 +1060,10 @@ addr05a7:        str RD         ; Store D to (RD)
 addr05a8:        br  addr05b2        ; Short branch
 addr05aa:        ldi  30h        ; Load D immediate
 addr05ac:        plo RB         ; Put low register RB
-addr05ad:        CALL   0354h    ; Set P=R4 as program counter
+addr05ad:        CALL   addr0354    ; Set P=R4 as program counter
 addr05b0:        ghi RD         ; Get high register RD
 addr05b1:        phi RB         ; Put high register RB
-addr05b2:        CALL   0106h    ; Set P=R4 as program counter
+addr05b2:        CALL   addr0106    ; Set P=R4 as program counter
 addr05b5:        ani  7fh        ; Logical AND D with value
 addr05b7:        bz  addr05b2        ; Short branch on D=0
 addr05b9:        str R2         ; Store D to (R2)
@@ -1098,32 +1098,32 @@ addr05e1:        glo RB         ; Get low register RB
 addr05e2:        sm             ; Substract memory: DF,D=D-(R(X))
 addr05e3:        bnf  addr05ec       ; Short branch on DF=0
 addr05e5:        ldi  07h        ; Load D immediate
-addr05e7:        CALL   03f4h    ; Set P=R4 as program counter
+addr05e7:        CALL   addr03f4    ; Set P=R4 as program counter
 addr05ea:        ldn RB         ; Load D with (RB)
 addr05eb:        skp            ; Skip next byte
 addr05ec:        lda RB         ; Load D from (RB), increment RB
 addr05ed:        xri  0dh        ; Logical XOR D with value
 addr05ef:        bnz  addr05b2       ; Short branch on D!=0
-addr05f1:        CALL   03d5h    ; Set P=R4 as program counter
+addr05f1:        CALL   addr03d5    ; Set P=R4 as program counter
 addr05f4:        sep R7         ; Set P=R7 as program counter
 addr05f5:        inc R8         ; Increment (R8)
 addr05f6:        glo RB         ; Get low register RB
 addr05f7:        str RD         ; Store D to (RD)
 addr05f8:        ldi  30h        ; Load D immediate
 addr05fa:        plo RB         ; Put low register RB
-addr05fb:        lbr  02c5h      ; Long branch
-addr05fe:        CALL   02c5h    ; Set P=R4 as program counter
+addr05fb:        lbr  addr02c5      ; Long branch
+addr05fe:        CALL   addr02c5    ; Set P=R4 as program counter
 addr0601:        glo RA         ; Get low register RA
 addr0602:        str R2         ; Store D to (R2)
 addr0603:        ghi RA         ; Get high register RA
 addr0604:        or             ; Logical OR  D with (R(X))
-addr0605:        lbz  037fh      ; Long branch on D=0
+addr0605:        lbz  addr037f      ; Long branch on D=0
 addr0608:        sep R7         ; Set P=R7 as program counter
 addr0609:        dec R0         ; Decrement (R0)
 addr060a:        phi RB         ; Put high register RB
 addr060b:        lda RD         ; Load D from (RD), increment RD
 addr060c:        plo RB         ; Put low register RB
-addr060d:        CALL   0698h    ; Set P=R4 as program counter
+addr060d:        CALL   addr0698    ; Set P=R4 as program counter
 addr0610:        lsnz           ; Long skip on D!=0
 addr0611:        glo RD         ; Get low register RD
 addr0612:        RETURN         ; Set P=R5 as program counter
@@ -1142,8 +1142,8 @@ addr061e:        lda RB         ; Load D from (RB), increment RB
 addr061f:        xri  0dh        ; Logical XOR D with value
 addr0621:        bnz  addr061e       ; Short branch on D!=0
 addr0623:        br  addr060d        ; Short branch
-addr0625:        CALL   0628h    ; Set P=R4 as program counter
-addr0628:        CALL   02c5h    ; Set P=R4 as program counter
+addr0625:        CALL   addr0628    ; Set P=R4 as program counter
+addr0628:        CALL   addr02c5    ; Set P=R4 as program counter
 addr062b:        lda RD         ; Load D from (RD), increment RD
 addr062c:        phi R8         ; Put high register R8
 addr062d:        lda RD         ; Load D from (RD), increment RD
@@ -1168,14 +1168,14 @@ addr063e:        glo RB         ; Get low register RB
 addr063f:        stxd           ; Store via X and devrement
 addr0640:        ghi RB         ; Get high register RB
 addr0641:        str RD         ; Store D to (RD)
-addr0642:        CALL   05feh    ; Set P=R4 as program counter
+addr0642:        CALL   addr05fe    ; Set P=R4 as program counter
 addr0645:        sep R7         ; Set P=R7 as program counter
 addr0646:        dec RA         ; Decrement (RA)
 addr0647:        glo RB         ; Get low register RB
 addr0648:        stxd           ; Store via X and devrement
 addr0649:        ghi RB         ; Get high register RB
 addr064a:        stxd           ; Store via X and devrement
-addr064b:        CALL   05feh    ; Set P=R4 as program counter
+addr064b:        CALL   addr05fe    ; Set P=R4 as program counter
 addr064e:        dec RB         ; Decrement (RB)
 addr064f:        dec RB         ; Decrement (RB)
 addr0650:        sep R7         ; Set P=R7 as program counter
@@ -1193,16 +1193,16 @@ addr065c:        plo RA         ; Put low register RA
 addr065d:        bnz  addr0662       ; Short branch on D!=0
 addr065f:        ghi RA         ; Get high register RA
 addr0660:        bz  addr067b        ; Short branch on D=0
-addr0662:        CALL   0415h    ; Set P=R4 as program counter
+addr0662:        CALL   addr0415    ; Set P=R4 as program counter
 addr0665:        ldi  2dh        ; Load D immediate
 addr0667:        xri  0dh        ; Logical XOR D with value
-addr0669:        CALL   03f4h    ; Set P=R4 as program counter
-addr066c:        CALL   010ch    ; Set P=R4 as program counter
+addr0669:        CALL   addr03f4    ; Set P=R4 as program counter
+addr066c:        CALL   addr010c    ; Set P=R4 as program counter
 addr066f:        bdf  addr067b       ; Short branch on DF=1
 addr0671:        lda RB         ; Load D from (RB), increment RB
 addr0672:        xri  0dh        ; Logical XOR D with value
 addr0674:        bnz  addr0667       ; Short branch on D!=0
-addr0676:        CALL   03d5h    ; Set P=R4 as program counter
+addr0676:        CALL   addr03d5    ; Set P=R4 as program counter
 addr0679:        br  addr0650        ; Short branch
 addr067b:        sep R7         ; Set P=R7 as program counter
 addr067c:        dec RC         ; Decrement (RC)
@@ -1231,7 +1231,7 @@ addr0691:        sex R2         ; Set P=R2 as datapointer
 addr0692:        stxd           ; Store via X and devrement
 addr0693:        glo RA         ; Get low register RA
 addr0694:        stxd           ; Store via X and devrement
-addr0695:        lbr  022dh      ; Long branch
+addr0695:        lbr  addr022d      ; Long branch
 addr0698:        sep R7         ; Set P=R7 as program counter
 addr0699:        dec R7         ; Decrement (R7)
 addr069a:        lda RB         ; Load D from (RB), increment RB
@@ -1243,8 +1243,8 @@ addr069f:        or             ; Logical OR  D with (R(X))
 addr06a0:        inc RD         ; Increment (RD)
 addr06a1:        RETURN         ; Set P=R5 as program counter
 
-addr06a2:        CALL   045eh    ; Set P=R4 as program counter
-addr06a5:        CALL   05feh    ; Set P=R4 as program counter
+addr06a2:        CALL   addr045e    ; Set P=R4 as program counter
+addr06a5:        CALL   addr05fe    ; Set P=R4 as program counter
 addr06a8:        adi  0ffh        ; Add D,DF with value
 addr06aa:        ghi RD         ; Get high register RD
 addr06ab:        plo RF         ; Put low register RF
@@ -1261,7 +1261,7 @@ addr06b6:        xri  0dh        ; Logical XOR D with value
 addr06b8:        bnz addr06b4       ; Short branch on D!=0
 addr06ba:        dec RB         ; Decrement (RB)
 addr06bb:        dec RB         ; Decrement (RB)
-addr06bc:        CALL   045eh    ; Set P=R4 as program counter
+addr06bc:        CALL   addr045e    ; Set P=R4 as program counter
 addr06bf:        sep R7         ; Set P=R7 as program counter
 addr06c0:        dec R8         ; Decrement (R8)
 addr06c1:        ldn RB         ; Load D with (RB)
@@ -1831,9 +1831,9 @@ addr0a5a:        ghi RE         ; Get high register RE
 addr0a5b:        bz  addr0ab0        ; Short branch on D=0
 addr0a5d:        SERIAL_B  addr0a5d        ; Short branch on EF4=1 SERIAL INPUT ROUTINE
 addr0a5f:        shr            ; Shift right D
-addr0a60:        CALL   00f9h    ; Set P=R4 as program counter
+addr0a60:        CALL   addr00f9    ; Set P=R4 as program counter
 addr0a63:        SERIAL_B  addr0a5a        ; Short branch on EF4=1
-addr0a65:        ldi  7fh        ; Load D immediate
+addr0a65:        ldi  7Fh        ; Load D immediate
 addr0a67:        plo RF         ; Put low register RF
 addr0a68:        ghi RE         ; Get high register RE
 addr0a69:        shr            ; Shift right D
@@ -1842,17 +1842,23 @@ addr0a6c:        bnf  addr0a71       ; Short branch on DF=0
 addr0a6e:        seq            ; Set Q=1
 addr0a6f:        skp            ; Skip next byte
 addr0a70:        req            ; Reset Q=0
-addr0a71:        CALL   00f6h    ; Set P=R4 as program counter
+addr0a71:        CALL   addr00f6    ; Set P=R4 as program counter
 addr0a74:        glo RF         ; Get low register RF
 addr0a75:        shr            ; Shift right D
 addr0a76:        plo RF         ; Put low register RF
 addr0a77:        SERIAL_BN  addr0a7b       ; Short branch on EF4=0
 addr0a79:        ori  80h        ; Logical OR D with value
-addr0a7b:        bdf  addr0a67       ; Short branch on DF=1
-addr0a7d:        req            ; Reset Q=0
-addr0a7e:        CALL   00f6h    ; Set P=R4 as program counter
-addr0a81:        glo RF         ; Get low register RF
-addr0a82:        RETURN         ; Set P=R5 as program counter
+addr0a7b:        bdf  addr0a67   ; Short branch on DF=1
+				 ghi RE
+				 shr
+				 SERIAL_B  +       ; Short branch on EF4=1
+				 seq            ; Set Q=1
+			 	 skp            ; Skip next byte
++				 req            ; Reset Q=0
+				 CALL   addr00f6    ; Set P=R4 as program counter
+				 req
+                 glo RF         ; Get low register RF
+                 RETURN         ; Set P=R5 as program counter
 
 ;OUTPUT TO SCREEN ROUTINE
 addr0a83:        plo RC         ; Put low register RC
@@ -1865,9 +1871,9 @@ addr0a89:        br  addr0aba        ; Short branch
 ;SERIAL OUTPUT ROUTINE
 addr0a8b:        ldi  0ah        ; Load D immediate
 addr0a8d:        plo RF         ; Put low register RF
-addr0a8e:        CALL   00f6h    ; Set P=R4 as program counter
+addr0a8e:        CALL   addr00f6    ; Set P=R4 as program counter
 addr0a91:        adi  00h        ; Add D,DF with value
-addr0a93:        CALL   00f6h    ; Set P=R4 as program counter
+addr0a93:        CALL   addr00f6    ; Set P=R4 as program counter
 addr0a96:        lsnf           ; Long skip on DF=0
 addr0a97:        req            ; Reset Q=0
 addr0a98:        skp            ; Skip next byte
@@ -1889,13 +1895,13 @@ addr0aa8:        shl            ; Shift left D
 addr0aa9:        shl            ; Shift left D
 addr0aaa:        bnz   addr0ab3       ; Short branch on D!=0
 addr0aac:        shlc           ; Shift left with carry
-addr0aad:        CALL   0ad8h    ; Set P=R4 as program counter
-addr0ab0:        CALL   09d8h    ; Set P=R4 as program counter
+addr0aad:        CALL   addr0ad8    ; Set P=R4 as program counter
+addr0ab0:        CALL   addr09d8    ; Set P=R4 as program counter
 addr0ab3:        KB_BN   addr0aa5       ; Short branch on EF3=0
 addr0ab5:        ghi RD         ; Get high register RD
-addr0ab6:        CALL   0ad8h    ; Set P=R4 as program counter
+addr0ab6:        CALL   addr0ad8    ; Set P=R4 as program counter
 addr0ab9:        inp 7          ; Input to (R(X)) and D, N=111
-addr0aba:        CALL   0ad8h    ; Set P=R4 as program counter
+addr0aba:        CALL   addr0ad8    ; Set P=R4 as program counter
 addr0abd:        plo RE         ; Put low register RE
 addr0abe:        xri  0ah        ; Logical XOR D with value
 addr0ac0:        bz   addr0ac6        ; Short branch on D=0
@@ -1903,7 +1909,7 @@ addr0ac2:        SERIAL_B   addr0ac6        ; Short branch on EF4=1
 addr0ac4:        glo RE         ; Get low register RE
 addr0ac5:        RETURN         ; Set P=R5 as program counter
 
-addr0ac6:        CALL   09d8h    ; Set P=R4 as program counter
+addr0ac6:        CALL   addr09d8    ; Set P=R4 as program counter
 addr0ac9:        ldi  0ch        ; Load D immediate
 addr0acb:        phi RF         ; Put high register RF
 addr0acc:        dec RF         ; Decrement (RF)
@@ -2121,7 +2127,7 @@ addr0bdd:        ldn RD         ; Load D with (RD)
 addr0bde:        sep RA         ; Set P=RA as program counter
 addr0bdf:        inc RA         ; Increment (RA)
 addr0be0:        inc RA         ; Increment (RA)
-addr0be1:        bnf addr0bfc       ; Short branch on DF=0
+addr0be1:        lbnf addr0bfc       ; Short branch on DF=0
 addr0be3:        glo RF         ; Get low register RF
 addr0be4:        smi  06h        ; Substract D,DF to value
 addr0be6:        plo RF         ; Put low register RF
@@ -2139,7 +2145,7 @@ addr0bf5:        sep RA         ; Set P=RA as program counter
 addr0bf6:        ghi R9         ; Get high register R9
 addr0bf7:        ori 0f8h        ; Logical OR D with value
 addr0bf9:        phi R9         ; Put high register R9
-addr0bfa:        br  addr0bd4        ; Short branch
+addr0bfa:        lbr  addr0bd4        ; Short branch
 addr0bfc:        sex R2         ; Set P=R2 as datapointer
 addr0bfd:        ori  80h        ; Logical OR D with value
 addr0bff:        skp            ; Skip next byte
