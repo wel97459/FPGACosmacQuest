@@ -55,6 +55,10 @@ KB_BN MACRO address
 		BN3 address
 		ENDM
 
+KB_INP MACRO address
+		INP   7
+		ENDM
+
 R0         EQU     0         ;REGISTER DEFINITION
 R1         EQU     1         ;REGISTER DEFINITION
 R2         EQU     2         ;REGISTER DEFINITION
@@ -178,9 +182,9 @@ AESTK      DW      00000h     ;RANDOM NUMBER GEN.
 Z165       PLO     R7         ;I/O ROUTINES
            LBDF    PEND       ;GOTO WARM START
            GHI     RD
-Z149       B3      Z148       ;CHECK FOR KEYBOARD OR SERIAL
+Z149       KB_B      Z148       ;CHECK FOR KEYBOARD OR SERIAL
            SERIAL_B      Z149          ;INPUT
-Z150       B3      Z148
+Z150       KB_B      Z148
            SERIAL_BN    Z150       ;FINED TIMING OF SERIAL INPUT
            SEQ
 Z153       PLO     RE
@@ -193,11 +197,11 @@ Z151       SMI     1
            SERIAL_B      Z153
            REQ
 Z152       SERIAL_BN    Z153       ;MUST GOTO #C4
-           NOP                      ;|
-           NOP                      ;|
-           SMI     1                ;|
-           SERIAL_BN    Z154             ;|
-           BNZ     Z152+1     ;BECAUSE OF THIS
+           NOP                     ;|
+           NOP                     ;|
+           SMI     1               ;|
+           SERIAL_BN    Z154       ;|
+           BNZ     Z152+1          ;BECAUSE OF THIS
            INC     RE
 Z154       GLO     RE
            SMI     6
@@ -208,7 +212,7 @@ Z148       PHI     RE
 BRKTST     ADI     0          ;BREAK TEST
            GHI     RE
            BNZ     Z156
-           BN3     Z157
+           KB_BN     Z157
            LSKP
 Z156       SERIAL_B      Z157
            SMI     0
@@ -1984,15 +1988,15 @@ BLINK      CALLOW  TIME_+2;   LOOK AT TIMER
            SHLC               ;EVERY HALF SECOND
            CALL    TVD        ;TOGGLE CURSOR
 KEYIN      CALL    TVON       ;TURN DISPLAY ON
-Z301       BN3     BLINK      ;WAIT FOR KEYIN
+Z301       KB_BN     BLINK      ;WAIT FOR KEYIN
            GHI     RD
            CALL    TVD        ;TURN CURSOR OFF
-           INP     7          ;GET KEYIN
+           KB_INP             ;GET KEYIN
 DISP       CALL    TVD        ;DISPLAY CHAR
            PLO     RE
            XRI     00Ah       ;IF <LF>
            BZ      HOLD       ;YES
-           SERIAL_B      HOLD       ;ALSO HOLD ON EF4
+           SERIAL_B  HOLD     ;ALSO HOLD ON EF4
            GLO     RE
            RETURN
 HOLD       CALL    TVON       ;TURN DISPLAY ON
@@ -2001,7 +2005,7 @@ TVOFF      LDI     00Ch       ;TV OFF AND DELAY
 -          DEC     RF
            GHI     RF
            BNZ     -
--          SERIAL_B      -          ;THEN WAIT FOR /4
+-          SERIAL_BN      -          ;THEN WAIT FOR /4
            SEX     R3
            OUT     1          ;TURN DISPLAY OFF
            IDL

@@ -15,8 +15,8 @@ class Top_Quest_ICE40(val withLcd: Boolean, val ramFile: String, val romFile: St
     val io = new Bundle {
         val reset_ = in Bool()
         val clk_12Mhz = in Bool() //12Mhz CLK
-        //val video = out Bool()
-        //val sync = out Bool()
+        val video = out Bool()
+        val sync = out Bool()
 
         val serial_txd = out Bool()
         val serial_rxd = in Bool()
@@ -165,8 +165,8 @@ class Top_Quest_ICE40(val withLcd: Boolean, val ramFile: String, val romFile: St
                 Ram255.io.addra := questElf.io.ram255.addr
                 questElf.io.ram255.din := Ram255.io.douta
                 Ram255.io.dina := questElf.io.ram255.dout
-            //io.sync := questElf.io.sync
-            //io.video := questElf.io.video
+            io.sync := questElf.io.sync
+            io.video := questElf.io.video
             io.led_red := !questElf.io.q 
             io.tape.output := questElf.io.q
 
@@ -242,5 +242,5 @@ class Top_Quest_ICE40(val withLcd: Boolean, val ramFile: String, val romFile: St
 }
 
 object Top_Quest_ICE40_Verilog extends App {
-  Config.spinal.generateVerilog(new Top_Quest_ICE40(false, "./data/test_1861.bin", "./data/SUPRMON-v1.1-2708.bin"))
+  Config.spinal.generateVerilog(new Top_Quest_ICE40(false, "./data/Tinybasi_0x1fff.bin", "./data/SUPRMON-v1.1-2708.bin"))
 }
