@@ -35,16 +35,16 @@ class Top_Quest_ICE40(val withLcd: Boolean, val ramFile: String, val romFile: St
             val row = out Bits(4 bits)
         }
 
-        // val lcd = new Bundle {
-        //     val sck = ifGen(withLcd) (out Bool())
-        //     val rst = ifGen(withLcd) (out Bool())
-        //     val dc = ifGen(withLcd) (out Bool())
-        //     val sdo = ifGen(withLcd) (out Bool())
-        // }
+        val lcd = new Bundle {
+            val sck = ifGen(withLcd) (out Bool())
+            val rst = ifGen(withLcd) (out Bool())
+            val dc = ifGen(withLcd) (out Bool())
+            val sdo = ifGen(withLcd) (out Bool())
+        }
 
         val seven = new Bundle {
             val seg = out Bits(7 bits)
-            val dis = out Bits(6 bits)
+            val dis = out Bits(4 bits)
         }
 
     }
@@ -126,9 +126,9 @@ class Top_Quest_ICE40(val withLcd: Boolean, val ramFile: String, val romFile: St
             debounce(20 downto 18) ## 
             debounce(1)
         
-        val seg7 = SevenSegmentDriver(5, 500 us)
+        val seg7 = SevenSegmentDriver(3, 500 us)
         io.seven.seg := seg7.segments(6 downto 0) 
-        io.seven.dis := seg7.displays(5 downto 0)
+        io.seven.dis := seg7.displays
         seg7.setDecPoint(0);
 
         val Ram = new RamInit(ramFile, log2Up(0x1fff))
@@ -174,13 +174,12 @@ class Top_Quest_ICE40(val withLcd: Boolean, val ramFile: String, val romFile: St
         }
 
         val segData = B"00000000"
-        val segAddr = B"0000000000000000"
+        val segAddr = B"00000000"
         val segDataReg = RegNextWhen(pro.io.RamInterface.DataOut, pro.io.RamInterface.Write)
         val segDataBus = RegNextWhen(areaDiv.questElf.io.CPU.DataOut, areaDiv.questElf.io.DE)
 
         seg7.setDigits(0, segData);
-        seg7.setDigits(2, segAddr(7 downto 0));
-        seg7.setDigits(4, segAddr(15 downto 8));
+        seg7.setDigits(2, segAddr);
 
         pro.io.RamInterface.DataIn := Ram.io.douta
         when(pro.io.FlagOut(2))
@@ -189,14 +188,14 @@ class Top_Quest_ICE40(val withLcd: Boolean, val ramFile: String, val romFile: St
             Ram.io.wea := pro.io.RamInterface.Write.asBits
             Ram.io.addra := pro.io.RamInterface.Address.resized
             segData := segDataReg
-            segAddr := pro.io.RamInterface.Address
+            segAddr := pro.io.RamInterface.Address.resized
             io.led_blue := !glow.io.led 
         }otherwise{
             Ram.io.dina := areaDiv.questElf.io.ram.dout
             Ram.io.wea := areaDiv.questElf.io.ram.wr.asBits
             Ram.io.addra := areaDiv.questElf.io.ram.addr
             segData := segDataBus
-            segAddr := areaDiv.questElf.io.CPU.Addr16
+            segAddr := areaDiv.questElf.io.CPU.Addr16.resized
             io.led_blue := True
         }
 
@@ -211,36 +210,36 @@ class Top_Quest_ICE40(val withLcd: Boolean, val ramFile: String, val romFile: St
             pro.io.UartRX := io.serial_rxd
             io.led_green := True
         }
-        // val lcd = ifGen(withLcd) (new Area(){  
-        //     val startFrame = !areaDiv.questElf.io.Pixie.INT
-        //     val startLine = !areaDiv.questElf.io.Pixie.DMAO
-        //     val dataClk = (areaDiv.questElf.io.CPU.TPB && areaDiv.questElf.io.CPU.SC === 2)
-        //     val data = areaDiv.questElf.io.CPU.DataOut
-        // })
+        
+        val lcd = ifGen(withLcd) (new Area(){
+            val startFrame = !areaDiv.questElf.io.Pixie.INT
+            val startLine = !areaDiv.questElf.io.Pixie.DMAO
+            val dataClk = (areaDiv.questElf.io.CPU.TPB && areaDiv.questElf.io.CPU.SC === 2)
+            val data = areaDiv.questElf.io.CPU.DataOut
+        })
     }
 
-    // val lcd = ifGen(withLcd) (new Area(){ 
-    //     val Core48 = new ClockingArea(clk48Domain) {
+    val lcd = ifGen(withLcd) (new Area(){ 
+        val Core48 = new ClockingArea(clk48Domain) {
+            //Clock Crossing
+            val startFrame = BufferCC(Core17.lcd.startFrame, False)
+            val startLine = BufferCC(Core17.lcd.startLine, False)
+            val dataClk = BufferCC(Core17.lcd.dataClk, False)
+            val dataClkB = dataClk.fall()
+            val dataClkC = RegNext(dataClkB)
+            val data = RegNextWhen(Core17.lcd.data, dataClkB) init(0)
             
-    //         //Clock Crossing
-    //         val startFrame = BufferCC(Core17.lcd.startFrame, False)
-    //         val startLine = BufferCC(Core17.lcd.startLine, False)
-    //         val dataClkB = BufferCC(Core17.lcd.dataClk, False)
-    //         val dataClk = dataClkB.fall()
-    //         val dataClkD = RegNext(dataClk)
-    //         val data = RegNextWhen(Core17.lcd.data, dataClk) init(0)
+            var LCD = LCD_Pixie(100 ms)
+            LCD.io.startFrame := startFrame
+            LCD.io.startLine := startLine
+            LCD.io.dataClk := dataClkC
+            LCD.io.data := data
             
-    //         var LCD = LCD_Pixie(10 ms)
-    //         LCD.io.startFrame := startFrame
-    //         LCD.io.startLine := startLine
-    //         LCD.io.dataClk := dataClkD
-    //         LCD.io.data := data
-            
-    //         io.lcd <> LCD.io.lcd
-    //     }
-    // })
+            io.lcd <> LCD.io.lcd
+        }
+    })
 }
 
 object Top_Quest_ICE40_Verilog extends App {
-  Config.spinal.generateVerilog(new Top_Quest_ICE40(false, "./data/Tinybasi_0x1fff.bin", "./data/SUPRMON-v1.1-2708.bin"))
+  Config.spinal.generateVerilog(new Top_Quest_ICE40(true, "./data/test_1861.bin", "./data/SUPRMON-v1.1-2708.bin"))
 }

@@ -18,18 +18,16 @@ set_io -nowarn spi_mosi 17 # Shared with the flash
 set_io -nowarn spi_miso 14 # Shared with the flash
 
 # Normal GPIO pins, left side
-set_io -nowarn gpio_23 23
-set_io -nowarn gpio_25 25
-set_io -nowarn gpio_26 26
-set_io -nowarn gpio_27 27
-set_io -nowarn gpio_32 32
-set_io -nowarn gpio_35 35
-set_io -nowarn gpio_31 31
-set_io -nowarn gpio_37 37
-set_io -nowarn gpio_34 34
-set_io -nowarn gpio_43 43
-set_io -nowarn gpio_36 36
-set_io -nowarn gpio_42 42
+# set_io -nowarn gpio_23 23
+# set_io -nowarn gpio_27 27
+# set_io -nowarn gpio_32 32
+# set_io -nowarn gpio_35 35
+# set_io -nowarn gpio_31 31
+# set_io -nowarn gpio_37 37
+# set_io -nowarn gpio_34 34
+# set_io -nowarn gpio_43 43
+# set_io -nowarn gpio_36 36
+# set_io -nowarn gpio_42 42
 
 set_io -nowarn sync 38
 set_io -nowarn video 28
@@ -59,15 +57,13 @@ set_io -nowarn seven_dis[0] 44
 set_io -nowarn seven_dis[1] 4
 set_io -nowarn seven_dis[2] 3
 set_io -nowarn seven_dis[3] 48
-set_io -nowarn seven_dis[4] 45
-set_io -nowarn seven_dis[5] 47
 
 set_io -nowarn tape_output 23
 
-#set_io -nowarn lcd_rst 18
-#set_io -nowarn lcd_dc 11
-#set_io -nowarn lcd_sdo 9
-#set_io -nowarn lcd_sck 6
+set_io -nowarn lcd_rst 47
+set_io -nowarn lcd_dc 45
+set_io -nowarn lcd_sdo 26
+set_io -nowarn lcd_sck 25
 
 set_io -nowarn keypad_row[0] 32
 set_io -nowarn keypad_row[1] 27
