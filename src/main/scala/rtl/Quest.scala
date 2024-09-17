@@ -152,8 +152,10 @@ class Quest(val divideBy: BigInt) extends Component {
         val video = out Bool()
         val sync = out Bool()
         val q = out Bool()
+
         val DE = out Bool()
         val DI = in Bits(8 bits)
+        val KeyHeld_ = in Bool()
 
         val SerialIn = in Bool()
         val TapeIn = in Bool()
@@ -275,7 +277,7 @@ class Quest(val divideBy: BigInt) extends Component {
         Cpu.io.DataIn := 0x00
     }
 
-    Cpu.io.EF_n := Cat(QLogic.io.EF4_,  io.TapeIn, io.SerialIn, Pixie.io.EFx)
+    Cpu.io.EF_n := Cat(QLogic.io.EF4_,  io.KeyHeld_, io.SerialIn, Pixie.io.EFx)
 
     //Good beeper sounds
     io.sync := Pixie.io.CompSync_

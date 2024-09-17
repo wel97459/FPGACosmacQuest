@@ -150,6 +150,8 @@ class Top_Quest_ICE40(val withLcd: Boolean, val ramFile: String, val romFile: St
                 questElf.io.Keys.S := debounce(17)
                 questElf.io.Keys.L := debounce(22)
                 questElf.io.Keys.M := debounce(23)
+
+                questElf.io.KeyHeld_ := !keyDecoder.io.KeyHeld
                 questElf.io.DI := keyDecoder.io.HexOutLast ## keyDecoder.io.HexOut
 
             val Rom = new RamInit(romFile, log2Up(0x3ff))
@@ -229,7 +231,7 @@ class Top_Quest_ICE40(val withLcd: Boolean, val ramFile: String, val romFile: St
             val dataClkC = RegNext(dataClkB)
             val data = RegNextWhen(Core17.lcd.data, dataClkB) init(0)
             
-            var LCD = LCD_Pixie(100 ms)
+            var LCD = LCD_Pixie(10 ms)
             LCD.io.startFrame := startFrame
             LCD.io.startLine := startLine
             LCD.io.dataClk := dataClkC
