@@ -103,8 +103,6 @@ class Top_Quest_ICE40(val withLcd: Boolean, val ramFile: String, val romFile: St
         val glow = new LedGlow(23)
         val pro = new ProgrammingInterface(57600)
         pro.io.FlagIn := 0x00
-        val keyReady = False
-        pro.io.keys.ready := keyReady.fall()
 
         val keyScanner = new KeypadScanner(6, 4, 1000)
         io.keypad.row := ~keyScanner.io.KeypadRow
@@ -151,8 +149,10 @@ class Top_Quest_ICE40(val withLcd: Boolean, val ramFile: String, val romFile: St
                 questElf.io.Keys.L := debounce(22)
                 questElf.io.Keys.M := debounce(23)
 
-                questElf.io.KeyHeld_ := !keyDecoder.io.KeyHeld
+                questElf.io.KeyHeld_ := !pro.io.keys.valid
                 questElf.io.DI := keyDecoder.io.HexOutLast ## keyDecoder.io.HexOut
+                
+                questElf.io.Parallel := pro.io.keys.payload
 
             val Rom = new RamInit(romFile, log2Up(0x3ff))
                 Rom.io.ena := True
@@ -175,13 +175,15 @@ class Top_Quest_ICE40(val withLcd: Boolean, val ramFile: String, val romFile: St
             questElf.io.TapeIn := True
         }
 
+        pro.io.keys.ready := areaDiv.questElf.io.ParallelN.fall()
+        
         val segData = B"00000000"
         val segAddr = B"00000000"
         val segDataReg = RegNextWhen(pro.io.RamInterface.DataOut, pro.io.RamInterface.Write)
         val segDataBus = RegNextWhen(areaDiv.questElf.io.CPU.DataOut, areaDiv.questElf.io.DE)
 
         seg7.setDigits(0, segData);
-        seg7.setDigits(2, segAddr);
+        seg7.setDigits(2, pro.io.keys.payload);
 
         pro.io.RamInterface.DataIn := Ram.io.douta
         when(pro.io.FlagOut(2))

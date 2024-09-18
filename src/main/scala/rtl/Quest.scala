@@ -155,6 +155,9 @@ class Quest(val divideBy: BigInt) extends Component {
 
         val DE = out Bool()
         val DI = in Bits(8 bits)
+        val Parallel = in Bits(8 bits)
+        val ParallelN = out Bool() 
+        
         val KeyHeld_ = in Bool()
 
         val SerialIn = in Bool()
@@ -251,6 +254,9 @@ class Quest(val divideBy: BigInt) extends Component {
     Cpu.io.Interrupt_n := Pixie.io.INT
     Cpu.io.DMA_Out_n := Pixie.io.DMAO
     
+    val Parallel = (Cpu.io.N === 7 && Cpu.io.TPB && Cpu.io.MRD)
+    io.ParallelN := Parallel
+
     val ramSel = Cpu.io.Addr16.asUInt < 0x2000
     val romSel = (Cpu.io.Addr16.asUInt >= 0x8000 && Cpu.io.Addr16.asUInt <= 0x83ff)
     val ram255Sel = (Cpu.io.Addr16.asUInt >= 0x9800 && Cpu.io.Addr16.asUInt <= 0x98ff)
@@ -267,6 +273,8 @@ class Quest(val divideBy: BigInt) extends Component {
 
     when(QLogic.io.IE){
         Cpu.io.DataIn := io.DI
+    }elsewhen(Parallel){
+        Cpu.io.DataIn := io.Parallel
     }elsewhen(!QLogic.io.ROMs_ || romSel) {
         Cpu.io.DataIn := io.rom.din
     }elsewhen(ram255Sel) {
