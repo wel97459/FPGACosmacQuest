@@ -351,3 +351,34 @@ object Quest_Test {
         }
     }
 }
+
+object QuestSDLSim {
+    def main(args: Array[String]) {
+        SimConfig.withWave.compile{
+            val dut = new Quest(0)
+            dut.Cpu.OP.simPublic();
+            dut.Cpu.io.Addr16.simPublic();
+            dut.Cpu.io.MWR.simPublic();
+            dut.Cpu.io.MRD.simPublic();
+            dut.Cpu.P.simPublic()
+            dut.Cpu.D.simPublic()
+            dut.Cpu.R(0).simPublic()
+            dut.Cpu.R(1).simPublic()
+            dut.Cpu.R(2).simPublic()
+            dut.Cpu.R(3).simPublic()
+            dut.Cpu.R(4).simPublic()
+            dut.Cpu.R(5).simPublic()
+            dut.Cpu.R(6).simPublic()
+            dut.Cpu.R(7).simPublic()
+            dut.Cpu.R(8).simPublic()
+            dut.Cpu.R(9).simPublic()
+            dut.Cpu.R(10).simPublic()
+            dut.Cpu.R(11).simPublic()
+            dut.Cpu.R(12).simPublic()
+            dut.Cpu.R(13).simPublic()
+            dut.Cpu.R(14).simPublic()
+            dut.Cpu.R(15).simPublic()
+            dut
+        }
+    }
+}
