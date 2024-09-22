@@ -134,7 +134,7 @@ void sim_init(unsigned char *v, SDL_Texture *td, void (*d)(), struct CRT *c, int
     genIQ();
     
     char *rom_file = "../data/SUPRMON-v1.1-2708.rom";
-    char *ram_file = "../data/test_1861.bin";
+    char *ram_file = "../data/Tinybasi.bin";
     char *chip8 = "";
     
     for (int i = 1; i < argc; i++) {
@@ -179,8 +179,14 @@ void sim_init(unsigned char *v, SDL_Texture *td, void (*d)(), struct CRT *c, int
 int keyIn = 0;
 int keyWait = false;
 void sim_keyevent(int event, int key) {
-    if(event == SDL_KEYDOWN)
-    {
+    if(event == SDL_KEYDOWN && 
+        key != SDLK_LSHIFT &&
+        key != SDLK_RSHIFT &&
+        key != SDLK_LCTRL &&
+        key != SDLK_RCTRL &&
+        key != SDLK_LALT &&
+        key != SDLK_RALT
+    ){
         keyIn = key;
         keyWait = true;
     }
@@ -438,6 +444,7 @@ void doFrame()
 
 void sim_run(){
     Quest->reset = !(main_time>10);
+    Quest->io_SerialIn = true;
 
     Quest->io_Keys_R = (main_time>10) && (main_time<20);
     Quest->io_Keys_G = (main_time>20) && (main_time<30);
@@ -466,8 +473,9 @@ void sim_run(){
     // }
     //printf("0x%01X, 0x%01X\n", ~Quest->io_keypad_col, ~Quest->io_keypad_row);
     
-    Quest->io_KeyHeld_ = !keyWait
-    Quest->io_ = 
+    Quest->io_KeyHeld_ = !keyWait;
+    if(keyWait && Quest->io_ParallelN) keyWait = false;
+    Quest->io_Parallel = keyIn;
 
     doFrame();
 
@@ -479,6 +487,10 @@ void sim_run(){
     VSync_Edge = Quest->io_Pixie_VSync;
     HSync_Edge = Quest->io_Pixie_HSync;
     Video_Last = Quest->io_video;
+
+    Quest->io_Debug_d1 = Quest->io_ram_addr >= 0x766 && Quest->io_ram_addr < 0x9d8 && !Quest->io_CPU_MRD;
+    Quest->io_Debug_d2 = Quest->io_ram_addr >= 0xcb8 && Quest->io_ram_addr < 0xDB9 && !Quest->io_CPU_MRD;
+
     main_time++;
     Quest->clk = 1;
     Quest->eval();
