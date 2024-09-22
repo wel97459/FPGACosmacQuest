@@ -149,7 +149,7 @@ class Top_Quest_ICE40(val withLcd: Boolean, val ramFile: String, val romFile: St
                 questElf.io.Keys.L := debounce(22)
                 questElf.io.Keys.M := debounce(23)
 
-                questElf.io.KeyHeld_ := !pro.io.keys.valid
+                questElf.io.KeyHeld_ := !pro.io.keys.valid && !keyDecoder.io.KeyHeld
                 questElf.io.DI := keyDecoder.io.HexOutLast ## keyDecoder.io.HexOut
                 
                 questElf.io.Parallel := pro.io.keys.payload
@@ -183,7 +183,7 @@ class Top_Quest_ICE40(val withLcd: Boolean, val ramFile: String, val romFile: St
         val segDataBus = RegNextWhen(areaDiv.questElf.io.CPU.DataOut, areaDiv.questElf.io.DE)
 
         seg7.setDigits(0, segData);
-        seg7.setDigits(2, pro.io.keys.payload);
+        seg7.setDigits(2, segAddr);
 
         pro.io.RamInterface.DataIn := Ram.io.douta
         when(pro.io.FlagOut(2))

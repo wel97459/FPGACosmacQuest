@@ -43,10 +43,6 @@ class QuestControlLogic() extends Component{
         val DMA_In_ = out Bool()
         val DE = out Bool()
         val IE = out Bool()
-
-        val Debug = new Bundle {
-            val regs = out Bits(11 bits)
-        }
     }
 
     val Roms = Reg(Bool()) init(False)   
@@ -139,12 +135,10 @@ class QuestControlLogic() extends Component{
     io.DE := d1 || Step || Load
     
     io.IE := io.CPU.MRD && LoadN4 && !RamP
-
-    io.Debug.regs := Cat(io.WAIT_, io.CLEAR_, Roms,    RamP, Load, I, Run,   Run1, Run2, Step, Wait)
 }    
 
 //Hardware definition
-class Quest(val divideBy: BigInt) extends Component {
+class Quest(val divideBy: BigInt, val withDebug: Boolean = false) extends Component {
     val io = new Bundle {
         val Clear_ = in Bool()
         val Wait_ = in Bool()
@@ -191,6 +185,8 @@ class Quest(val divideBy: BigInt) extends Component {
 
         val CPU = new Bundle {
             val TPB = out Bool()
+            val MRD = out Bool()
+            val MWR = out Bool()
             val SC = out Bits(2 bit)
             val DataOut = out Bits(8 bits)
             val Addr16 = out Bits(16 bits)
@@ -209,13 +205,13 @@ class Quest(val divideBy: BigInt) extends Component {
         }
 
         val Debug = new Bundle {
-            val regs = out Bits(11 bits)
+            val d1 = ifGen(withDebug) (in Bool())
+            val d2 = ifGen(withDebug) (in Bool())
         }
     }        
 
     val QLogic = new QuestControlLogic()
         QLogic.io.Keys <> io.Keys
-        io.Debug <> QLogic.io.Debug
         io.DE := QLogic.io.DE
 
     val Cpu = new Spinal1802()
@@ -226,6 +222,8 @@ class Quest(val divideBy: BigInt) extends Component {
         io.CPU.SC := Cpu.io.SC
         io.CPU.DataOut := Cpu.io.DataOut
         io.CPU.Addr16 := Cpu.io.Addr16
+        io.CPU.MWR := Cpu.io.MWR
+        io.CPU.MRD := Cpu.io.MRD
 
         QLogic.io.CPU.TPA := Cpu.io.TPA
         QLogic.io.CPU.TPB := Cpu.io.TPB
@@ -254,7 +252,7 @@ class Quest(val divideBy: BigInt) extends Component {
     Cpu.io.Interrupt_n := Pixie.io.INT
     Cpu.io.DMA_Out_n := Pixie.io.DMAO
     
-    val Parallel = (Cpu.io.N === 7 && Cpu.io.TPB && Cpu.io.MRD)
+    val Parallel = (Cpu.io.N === 7 && !Cpu.io.MWR)
     io.ParallelN := Parallel
 
     val ramSel = Cpu.io.Addr16.asUInt < 0x2000
@@ -363,7 +361,7 @@ object Quest_Test {
 object QuestSDLSim {
     def main(args: Array[String]) {
         SimConfig.withWave.compile{
-            val dut = new Quest(0)
+            val dut = new Quest(0, true)
             dut.Cpu.OP.simPublic();
             dut.Cpu.io.Addr16.simPublic();
             dut.Cpu.io.MWR.simPublic();
