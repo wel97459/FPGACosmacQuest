@@ -1,35 +1,35 @@
- ;Netronic TinyBasic For The ELF II Recreation
- ;By Richard Peters, Richard11092000@cox.net
- ;Special THANKS to TOM PITTMAN for Writing Program,
- ;To LEE A. HART for Posting Necessary Parts
- ;And To Dave Ruske for creating COMACELF group
- ;Which Made This Recreation Possible
- ;Assembled With QELFEXE V2.0 Multiformat Assembler
- ;Current Code Running In Tinybasi.zip Emulator
- ;Requires Giant Board And ROM Monitor
- ;To Use LOAD And SAVE to Tape
- ;Designed to run In RAM Starting at 0000
- ;I Have Done What I Could To Make This Source
- ;Moveable And To Follow Itself, But I Still Could
- ;Could Have Missed Something. I Also Tried To Figure
- ;Out Some Of The IL Code and Add Comments To It.
- ;If There Is Something To Add Or Change, Let Me Know.
- ;Code Has Only Been Verified With What I Have
- ;Hope The Above Changes Soon.
- ;Last Update 01/29/2004 09:40PM
+; Netronic TinyBasic For The ELF II Recreation
+; By Richard Peters, Richard11092000@cox.net
+; Special THANKS to TOM PITTMAN for Writing Program,
+; To LEE A. HART for Posting Necessary Parts
+; And To Dave Ruske for creating COMACELF group
+; Which Made This Recreation Possible
+; Assembled With QELFEXE V2.0 Multiformat Assembler
+; Current Code Running In Tinybasi.zip Emulator
+; Requires Giant Board And ROM Monitor
+; To Use LOAD And SAVE to Tape
+; Designed to run In RAM Starting at 0000
+; I Have Done What I Could To Make This Source
+; Moveable And To Follow Itself, But I Still Could
+; Could Have Missed Something. I Also Tried To Figure
+; Out Some Of The IL Code and Add Comments To It.
+; If There Is Something To Add Or Change, Let Me Know.
+; Code Has Only Been Verified With What I Have
+; Hope The Above Changes Soon.
+; Last Update 01/29/2004 09:40PM
 ;
- ;INTERNAL MACRO DEFINITIONS
+; INTERNAL MACRO DEFINITIONS
 ;
- ;CALL   = SEP R4 + DW   SUB LOCATION
- ;RETURN = SEP R5
- ;SEP R7 = SEP R7 + DB   LOW LOCATION OF BYTE
+; CALL   = SEP R4 + DW   SUB LOCATION
+; RETURN = SEP R5
+; SEP R7 = SEP R7 + DB   LOW LOCATION OF BYTE
 ;
 
 FETCH  MACRO address
         SEP R7
 	db (address)&255
         ENDM
-
+        
 CALL    MACRO address
         SEP R4
 	dw address
@@ -40,11 +40,11 @@ RETURN  MACRO
         ENDM
 
 SERIAL_B MACRO address
-		B2 address
+		B4 address
 		ENDM
 
 SERIAL_BN MACRO address
-		BN2 address
+		BN4 address
 		ENDM
 		
 KB_B MACRO address
@@ -59,10 +59,9 @@ KB_INP MACRO address
 		INP   7
 		ENDM
 
-LDI0 MACRO      ;CLEAR ACCUM. MACRO - ASSUMES THAT BASE PAGE IS ZERO
-                GHI RD 
-                ENDM
-
+LDI0 MACRO
+        GHI RD 
+        ENDM
 
 
 R0         EQU     0         ;REGISTER DEFINITION
@@ -82,45 +81,44 @@ RD         EQU     13        ;REGISTER DEFINITION
 RE         EQU     14        ;REGISTER DEFINITION
 RF         EQU     15        ;REGISTER DEFINITION
 ;
- ;The Following Register And EQU Assignments Are Not Used
- ;In Every Part Of Program
+; The Following Register And EQU Assignments Are Not Used
+; In Every Part Of Program
 ;
- ;REGISTER ASSIGNMENTS:
+; REGISTER ASSIGNMENTS:
 ;
-      ;0  ;PC (VIA RESET) AT ENTRY
-      ;1  ;INTERRUPT PROGRAM COUNTER
-      ;2  ;STACK POINTER
-      ;3  ;NORMAL PROGRAM COUNTER
-      ;4  ;BASIC: SCRT "CALL" PC
-      ;5  ;BASIC: SCRT "RETURN" PC
-      ;6  ;BASIC: SCRT RETURN ADDR.
-      ;7  ;BASIC: PC FOR "FECH"
+;      0 ; PC (VIA RESET) AT ENTRY
+;      1 ; INTERRUPT PROGRAM COUNTER
+;      2 ; STACK POINTER
+;      3 ; NORMAL PROGRAM COUNTER
+;      4 ; BASIC: SCRT "CALL" PC
+;      5 ; BASIC: SCRT "RETURN" PC
+;      6 ; BASIC: SCRT RETURN ADDR.
+;      7 ; BASIC: PC FOR "FECH"
 XX         EQU     8         ;BASIC: WORK REGISTER
 PC         EQU     9         ;IL PROGRAM COUNTER
 AC         EQU     10        ;BASIC: 16-BIT ACCUMULATOR
 BP         EQU     11        ;BASIC POINTER
-     ;12                     SERIAL AND TAPE ROUTINES
+;     12                     SERIAL AND TAPE ROUTINES
 PZ         EQU     13        ;BASE: PAGE 0 POINTER
-     ;14       ;RE.0=BAUD RATE CONSTANT
-            ;IF RE.0=0 USES 1861 AND KEYBOARD P7,EF3
-               ;RE.1=  USED FOR INPUT,OUTPUT
+;     14 ;      RE.0=BAUD RATE CONSTANT
+;            IF RE.0=0 USES 1861 AND KEYBOARD P7,EF3
+;               RE.1=  USED FOR INPUT,OUTPUT
 X          EQU     15        ;BASIC: SCRATCH REGISTER
 ;
-;
- ;DISPLAY BUFFER EQU
+; DISPLAY BUFFER EQU
 ;
 BUFF       EQU     0DB0h     ;ONLY CHANGE PAGE, UNLESS YOU
-BUFE       EQU     BUFF+344  ;WONT TO CHANGE INTERUPT ROUTINE
+BUFE       EQU     BUFF+344  ;WANT TO CHANGE INTERUPT ROUTINE
 BUFX       EQU     BUFE+56   ;ALSO LIMITED TO 1DB0 BY PLOT
 ;
-MONITOR    EQU     08000h    ;Monitor address
+MONITOR    EQU     0F000h    ;Monitor address
 ;Putting C8 in first byte allows Monitor To Run instead of Tiny
 PAGE       LBR     COLDV
            LBR     MONITOR
            SEP     R0
            IDL
 ;
-  ;DATA AREA, COULD BE EQUATES
+;  DATA AREA, COULD BE EQUATES
 ;
 TVXY       DB      00Fh       ;DISPLAY CURSOR LOCATION
            DB      000h
@@ -185,10 +183,10 @@ AESTK      DW      00000h     ;RANDOM NUMBER GEN.
 Z165       PLO     R7         ;I/O ROUTINES
            LBDF    PEND       ;GOTO WARM START
            GHI     RD
-Z149       KB_B      Z148       ;CHECK FOR KEYBOARD OR SERIAL
-           SERIAL_B      Z149          ;INPUT
+Z149       KB_B      Z148     ;CHECK FOR KEYBOARD OR SERIAL
+           SERIAL_B      Z149 ;INPUT
 Z150       KB_B      Z148
-           SERIAL_BN    Z150       ;FINED TIMING OF SERIAL INPUT
+           SERIAL_BN    Z150  ;FINED TIMING OF SERIAL INPUT
            SEQ
 Z153       PLO     RE
            LDI     8
@@ -233,8 +231,8 @@ COLDV      NOP                ;COLD START
 KEYV       LBR     INPUTR     ;BRANCH TO CHARATER INPUT
 TYPEV      LBR     OUTPUTR    ;BRANCH TO CHARATER OUPUT
 BREAKV     LBR     BRKTST     ;BRANCH TO BREAK TEST
- ;DEFAULTS LOADED TO DIRECT PAGE
-           DB      07Fh       ;BACKSPACE CODE
+; DEFAULTS LOADED TO DIRECT PAGE
+           DB      008h       ;BACKSPACE CODE
            DB      01Bh       ;LINE CANCEL CODE
            DB      000h       ;PAD CHARATER
            DB      000h       ;TAPE MODE ENABLE FLAG 80=ENABLED
@@ -248,7 +246,7 @@ ILPOKE     DB      058h       ;POKE
 CONST      DW      00F40h     ;DEFAULT START OF PROGRAM SPACE
            DB      07Fh       ;END MEM STOP
            DB      000h
- ;END DEFAULTS
+; END DEFAULTS
            LDA     R8         ;DOUBLE PEEK ENTRY
            SKP
 PEEK       GHI     RD         ;PEEK ENTRY
@@ -295,7 +293,6 @@ FETCH_     LDA     R3         ;LOAD TEMP IMMEDIATE ROUTINE
            LDA     RD
            SEX     RD         ;AND SET X TO D AND +
            BR      FETCH_-1
-           
 TABLE      DW      BACK
            DW      HOP
            DW      MATCH
@@ -343,16 +340,16 @@ TABLE      DW      BACK
            DW      LIT1
            DW      RETN
 TBEND:
- ;COLD & WARM START INITIALIZATION ;
+; COLD & WARM START INITIALIZATION ;
 ;
- ;COLD START;
+; COLD START;
 ;
 COLD       LDI     ($+3)&255   ;CHANGE PROGRAM COUNTER
            PLO     R3        ;FROM R0 TO R3
            LDI     ($)>>8
            PHI     R3
            SEP     R3
- ;DETERMINE SIZE OF USER RAM
+; DETERMINE SIZE OF USER RAM
            PHI     AC        ;GET LOW END ADDR.
            LDI     (CONST)&255 ;OF USER PROGRAM
            PLO     AC        ;RAM (AT "CONST")
@@ -400,7 +397,7 @@ SCAN       SEX     R2        ;REPEAT TO SEARCH RAM..
            SHR               ;SET DF=0 FOR "CLEAR"
            LSKP
 ;
- ;WARM START:
+; WARM START:
 ;
 WARM       SMI     0         ;SET DF=1 FOR "DON'T CLEAR"
            LDI     ($+3)&255
@@ -417,7 +414,7 @@ WARM       SMI     0         ;SET DF=1 FOR "DON'T CLEAR"
            PLO     R5
            LDI     (FETCH_)&255
            LBR     Z165       ;GOTO #00B6
-CLEAR      FETCH   BASIC      ;- MARK PROGRAM EMPTY
+CLEAR      FETCH   BASIC;- MARK PROGRAM EMPTY
            PHI     BP
            LDA     PZ
            PLO     BP
@@ -425,7 +422,7 @@ CLEAR      FETCH   BASIC      ;- MARK PROGRAM EMPTY
            STR     BP
            INC     BP
            STR     BP
-           FETCH   SPARE-1    ;SET MEND = START + SPARE
+           FETCH   SPARE-1 ;SET MEND = START + SPARE
            GLO     BP         ;GET START
            ADD                ;ADD ;LOW BYTE OF SPARE
            PHI     X          ;SAVE TEMPORARILY
@@ -435,7 +432,7 @@ CLEAR      FETCH   BASIC      ;- MARK PROGRAM EMPTY
            GHI     BP
            ADCI    0          ;ADD CARRY
            STXD               ;STORE ;HIGH BYTE OF MEND
-PEND       FETCH   STACK      ;SET STACK TO END OF MEMORY
+PEND       FETCH   STACK ;SET STACK TO END OF MEMORY
            PHI     R2
            LDA     PZ
            PLO     R2
@@ -450,7 +447,7 @@ IIL        FETCH   AIL       ;SET IL PC
            LDA     PZ
            PLO     PC        ;CONTINUE INTO "NEXT"
 ;
- ;EXECUTE NEXT INTERMEDIATE LANGUAGE (IL) INSTRUCTION
+; EXECUTE NEXT INTERMEDIATE LANGUAGE (IL) INSTRUCTION
 ;
 NEXT       SEX     R2        ;GET OPCODE
            LDA     PC
@@ -475,11 +472,11 @@ DOIT       GHI     R7        ;TABLE PAGE
            PLO     R6
            LDX
            PHI     R6
-           RETURN       ;GO DO IT using the entry placed into the stack as the new PC
-
+           SEP     R5        ;GO DO IT
+;
 TBR        SMI     010h      ;IF JUMP OR CALL,
            BNF     TJMP      ;GO DO IT
-           PLO     R6        ;ELSE BRANCH ;SAVE OPCODE
+           PLO     R6        ;ELSE BRANCH; SAVE OPCODE
            ANI     01Fh      ;COMPUTE DESTINATION
            BZ      TBERR     ;IF BRANCh, 0ADh DR = 0, GOTO ERROR
            STR     R2        ;PUSh, 0ADh DRESS ONTO STACK
@@ -562,7 +559,7 @@ NONBL      LDN     BP        ;GET CHARACTER
            LSNF
            SDI     9         ;SET DF=1
 NONBX      LDN     BP        ;GET CHARACTER
-           RETURN            ;AND RETURN
+           RETURN              AND ;RETURN
 ;
 STORE      CALL    APOP      ;GET VARIABLE
            LDA     PZ        ;GET POINTER
@@ -577,7 +574,7 @@ STORE      CALL    APOP      ;GET VARIABLE
            CALL    APOP      ;POP 4 BYTES
 APOP       CALL    BPOP      ;POP 2 BYTES
            PHI     AC        ;FIRST BYTE TO AC.1
-BPOP       FETCH   AEPTR     ;POP 1 BYTE
+BPOP       FETCH   AEPTR ;POP 1 BYTE
            DEC     PZ
            ADI     1         ;INCREMENT
            STR     PZ
@@ -612,7 +609,7 @@ TSTN       CALL    NONBL     ;GET NEXT CHARACTER
 NUMB       LDA     BP        ;GET CHARACTER
            ANI     00Fh      ;CONVERT FROM ASCII TO NUMBER
            PLO     AC
-           LDI0
+           LDI0        
            PHI     AC
            LDI     10        ;ADD 10 TIMES THE..
            PLO     X
@@ -662,7 +659,7 @@ STEST      FETCH   MEND ;POINT TO PROGRAM END
            DEC     PZ
            GHI     R2
            SDB
-           BDF     ERR       ;AHA ;OVERFLOW
+           BDF     ERR       ;AHA; OVERFLOW
            RETURN            ;ELSE ;EXIT
 ;
 LIT1       LDA     PC        ;ONE BYTE
@@ -690,7 +687,7 @@ BPUSH      STR     R2        ;PUSH ONE BYTE (IN D)
            PLO     PZ
            LDN     R2        ;GET SAVED BYTE
            STR     PZ        ;STORE INTO STACK
-SEP5       RETURN              ;& RETURN
+SEP5       RETURN            ;  & RETURN
 ;
 IND        CALL    BPOP      ;GET POINTER
            PLO     PZ
@@ -708,7 +705,7 @@ PRS        LDA     BP        ;GET NEXT BYTE
            BNZ     QUOTE     ;THEN CONTINUE
            DEC     PC        ;ELSE CONTINUE INTO ERROR
 ;
-ERR        FETCH   XEQ  ;ERROR:
+ERR        FETCH   XEQ       ;ERROR:
            PHI     XX        ;SAVE XEQ FLAG
            CALL    FORCE     ;TURN TAPE MODE OFF
            LDI     "!"       ;PRINT "!" ON NEW LINE
@@ -738,7 +735,7 @@ BELL       LDI     7         ;RING THE BELL
            CALL    TYPEV
            CALL    CRLF      ;PRINT <CR><LF>
 FIN        FETCH   TTYCC-1
-           LDI0      ;TURN TAPE MODE OFF
+           LDI0              ;TURN TAPE MODE OFF
            STR     PZ
 EXIT       FETCH   TOPS ;RESET STACK POINTER
            PHI     R2
@@ -758,7 +755,7 @@ STRNG      LDA     PC        ;GET NEXT CHARACTER OF STRING
 FORCE      FETCH   AEPTR-1
            LDI     AESTK     ;CLEAR A.E.STACK
            STXD
-           LDI0      ;SET "NOT EXECUTING"
+           LDI0              ;SET "NOT EXECUTING"
            STXD              ;LEND=0 ZERO LINE LENGTH
            STXD              ;XEQ=0 NOT EXECUTING
            LSKP              ;CONTINUE TO CRLF
@@ -775,7 +772,7 @@ PADS       CALL    TYPEV
            SHL               ;MSB SELECTS NULL OR DELETE
            BZ      PLF       ;UNTIL NO MORE PADS..
            DEC     AC        ;DECREMENT # OF PADS TO GO
-           LDI0      ;PAD=NULL=0 IF MSB=0
+           LDI0              ;PAD=NULL=0 IF MSB=0
            LSNF
            LDI     0FFh      ;PAD=DELETE=FFH IF MSB=1
            BR      PADS      ;..REPEAT
@@ -811,7 +808,7 @@ PRN        FETCH   AEPTR ;CHECK SIGN
            BNF     PRP
            LDI     '-'       ;PRINT '-'
            CALL    TYPER
-PRP        LDI0      ;PUSH ZERO FLAG
+PRP        LDI0              ;PUSH ZERO FLAG
            STXD              ;WHICH ;MARKS NUMBER END
            PHI     AC        ;PUSh, 010h  (=DIVISOR)
            LDI     10
@@ -819,7 +816,7 @@ PRP        LDI0      ;PUSH ZERO FLAG
            INC     PZ
 PDVL       CALL    PDIV      ;DIVIDE BY 10
            GLO     AC        ;REMAINDER IS NEXT DIGIT
-           SHR               ;BUT ;DOUBLED ;HALVE IT
+           SHR               ;BUT ;DOUBLED; HALVE IT
            ORI     030h      ;CONVERT TO ASCII
            STXD              ;PUSH ;IT
            INC     PZ        ;IS QUOTIENT=0?
@@ -835,7 +832,7 @@ PRNL       INC     R2        ;NOW, TO PRINT IT
            CALL    TYPER     ;PRINT IT
            BR      PRNL      ;..REPEAT
 ;
-RSBP       FETCH   SP   ;GET SP
+RSBP       FETCH   SP        ;GET SP
            SKP
 SVBP       GHI     BP        ;GET BP
            XRI     (LINE)>>8 ;IN THE LINE?
@@ -852,7 +849,7 @@ SVBP       GHI     BP        ;GET BP
            STR     PZ
 TYX        RETURN
 ;
-SWAP       FETCH   SP   ;EXCHANGE BP AND SP
+SWAP       FETCH   SP        ;EXCHANGE BP AND SP
            PHI     XX        ;PUT SP IN TEMP
            LDN     PZ
            PLO     XX
@@ -957,9 +954,9 @@ IDIV       CALL    APOP      ;GET DIVISOR
            DEC     PZ
            CALL    DNEG
            INC     PZ
-           LDI0
+           LDI0        
            LSKP
-PDIV       LDI0      ;MARK "NO SIGN CHANGE"
+PDIV       LDI0              ;MARK "NO SIGN CHANGE"
            STXD              ;FOR PRN ENTRY
            PLO     AC        ;CLEAR HIGH END
            PHI     AC        ;OF DIVIDEND IN AC
@@ -1003,10 +1000,10 @@ DNEG       SEX     PZ
            SHL               ;TEST SIGN
            BNF     NEGX      ;IF POSITIVE, LEAVE IT ALONE
 NEG        INC     PZ        ;IF NEGATIVE,
-           LDI0      ;SUBTRACT IT FROM 0
+           LDI0              ;SUBTRACT IT FROM 0
            SM
            STXD
-           LDI0
+           LDI0        
            SMB
            STR     PZ
            SMI     0         ;AND SET CARRY=1
@@ -1020,7 +1017,7 @@ SHCL       PLO     AC        ;AND DIVIDE
            PHI     AC
            RETURN
 ;
-NXT        FETCH   XEQ  ;IF DIRECT EXECUTION
+NXT        FETCH   XEQ       ;IF DIRECT EXECUTION
            LBZ     FIN       ;QUIT WITh, 0DFh =0
            LDA     BP        ;ELSE SCAN TO NEXT <CR>
            XRI     00Dh
@@ -1029,7 +1026,7 @@ NXT        FETCH   XEQ  ;IF DIRECT EXECUTION
            BZ      BERR      ;ZERO IS ERROR
 CONT       CALL    BREAKV    ;TEST FOR BREAK
            BDF     BREAK     ;IF BREAK,
-           FETCH   NXA  ;RECOVER RESTART POINT
+           FETCH   NXA       ;RECOVER RESTART POINT
            PHI     PC        ;WHICH WAS SAVED BY INIT
            LDA     PZ
            PLO     PC
@@ -1037,7 +1034,7 @@ RUN        FETCH   XEQ-1 ;TURN OFF RUN MODE
            STR     PZ         ;(NON-ZERO)
            RETURN
 ;
-BREAK      FETCH   AIL  ;SET BREAK ADDR=0
+BREAK      FETCH   AIL       ;SET BREAK ADDR=0
            PHI     PC        ;I.E. PC=IL START
            LDA     PZ
            PLO     PC
@@ -1049,7 +1046,7 @@ XINIT      FETCH   BASIC ;POINT TO START OF BASIC PROGRAM
            PLO     BP
            CALL    GLINO     ;GET LINE NUMBER
            BZ      BERR      ;IF 0, IS ERROR (NO PROGRAM)
-           FETCH   NXA  ;SAVE STATEMENT
+           FETCH   NXA       ;SAVE STATEMENT
            GLO     PC        ;ANALYZER ADDRESS
            STXD
            GHI     PC
@@ -1086,7 +1083,7 @@ RTN        CALL    TTOP      ;CHECK FOR UNDERFLOW
            PLO     PC
 BNEXT      LBR     NEXT
 ;
-TTOP       FETCH   STACK     ;GET TOP OF STACK
+TTOP       FETCH   STACK ;GET TOP OF STACK
            INC     R2
            INC     R2
            GLO     R2        ;MATCH TO STACK POINTER
@@ -1102,12 +1099,12 @@ TTOP       FETCH   STACK     ;GET TOP OF STACK
 TTOK       INC     R2        ;(ONCE HERE SAVES TWICE)
            RETURN
 ;
-TAPE       FETCH   PAD+1     ;TURN OFF TYPEOUT
+TAPE       FETCH   PAD+1 ;TURN OFF TYPEOUT
            SKP
-NTAPE      LDI0      ;TURN ON TYPEOUT
+NTAPE      LDI0              ;TURN ON TYPEOUT
            SHL               ;(FLAG TO CARRY)
            FETCH   TTYCC-1
-           LDI0
+           LDI0        
            SHRC              ;00 OR 80H
            STR     PZ
            BR      KLOOP
@@ -1210,14 +1207,14 @@ HOOP       CALL    HOOP+3    ;ADJUST STACK
            PLO     PZ        ;LEAVE PZ AT STACK TOP
            GLO     AC        ;LEAVE AC.0 IN D
            RETURN              GO ;DO IT
-
+;
 LIST       FETCH   WORK+2
            GLO     BP        ;SAVE POINTERS
            STXD
            GHI     BP
            STR     PZ
            CALL    FIND      ;GET LIST LIMITS
-           FETCH   WORK      ;SAVE UPPER
+           FETCH   WORK ;SAVE UPPER
            GLO     BP
            STXD
            GHI     BP
@@ -1225,7 +1222,7 @@ LIST       FETCH   WORK+2
            CALL    FIND      ;TWO ITEMS MARK BOUNDS
            DEC     BP        ;BACK UP OVER LINE#
            DEC     BP
-LLINE      FETCH   WORK      ;END?
+LLINE      FETCH   WORK ;END?
            GLO     BP
            SM
            DEC     PZ
@@ -1251,13 +1248,13 @@ LLOOP      XRI     00Dh      ;(RESTORE BITS FROM <CR> TEST)
            CALL    CRLF      ;END LINE WITH <CR><LF>
            BR      LLINE     ;..REPEAT UNTIL DONE
 ;
-LIX        FETCH   WORK+2    ;RESTORE BP
+LIX        FETCH   WORK+2 ;RESTORE BP
            PHI     BP
            LDA     PZ
            PLO     BP
            RETURN
 ;
-SAV        FETCH   TOPS      ;ADJUST STACK TOP
+SAV        FETCH   TOPS ;ADJUST STACK TOP
            GLO     R2
            STXD
            GHI     R2
@@ -1276,7 +1273,7 @@ SAV        FETCH   TOPS      ;ADJUST STACK TOP
            STXD
            LBR     NEXT
 ;
-GLINO      FETCH   LINO-1    ;SETUP POINTER
+GLINO      FETCH   LINO-1 ;SETUP POINTER
            LDA     BP        ;GET 1ST BYTE
            STR     PZ        ;STORE IN RAM
            INC     PZ
@@ -1289,7 +1286,7 @@ GLINO      FETCH   LINO-1    ;SETUP POINTER
 INSRT      CALL    SWAP      ;SAVE POINTER IN NEW LINE
            CALL    FIND      ;FIND INSERT POINT
            ADI     0FFh      ;IF DONE, SET DF
-           LDI0
+           LDI0        
            PLO     X         ;X IS SIZE DIFFERENCE
            BDF     NEW
            GHI     BP        ;SAVE INSERT POINT
@@ -1330,7 +1327,7 @@ HMUCH      FETCH   SP        ;FIGURE AMOUNT OF MOVE
            PHI     AC
            LDA     PZ
            PLO     AC
-           FETCH   MEND      ;=DISTANCE FROM INSERT
+           FETCH   MEND ;=DISTANCE FROM INSERT
            GLO     AC        ;TO END OF PROGRAM
            SM
            PLO     AC        ;LEAVE IT IN AC, NEGATIVE
@@ -1399,7 +1396,7 @@ MORE       GHI     X         ;SET UP POINTERS
            INC     AC
            GHI     AC
            BNZ     $-5
-STUFF      FETCH   MEND      ;UPDATE MEND
+STUFF      FETCH   MEND ;UPDATE MEND
            INC     R2
            LDA     R2
            STXD
@@ -1409,7 +1406,7 @@ STUFF      FETCH   MEND      ;UPDATE MEND
            PHI     AC
            LDA     PZ
            PLO     AC
-           FETCH   LINO      ;INSERT NEW LINE
+           FETCH   LINO ;INSERT NEW LINE
            PLO     X
            OR                ;IF THERE IS ONE
            BZ      INSX      ;NO, EXIT
@@ -1426,7 +1423,7 @@ STUFF      FETCH   MEND      ;UPDATE MEND
 INSX       LBR     EXIT
 IO         STXD              ;PUSH OUT BYTE
            STR     R2
-           LDI0      ;CLEAR AC
+           LDI0              ;CLEAR AC
            PHI     AC
            DEC     PZ
            LDA     R3        ;STORE RETURN IN RAM
@@ -1443,393 +1440,13 @@ IO         STXD              ;PUSH OUT BYTE
            INC     R2        ;DO INCREMENT NOW
            SEP     PZ        ;GO EXECUTE, RESULT IN D
 
-IL_STR     EQU     24h
-
-STRT    DB IL_STR, ':', 091h     ;PC      ':Q^'  Start Of IL Program
-        DB 027h                 ;GL
-        DB 010h                 ;SB
-        DB 0E1h                 ;BE      :LO
-        DB 059h                 ;BR      :STRT
-LO      DB 0C5h                 ;BN      :STMT
-        DB 02Ah                 ;IL
-        DB 056h                 ;BR      :STRT
-XEC     DB 010h                 ;SB
-        DB 011h                 ;RB
-        DB 02Ch                 ;XQ
-STMT    DB 08Bh, 04Ch, 045h     ;BC      :GOTO     'LET'
-        DB 0D4h;
-        DB 0A0h                 ;BV      * !18
-        DB 080h, 0BDh               ;BC      * !20     '='
-LET     DB 031h, 08Fh        ;JS      :EXPR
-        DB 0E0h                 ;BE      * !23
-        DB 013h                 ;SV
-        DB 01Dh                 ;NX
-GOTO    DB 094h, 047h, 0CFh       ;BC      :PRNT     'GO'
-        DB 088h, 054h, 0CFh             ;BC      :GOSB     'TO'
-        DB 031h, 08Fh               ;JS      :EXPR
-        DB 0E0h                 ;BE      * !34
-        DB 010h                 ;SB
-        DB 011h                 ;RB
-        DB 016h                 ;GO
-GOSB    DB 080h, 053h, 055h       ;BC      * !39     'SUB'
-        DB 0C2h                ;--
-        DB 031h, 08Fh               ;JS      :EXPR
-        DB 0E0h                 ;BE      * !44
-        DB 014h                 ;GS
-        DB 016h                 ;GO
-PRNT    DB 090h, 050h, 0D2h       ;BC      :SKIP     'PR'
-        DB 083h, 049h, 04Eh             ;BC      :P0       'INT'
-        DB 0D4h                ;--
-P0      DB 0E5h         ;BE      :P3
-        DB 071h                 ;BR      Z233
-P1      DB 088h, 0BBh         ;BC      Z234      ';'
-P2      DB 0E1h         ;BE      :P3
-        DB 01Dh                 ;NX
-P3      DB 08Fh, 0A2h         ;BC      Z235      '"'
-        DB 021h                 ;PQ
-        DB 058h                 ;BR      :P1
-SKIP_   DB 06Fh       ;BR      :IF
-        DB 083h, 0ACh    ;Z234       BC      Z236      ','
-        DB 022h                 ;PT
-        DB 055h                 ;BR      :P2
-        DB 083h, 0BAh    ;Z236       BC      Z233      ':'
-        DB 024h, 093h               ;PC                'S^'
-        DB 0E0h      ;Z233       BE      * !73
-        DB 023h                 ;NL
-        DB 01Dh                 ;NX
-        DB 031h, 08Fh    ;Z235       JS      :EXPR
-        DB 020h                 ;PN
-        DB 048h                 ;BR      :P1
-IF_     DB 091h, 049h, 0C6h         ;BC      :INPT     'IF'
-        DB 031h, 08Fh               ;JS      :EXPR
-        DB 032h, 037h               ;JS      Z237
-        DB 031h, 08Fh               ;JS      :EXPR
-        DB 084h, 054h, 048h             ;BC      :I1       'THEN'
-        DB 045h, 0CEh               ;--
-I1      DB 01Ch         ;CP
-        DB 01Dh                 ;NX
-        DB 038h, 00Dh               ;J       :STMT
-INPT    DB 09Ah, 049h, 04Eh       ;BC      :RETN     'INPUT'
-        DB 050h, 055h, 0D4h             ;--
-        DB 0A0h      ;Z242       BV      * !104
-        DB 010h                 ;SB
-        DB 0E7h                 ;BE      Z238
-        DB 024h, 03Fh, 020h  ;Z239       PC                '? Q^'
-        DB 091h                ;--
-        DB 027h                 ;GL
-        DB 0E1h                 ;BE      Z238
-        DB 059h                 ;BR      Z239
-        DB 081h, 0ACh    ;Z238       BC      Z240      ','
-        DB 031h, 08Fh    ;Z240       JS      :EXPR
-        DB 013h                 ;SV
-        DB 011h                 ;RB
-        DB 082h, 0ACh               ;BC      Z241      ','
-        DB 04Dh                 ;BR      Z242
-        DB 0E0h      ;Z241       BE      * !123
-        DB 01Dh                 ;NX
-RETN_   DB 089h, 052h, 045h       ;BC      :END      'RETURN'
-        DB 054h, 055h, 052h             ;--
-        DB 0CEh                ;--
-        DB 0E0h                 ;BE      * !132
-        DB 015h                 ;RS
-        DB 01Dh                 ;NX
-END     DB 085h, 045h, 04Eh        ;BC      :LIST     'END'
-        DB 0C4h                ;--
-        DB 0E0h                 ;BE      * !139
-        DB 02Dh                 ;WS
-LIST_   DB 09Ah, 04Ch, 049h       ;BC      :RUN      'LIST'
-        DB 053h, 0D4h               ;--
-        DB 0E7h                 ;BE      Z243
-        DB 00Ah, 000h, 001h             ;LN      #0001
-        DB 00Ah, 07Fh, 0FFh             ;LN      #7FFF
-        DB 065h                 ;BR      Z244
-        DB 031h, 08Fh    ;Z243       JS      :EXPR
-        DB 032h, 031h               ;JS      Z245
-        DB 0E0h                 ;BE      * !158
-        DB 024h, 000h, 000h  ;Z244       PC                '@^@^@^@^J^@^'
-        DB 000h, 000h, 00Ah             ;--
-        DB 080h                ;--
-        DB 01Fh                 ;LS
-        DB 01Dh                 ;NX
-RUN_    DB 085h, 052h, 055h        ;BC      :CLER     'RUN'
-        DB 0CEh                ;--
-        DB 038h, 00Ah               ;J       :XEC
-CLER    DB 086h, 043h, 04Ch       ;BC      :PLOT     'CLEAR'
-        DB 045h, 041h, 0D2h             ;--
-        DB 02Bh                 ;MT
-PLOT    DB 09Ah, 050h, 04Ch       ;BC      Z246      'PLOT'
-        DB 04Fh, 0D4h               ;--
-        DB 031h, 08Fh               ;JS      :EXPR
-        DB 095h, 0ACh               ;BC      Z247      ','
-        DB 00Bh                 ;DS
-        DB 00Bh                 ;DS
-        DB 00Ah, 000h, 02Ah             ;LN      42
-        DB 032h, 062h               ;JS      Z248      COMPARE >0 AND <42
-        DB 00Ah, 000h, 040h             ;LN      64        MULTIPLY BY 64
-        DB 01Ah                 ;MP
-        DB 00Ah, 000h, 040h             ;LN      64
-        DB 032h, 05Ah               ;JS      Z249      GET NEXT EXPR AND COMP >0 AND <64
-        DB 018h                 ;AD                ADD TOGETHER (X*64+Y)
-        DB 064h                 ;BR      Z250      SKIP JUMPS
-        DB 039h, 002h    ;Z246       J       :POKE
-        DB 038h, 0F4h    ;Z247       J       Z251
-        DB 00Ah, 06Dh, 080h  ;Z250       LN      BUFF<<3         BUFF*8
-        DB 018h                 ;AD                ADD (BUFF*8)+(X*64+Y)
-        DB 00Bh                 ;DS
-        DB 00Ah, 000h, 008h             ;LN      8
-        DB 01Bh                 ;DV                ((BUFF*8)+(X*64+Y))/8
-        DB 00Bh                 ;DS
-        DB 004h                 ;SX 4
-        DB 002h                 ;SX 2
-        DB 005h                 ;SX 5
-        DB 003h                 ;SX 3
-        DB 005h                 ;SX 5
-        DB 00Ah, 000h, 008h             ;LN      8
-        DB 01Ah                 ;MP                 MULTIPLY BY 8
-        DB 019h                 ;SU                 GET REMANDER
-        DB 009h, 00Ah               ;LB      TVXY+2
-        DB 002h                 ;SX 2
-        DB 013h                 ;SV                 STORE NEW BIT POINTER
-        DB 009h, 008h               ;LB      TVXY
-        DB 002h                 ;SX 2
-        DB 001h                 ;SX 1
-        DB 013h                 ;SV                 STORE NEW CURSOR
-        DB 08Fh, 0ACh               ;BC      Z252      ','
-        DB 031h, 08Fh               ;JS      :EXPR
-        DB 0E0h      ;Z251       BE      * !245
-        DB 00Ah, 001h, 009h             ;LN      TYPEV
-        DB 002h                 ;SX 2
-        DB 001h                 ;SX 1
-        DB 003h                 ;SX 3
-        DB 001h                 ;SX 1
-        DB 00Bh                 ;DS
-        DB 02Eh                 ;US                CALL TYPEV AND OUTPUT BYTE
-        DB 00Ch                 ;SP                POP RETURNED VALUE
-        DB 01Dh                 ;NX                NEXT STATEMENT
-        DB 0E0h      ;Z252       BE      * !257
-        DB 01Dh                 ;NX
-POKE    DB 08Ah, 050h, 04Fh       ;BC      :OUT      'POKE'
-        DB 04Bh, 0C5h               ;--
-        DB 00Ah, 001h, 018h             ;LN      ILPOKE
-        DB 031h, 08Fh               ;JS      :EXPR
-        DB 06Ch                 ;BR      Z253
-OUT_    DB 091h, 04Fh, 055h        ;BC      :SAVE     'OUT'
-        DB 0D4h                ;--
-        DB 00Ah, 001h, 026h             ;LN      ILINPOUT
-        DB 00Ah, 000h, 008h             ;LN      8
-        DB 032h, 05Ah               ;JS      Z249      GET EXPR AND COMP >0 AND <8
-        DB 032h, 031h    ;Z253       JS      Z245      CHECK FOR ,AND GET EXPR
-        DB 0E0h                 ;BE      * !284
-        DB 02Eh                 ;US                CALL ILINPOUT OR ILPOKE
-        DB 00Ch                 ;SP                POP RETURNED VALUE
-        DB 01Dh                 ;NX                NEXT STATEMENT
-SAVE    DB 09Eh, 053h, 041h       ;BC      Z254      'SAVE'
-        DB 056h, 0C5h               ;--
-        DB 0E0h                 ;BE      * !293
-        DB 024h, 054h, 055h             ;PC                'TURN ON RECORD'
-        DB 052h, 04Eh, 020h             ;--
-        DB 04Fh, 04Eh, 020h             ;--
-        DB 052h, 045h, 043h             ;--
-        DB 04Fh, 052h, 0C4h             ;--
-        DB 023h                 ;NL
-        DB 024h, 048h, 049h             ;PC                'HIT KEY'
-        DB 054h, 020h, 04Bh             ;--
-        DB 045h, 0D9h               ;--
-        DB 062h                 ;BR      Z255
-        DB 039h, 05Ch    ;Z254       J       :LOAD
-        DB 00Ah, 001h, 006h  ;Z255       LN      KEYV
-        DB 00Bh                 ;DS
-        DB 00Bh                 ;DS
-        DB 02Eh                 ;US                CALL KEY INPUT
-        DB 00Ch                 ;SP                POP RETURNED VALUE
-        DB 023h                 ;NL                NEW LINE
-        DB 00Ah, 009h, 0FDh             ;LN      ILSAVE
-        DB 009h, 024h               ;LB      MEND
-        DB 012h                 ;FV
-        DB 009h, 020h               ;LB      BASIC
-        DB 012h                 ;FV
-        DB 019h                 ;SU                END PROGRAM-BEGIN PROGRAM
-        DB 00Ah, 001h, 000h             ;LN      256
-        DB 018h                 ;AD                ADD 256 ????
-        DB 009h, 020h               ;LB      BASIC
-        DB 012h                 ;FV
-        DB 02Eh                 ;US                CALL ILSAVE
-        DB 00Ch                 ;SP                POP RETURNED VALUE
-        DB 01Dh                 ;NX                NEXT STATEMENT
-LOAD    DB 086h, 04Ch, 04Fh             ;BC      Z256      'LOAD'
-        DB 041h, 0C4h               ;--
-        DB 0E0h                 ;BE      * !354
-        DB 062h                 ;BR      Z257
-        DB 039h, 085h    ;Z256       J       Z258
-        DB 009h, 024h    ;Z257       LB      MEND
-        DB 00Ah, 009h, 0FAh             ;LN      ILLOAD
-        DB 00Ah, 000h, 001h             ;LN      1
-        DB 009h, 020h               ;LB      BASIC
-        DB 012h                 ;FV
-        DB 02Eh                 ;US                CALL ILLOAD
-        DB 066h                 ;BR      Z259      ILLOAD SKIPS THIS IF NO ERROR
-        DB 00Ah, 000h, 018h             ;LN      0x18      SPARE STACK SIZE-1,DOES NOT GET IT?
-        DB 018h                 ;AD                ADD TO RETURN VALUE
-        DB 013h                 ;SV                SAVE MEM END
-        DB 02Dh                 ;WS                WARM START
-        DB 023h      ;Z259       NL
-        DB 024h, 054h, 041h             ;PC                'TAPE ERROR'
-        DB 050h, 045h, 020h             ;--
-        DB 045h, 052h, 052h             ;--
-        DB 04Fh, 0D2h               ;--
-        DB 02Bh                 ;MT
-        DB 084h, 052h, 045h  ;Z258       BC      :DFLT     'REM'
-        DB 0CDh                ;--
-        DB 01Dh                 ;NX
-DFLT    DB 0A0h                 ;BV      * !395
-        DB 080h, 0BDh               ;BC      * !397    '='
-        DB 038h, 014h               ;J       :LET
-EXPR    DB 085h, 0ADh       ;BC      Z260      '-'
-        DB 031h, 0A6h               ;JS      :TERM
-        DB 017h                 ;NE
-        DB 064h                 ;BR      Z261
-        DB 081h, 0ABh    ;Z260       BC      Z262      '+'
-        DB 031h, 0A6h    ;Z262       JS      :TERM
-        DB 085h, 0ABh    ;Z261       BC      Z263      '+'
-        DB 031h, 0A6h               ;JS      :TERM
-        DB 018h                 ;AD
-        DB 05Ah                 ;BR      Z261
-        DB 085h, 0ADh    ;Z263       BC      Z264      '-'
-        DB 031h, 0A6h               ;JS      :TERM
-        DB 019h                 ;SU
-        DB 054h                 ;BR      Z261
-        DB 02Fh      ;Z264       RT
-TERM    DB 031h, 0B5h       ;JS      :RND
-        DB 085h, 0AAh    ;Z266       BC      Z265      '*'
-        DB 031h, 0B5h               ;JS      :RND
-        DB 01Ah                 ;MP
-        DB 05Ah                 ;BR      Z266
-        DB 085h, 0AFh    ;Z265       BC      Z267      '/'
-        DB 031h, 0B5h               ;JS      :RND
-        DB 01Bh                 ;DV
-        DB 054h                 ;BR      Z266
-        DB 02Fh      ;Z267       RT
-RND     DB 099h, 052h, 04Eh        ;BC      Z268      'RND('
-        DB 044h, 0A8h               ;--
-        DB 00Ah, 080h, 080h             ;LN      0x8080
-        DB 012h                 ;FV
-        DB 00Ah, 009h, 029h             ;LN      0x0929
-        DB 01Ah                 ;MP
-        DB 00Ah, 01Ah, 085h             ;LN      0x1A85
-        DB 018h                 ;AD
-        DB 013h                 ;SV
-        DB 009h, 080h               ;LB      0x80
-        DB 012h                 ;FV
-        DB 001h                 ;SX 1
-        DB 00Bh                 ;DS
-        DB 032h, 02Ch               ;JS      Z269
-        DB 061h                 ;BR      Z270
-        DB 072h      ;Z268       BR      :USR
-        DB 00Bh      ;Z270       DS
-        DB 004h                 ;SX 4
-        DB 002h                 ;SX 2
-        DB 003h                 ;SX 3
-        DB 005h                 ;SX 5
-        DB 003h                 ;SX 3
-        DB 01Bh                 ;DV
-        DB 01Ah                 ;MP
-        DB 019h                 ;SU
-        DB 00Bh                 ;DS
-        DB 009h, 006h               ;LB      6
-        DB 00Ah, 000h, 000h             ;LN      0
-        DB 01Ch                 ;CP
-        DB 017h                 ;NE
-        DB 02Fh                 ;RT
-USR     DB 08Eh, 055h, 053h        ;BC      :INP      'USR('
-        DB 052h, 0A8h               ;--
-        DB 031h, 08Fh               ;JS      :EXPR
-        DB 032h, 031h               ;JS      Z245
-        DB 032h, 031h               ;JS      Z245
-        DB 080h, 0A9h               ;BC      * !495    ')'
-        DB 02Eh                 ;US
-        DB 02Fh                 ;RT
-INP     DB 091h, 049h, 04Eh        ;BC      :FLG      'INP('
-        DB 050h, 0A8h               ;--
-        DB 00Ah, 001h, 026h             ;LN      ILINPOUT
-        DB 00Ah, 000h, 008h             ;LN      8
-        DB 032h, 05Ah               ;JS      Z249      GET EXPR AND COMP >0 AND <8
-        DB 00Ah, 000h, 008h             ;LN      8         ADD 8 TO OP FOR INPUT
-        DB 018h                 ;AD
-        DB 07Dh                 ;BR      Z271
-FLG     DB 091h, 046h, 04Ch        ;BC      :PEEK     'FLG('
-        DB 047h, 0A8h               ;--
-        DB 00Ah, 009h, 0F8h             ;LN      ILFLG     FLG WAS NEVER DOCUMENTED
-        DB 00Ah, 000h, 005h             ;LN      5
-        DB 032h, 05Ah               ;JS      Z249      GET EXPR AND COMP >0 AND <5
-        DB 00Ah, 000h, 001h             ;LN      1
-        DB 019h                 ;SU                SUB 1
-        DB 06Bh                 ;BR      Z271
-PEEK_   DB 08Fh, 050h, 045h       ;BC      Z272      'PEEK('
-        DB 045h, 04Bh, 0A8h             ;--
-        DB 00Ah, 001h, 014h             ;LN      ILPEEK
-        DB 031h, 08Fh               ;JS      :EXPR
-        DB 080h, 0A9h    ;Z271       BC      * !546    ')'
-        DB 00Bh                 ;DS
-        DB 02Eh                 ;US
-        DB 02Fh                 ;RT
-        DB 0A2h      ;Z272       BV      Z273
-        DB 012h                 ;FV
-        DB 02Fh                 ;RT
-        DB 0C1h      ;Z273       BN      Z274
-        DB 02Fh                 ;RT
-        DB 080h, 0A8h    ;Z274       BC      * !556    '('
-        DB 031h, 08Fh    ;Z269       JS      :EXPR
-        DB 080h, 0A9h               ;BC      * !560    ')'
-        DB 02Fh                 ;RT
-        DB 083h, 0ACh    ;Z245       BC      Z275      ','
-        DB 039h, 08Fh               ;J       :EXPR
-        DB 00Bh      ;Z275       DS
-        DB 02Fh                 ;RT
-        DB 084h, 0BDh    ;Z237       BC      Z276      '='
-        DB 009h, 002h               ;LB      2
-        DB 02Fh                 ;RT
-        DB 08Eh, 0BCh    ;Z276       BC      Z277      '<'
-        DB 084h, 0BDh               ;BC      Z278      '='
-        DB 009h, 003h               ;LB      3
-        DB 02Fh                 ;RT
-        DB 084h, 0BEh    ;Z278       BC      Z279      '>'
-        DB 009h, 005h               ;LB      5
-        DB 02Fh                 ;RT
-        DB 009h, 001h    ;Z279       LB      1
-        DB 02Fh                 ;RT
-        DB 080h, 0BEh    ;Z277       BC      * !589    '>'
-        DB 084h, 0BDh               ;BC      Z280      '='
-        DB 009h, 006h               ;LB      6
-        DB 02Fh                 ;RT
-        DB 084h, 0BCh    ;Z280       BC      Z281      '<'
-        DB 009h, 005h               ;LB      5
-        DB 02Fh                 ;RT
-        DB 009h, 004h    ;Z281       LB      4
-        DB 02Fh                 ;RT
-        DB 031h, 08Fh    ;Z249       JS      :EXPR
-        DB 00Bh                 ;DS
-        DB 00Bh                 ;DS
-        DB 006h                 ;SX 6
-        DB 001h                 ;SX 1
-        DB 007h                 ;SX 7
-        DB 001h                 ;SX 1
-        DB 009h, 001h    ;Z248       LB      1
-        DB 002h                 ;SX 2
-        DB 001h                 ;SX 1
-        DB 01Ch                 ;CP
-        DB 060h                 ;BR      * !616
-        DB 009h, 006h               ;LB      6
-        DB 00Ah, 000h, 000h             ;LN      0
-        DB 01Ch                 ;CP
-        DB 060h                ;BR      * !623
-ENDIL   DB 02Fh                ;RT                 End Of IL Program
-        DB 0, 0
+           
 TVON       LDI     (INTERUPT)&255  ;SETUP INTERRUPT ROUTINE
            PLO     R1
            LDI     (INTERUPT)>>8
            PHI     R1
 -          B1      -         ;LOOP UNTIL EF1 GOES FALSE
-                  ;(EF1 brackets the 1861 interrupt request)
+;                  (EF1 brackets the 1861 interrupt request)
            INP     1         ;TURN ON 1861
            SEX     R3
            RET               ;ENABLE INTERRUPTS
@@ -1850,86 +1467,84 @@ Z283       ORI     034h      ;MAKE FLG BRANCH
            STR     RD
            LDI     1         ;LOAD 1
            SEP     RD        ;EXAMPLE  34XX  9D D5 BRANCH SKIPS C
-ILFLG      LBR      Z283
-ILLOAD     ;LBR     Z284
-ILSAVE     ;LDI     0F0h        ;SAVE TO TAPE
+ILFLG      BR      Z283
+ILLOAD     LBR     Z284
+ILSAVE     LDI     0F0h        ;SAVE TO TAPE
+           PHI     RC
+           LDI     065h
+           PLO     RC
+           LDI     080h
+           PHI     RD
+Z285       SMI     0
+           SEP     RC         ;GOSUB #F065 ROM CALLS
+           GHI     RD
+           BNZ     Z285
+Z287       SEQ
+           LDA     RA
+           PHI     RF
+           LDI     9
+           PLO     RF
+           PLO     RD
+           SHL
+Z286       SEP     RC
+           DEC     RF
+           GHI     RF
+           SHL
+           PHI     RF
+           GLO     RF
+           BNZ     Z286
+           GLO     RD
+           SHR
+           SEP     RC
+           DEC     R8
+           GHI     R8
+           BNZ     Z287
+           SEP     RC
+           SEP     RC
+           SEP     RC
+           SEP     RC
+           REQ
            RETURN
-           ;PHI     RC
-           ;LDI     065h
-           ;PLO     RC
-           ;LDI     080h
-           ;PHI     RD
-;Z285       SMI     0
-           ;SEP     RC         ;GOSUB #F065 ROM CALLS
-           ;GHI     RD
-           ;BNZ     Z285
-;Z287       SEQ
-           ;LDA     RA
-           ;PHI     RF
-           ;LDI     9
-           ;PLO     RF
-           ;PLO     RD
-           ;SHL
-;Z286       SEP     RC
-           ;DEC     RF
-           ;GHI     RF
-           ;SHL
-           ;PHI     RF
-           ;GLO     RF
-           ;BNZ     Z286
-           ;GLO     RD
-           ;SHR
-           ;SEP     RC
-           ;DEC     R8
-           ;GHI     R8
-           ;BNZ     Z287
-           ;SEP     RC
-           ;SEP     RC
-           ;SEP     RC
-           ;SEP     RC
-           ;REQ
-           ;RETURN
+Z284       LDI     0F0h        ;LOAD FROM TAPE
+           PHI     RC
+           LDI     0BAh
+           PLO     RC
+Z288       LDI     0F9h
+           PHI     RD
+Z289       SEP     RC         ;GOSUB #F0BA ROM CALLS
+           BNF     Z288
+           GHI     RD
+           BNZ     Z289
+Z290       SEP     RC
+           BDF     Z290
+           LDI     1
+           PHI     RD
+           PLO     RD
+Z291       SEP     RC
+           GHI     RD
+           SHLC
+           PHI     RD
+           BNF     Z291
+           SEP     RC
+           GLO     RD
+           SHR
+           BDF     Z292
+           GHI     RD
+           STR     RA
+           SEX     RA
+           OUT     4
+           ADI     0FFh
+           GLO     R8
+           SHLC
+           PLO     R8
+           ANI     003h
+           BNZ     Z290
+           INC     R9
+           GLO     RA
+Z292       RETURN
 
-;Z284       LDI     0F0h        ;LOAD FROM TAPE
-           ;PHI     RC
-           ;LDI     0BAh
-           ;PLO     RC
-;Z288       LDI     0F9h
-           ;PHI     RD
-;Z289       SEP     RC         ;GOSUB #F0BA ROM CALLS
-           ;BNF     Z288
-           ;GHI     RD
-           ;BNZ     Z289
-;Z290       SEP     RC
-           ;BDF     Z290
-           ;LDI     1
-           ;PHI     RD
-           ;PLO     RD
-;Z291       SEP     RC
-           ;GHI     RD
-           ;SHLC
-           ;PHI     RD
-           ;BNF     Z291
-           ;SEP     RC
-           ;GLO     RD
-           ;SHR
-           ;BDF     Z292
-           ;GHI     RD
-           ;STR     RA
-           ;SEX     RA
-           ;OUT     4
-           ;ADI     0FFh
-           ;GLO     R8
-           ;SHLC
-           ;PLO     R8
-           ;ANI     003h
-           ;BNZ     Z290
-           ;INC     R9
-           ;GLO     RA
-;Z292       RETURN
-           org 0A00h
 INPUTR     GHI     RE         ;INPUT FROM KEYBOARD ROUTINE
-           LBZ      KEYIN
+           BZ      KEYIN
 Z293       SERIAL_B      Z293       ;SERIAL INPUT ROUTINE
            SHR
            CALL    Z158
@@ -1950,18 +1565,17 @@ Z295       CALL    SERIAL_DELAY
            SERIAL_BN    Z297
            ORI     080h
 Z297       BDF     Z298
-           GHI RE
-           SHR
-           SERIAL_B  +     ;Short branch on EF4=1
-           SEQ             ;Set Q=1
-           SKP             ;Skip next byte
-+          REQ             ;Reset Q=0
-           CALL   SERIAL_DELAY     ;Set P=R4 as program counter
+;           GHI RE
+;           SHR
+;           SERIAL_B  +       ; Short branch on EF4=1
+;           SEQ            ; Set Q=1
+;           SKP            ; Skip next byte
+;+		   REQ            ; Reset Q=0
            REQ
-           GLO RF          ;Get low register RF
+           CALL   SERIAL_DELAY    ; Set P=R4 as program counter
+           GLO RF         ; Get low register RF
            RETURN
 
-           ORG 0A83h
 OUTPUTR    PLO     RC         ;OUTPUT TO SCREEN ROUTINE
            PHI     RC
            GHI     RE
@@ -1986,7 +1600,7 @@ Z300       CALL    SERIAL_DELAY
            BNZ     Z300
            GLO     RC
            RETURN
-BLINK      FETCH   TIME_+2   ;LOOK AT TIMER
+BLINK      FETCH   TIME_+2;   LOOK AT TIMER
            SHL
            SHL
            SHL
@@ -2019,9 +1633,9 @@ TVOFF      LDI     00Ch       ;TV OFF AND DELAY
            DIS
            RETURN
 ;
-       ;(ORG in last 40 bytes of page)
+;       (ORG in last 40 bytes of page)
 ;
- ;Character Formatter - ASCII character in ACC.
+; Character Formatter - ASCII character in ACC.
 ;
 TVD        ANI     07Fh       ;SET HIGH BIT TO 0
            PLO     RE         ;SAVE FOR EXIT
@@ -2043,11 +1657,11 @@ Z304       SEX     R2
            STXD
            GHI     R8
            STXD
-           LDI     (SHFT)&255 ;SET UP SHIFT PC
+           LDI     (SHFT)&255       ;SET UP SHIFT PC
            PLO     RA
            LDI     (SHFT)>>8
            PHI     RA
-           FETCH   TVXY       ;TVXY GET POINTER R8 = *0008-9
+           FETCH   TVXY            ;TVXY GET POINTER R8 = *0008-9
            PHI     R8         ;WHICH IS CURSOR
            LDA     RD
            PLO     R8
@@ -2300,7 +1914,7 @@ Z314       SEX     R8
            BR      Z320       ;SECOND ENTRY POINT
            BR      SHFT       ;OPTIONAL RERUNS
 ;
- ;Count words, moving pointer up
+; Count words, moving pointer up
 ;
 Z320       GHI     R9
            ADI     018h       ;CONVERT IF NEGATIVE, ADD 1
@@ -2332,7 +1946,7 @@ Z322       GLO     R8         ;GO TO NEXT LINE UP
            PHI     R8
            BR      Z324       ;C=1
 ;
- ;Interrupt service routine for 1861
+; Interrupt service routine for 1861
 ;
 Z327       LDI     3
            PLO     R0
@@ -2375,7 +1989,6 @@ Z326       GLO     R0
            ADI     1
            STR     R0
            BR      Z327
-
 CTBL       DW      08608h     ;SP MASK BYTE AND DATA POINTER
            DW      0820Ah     ;! MASK BYTE AND DATA POINTER
            DW      0E508h     ;" MASK BYTE AND DATA POINTER
@@ -2403,7 +2016,7 @@ CTBL       DW      08608h     ;SP MASK BYTE AND DATA POINTER
            DW      0E303h     ;8 MASK BYTE AND DATA POINTER
            DW      0E049h     ;9 MASK BYTE AND DATA POINTER
            DW      08304h     ;: MASK BYTE AND DATA POINTER
-           DW      0C335h     ;  MASK BYTE AND DATA POINTER
+           DW      0C335h     ;; MASK BYTE AND DATA POINTER
            DW      0E541h     ;< MASK BYTE AND DATA POINTER
            DW      0E503h     ;= MASK BYTE AND DATA POINTER
            DW      0E517h     ;> MASK BYTE AND DATA POINTER

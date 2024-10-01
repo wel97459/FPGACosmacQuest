@@ -245,5 +245,5 @@ class Top_Quest_ICE40(val withLcd: Boolean, val ramFile: String, val romFile: St
 }
 
 object Top_Quest_ICE40_Verilog extends App {
-  Config.spinal.generateVerilog(new Top_Quest_ICE40(true, "./data/test_1861.bin", "./data/SUPRMON-v1.1-2708.bin"))
+  Config.spinal.generateVerilog(new Top_Quest_ICE40(true, "./data/Tinybasi_0x1fff.bin", "./data/SUPRMON-v1.1-2708.bin"))
 }

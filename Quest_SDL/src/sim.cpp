@@ -178,6 +178,7 @@ void sim_init(unsigned char *v, SDL_Texture *td, void (*d)(), struct CRT *c, int
 
 int keyIn = 0;
 int keyWait = false;
+int shift = false;
 void sim_keyevent(int event, int key) {
     if(event == SDL_KEYDOWN && 
         key != SDLK_LSHIFT &&
@@ -188,7 +189,16 @@ void sim_keyevent(int event, int key) {
         key != SDLK_RALT
     ){
         keyIn = key;
-        keyWait = true;
+        if(key == '\'' && shift) keyIn = '"';
+        if(key != '\n') keyWait = true;
+    }else if(event == SDL_KEYDOWN && 
+        key == SDLK_LSHIFT ||
+        key == SDLK_RSHIFT){
+        shift = true;
+    }else if(event == SDL_KEYUP && 
+        key == SDLK_LSHIFT ||
+        key == SDLK_RSHIFT){
+        shift = false;
     }
 
     if(event == SDL_KEYDOWN)

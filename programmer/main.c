@@ -93,8 +93,7 @@ void flipShort(unsigned short *s){
 int main(int argc, char **argv)
 {
     FILE *fp;
-    char portname[32];
-    strcat(portname, argv[1]);
+    char *portname = argv[1];
 
     fp = fopen(argv[2], "r");
     int fd;
@@ -141,7 +140,7 @@ int main(int argc, char **argv)
     }
 
     printf("Put system in run mode.\r\n");
-    write (fd, "fE0", 3);
+    write (fd, "f00", 3);
     waitOk(fd);
  
 done:
