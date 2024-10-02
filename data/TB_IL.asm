@@ -97,8 +97,12 @@ IL_NL   MACRO                   ;New Line
         DB 23H
     ENDM
 
-IL_PC   MACRO                   ;Print literal string  
+IL_PC   MACRO char, endchar     ;Print literal string  
         DB 24h
+        IF char>0
+        DB char
+        ENDIF
+        DB endchar | 80h                
     ENDM
 
 IL_GL   MACRO                   ;Get Input Line.
@@ -145,8 +149,12 @@ IL_BR_F MACRO  addr             ;Relative Branch Forward
         DB 60h + (addr-$+1)
     ENDM
 
-IL_BC MACRO  addr               ;String Match Branch
+IL_BC MACRO  addr, char, endchar;String Match Branch
         DB 80h + ((addr-$-1)&31)
+        IF char>0
+        DB char
+        ENDIF
+        DB endchar | 80h               
     ENDM
 
 IL_BV MACRO  addr               ;Branch if not a Variable
@@ -165,8 +173,14 @@ IL_ENDCHAR  MACRO char
         DB char | 80h
     ENDM
 
-STRT    IL_PC
-        DB ':', 091h            ;':Q^'  Start Of IL Program
+IL_CHAR  MACRO char, endchar
+        IF char>0
+        DB char
+        ENDIF
+        DB endchar | 80h
+    ENDM
+
+STRT    IL_PC ':', 11h        ;':Q^'  Start Of IL Program
         IL_GL                   ;GL
         IL_SB                   ;SB
         IL_BE LO                ;BE      :LO
@@ -177,103 +191,82 @@ LO      IL_BN STMT              ;BN      :STMT
 XEC     IL_SB                   ;SB
         IL_RB                   ;RB
         IL_XQ                   ;XQ
-STMT    IL_BC GOTO
-        DB 'LE'                 ;BC      :GOTO     'LET'
-        IL_ENDCHAR 'T'
+STMT    IL_BC GOTO, 'LE', 'T'   ;BC      :GOTO     'LET'
         IL_BV $+1               ;BV      * !18
-        IL_BC $+1               ;BC      * !20     '='
-        IL_ENDCHAR '='          
+        IL_BC $+1, 0, '='       ;BC      * !20     '='         
 LET     IL_JS EXPR              ;JS      :EXPR
         IL_BE $+1               ;BE      * !23
         IL_SV                   ;SV
         IL_NX                   ;NX
-GOTO    IL_BC PRNT
-        DB 'G'                  ;BC      :PRNT     'GO'
-        IL_ENDCHAR 'O'       
-        IL_BC GOSB              ;BC      :GOSB     'TO'
-        DB 'T'
-        IL_ENDCHAR 'O'
+GOTO    IL_BC PRNT, 'G','O'     ;BC      :PRNT     'GO'      
+        IL_BC GOSB, 'T','O'     ;BC      :GOSB     'TO'
         IL_JS EXPR              ;JS      :EXPR
         IL_BE $+1               ;BE      * !34
         IL_SB                   ;SB
         IL_RB                   ;RB
         IL_GO                   ;GO
-GOSB    IL_BC $+1
-        DB 'S', 'U'             ;BC      * !39     'SUB'
-        IL_ENDCHAR 'B'          ;--
+GOSB    IL_BC $+1, 'SU', 'B'    ;BC      * !39     'SUB'
         IL_JS EXPR              ;JS      :EXPR
         IL_BE $+1               ;BE      * !44
         IL_GS                   ;GS
         IL_GO                   ;GO
-PRNT    IL_BC SKIP_             ;BC      :SKIP     'PR'
-        DB 'P'
-        IL_ENDCHAR 'R'
-        IL_BC P0                ;BC      :P0       'INT'
-        DB 'IN'    
-        IL_ENDCHAR 'T'          ;--
+PRNT    IL_BC SKIP_, 'P', 'R'   ;BC      :SKIP     'PR'
+        IL_BC P0, 'IN', 'T'     ;BC      :P0       'INT'
 P0      IL_BE P3                ;BE      :P3
         IL_BR_F S3              ;BR      Z233
-P1      IL_BC S1                ;BC      Z234      ';'
-        IL_ENDCHAR ';'
+P1      IL_BC S1, 0, ';'        ;BC      Z234      ';'
 P2      IL_BE P3                ;BE      :P3
         IL_NX                   ;NX
-P3      IL_BC S5                ;BC      Z235      '"'
-        IL_ENDCHAR '"'
+P3      IL_BC S5, 0, '"'        ;BC      Z235      '"'
         IL_PQ                   ;PQ
         IL_BR_B P1              ;BR      :P1
 SKIP_   IL_BR_B IF_             ;BR      :IF
-S1      IL_BC S2                ;Z234       BC      Z236      ','
-        IL_ENDCHAR ','
+S1      IL_BC S2, 0, ','        ;Z234       BC      Z236      ','
         IL_PT                   ;PT
         IL_BR_B P2              ;BR      :P2
-S2      IL_BC S4                ;Z236       BC      Z233      ':'
-        IL_ENDCHAR ':'
-S3      IL_PC                   ;PC                'S^'
-        IL_ENDCHAR 13h
-S4      IL_BE P3                 ;Z233       BE      * !73
-        IL_NL                 ;NL
-        IL_NX                 ;NX
+S2      IL_BC S4, 0, ':'        ;Z236       BC      Z233      ':'
+S3      IL_PC 13h               ;PC                'S^'
+S4      IL_BE P3                ;Z233       BE      * !73
+        IL_NL                   ;NL
+        IL_NX                   ;NX
 S5      IL_JS EXPR
-        DB 020h                 ;PN
+        IL_PN                   ;PN
         IL_BR_B P1
-IF_     DB 091h, 049h, 0C6h         ;BC      :INPT     'IF'
+IF_     IL_BC INPT, 'I', 'F'    ;BC      :INPT     'IF'
         IL_JS EXPR
-        DB 032h, 037h               ;JS      Z237
+        IL_JS RELOP             ;JS      RELOP
         IL_JS EXPR
-        DB 084h, 054h, 048h             ;BC      :I1       'THEN'
-        DB 045h, 0CEh               ;--
-I1      IL_CP         ;CP
-        IL_NX                 ;NX
+        IL_BC I1, 'THE', 'N'    ;BC      :I1       'THEN' 
+I1      IL_CP                   ;CP
+        IL_NX                   ;NX
         IL_J STMT
-INPT    DB 09Ah, 049h, 04Eh       ;BC      :RETN     'INPUT'
-        DB 050h, 055h, 0D4h             ;--
-        IL_BV BV      ;Z242       BV      * !104
-        IL_SB                 ;SB
-        IL_BE Z238                 ;BE      Z238
-        DB 024h, 03Fh, 020h  ;Z239       PC                '? Q^'
-        DB 091h                ;--
-        IL_GL                 ;GL
-        IL_BE Z238                 ;BE      Z238
-        IL_BR Z239                 ;BR      Z239
-        DB 081h, 0ACh    ;Z238       BC      Z240      ','
+INPT    IL_BC RETN, 'INPU', 'T';BC      :RETN     'INPUT'
+        IL_BV BV                ;Z242       BV      * !104
+        IL_SB                   ;SB
+        IL_BE Z238              ;BE      Z238
+        IL_PC '? ', 11h         ;Z239       PC                '? Q^'
+        IL_GL                   ;GL
+        IL_BE Z238              ;BE      Z238
+        IL_BR Z239              ;BR      Z239
+        DB 081h, 0ACh           ;Z238       BC      Z240      ','
         IL_JS EXPR
-        IL_SV                 ;SV
-        IL_RB                 ;RB
-        DB 082h, 0ACh               ;BC      Z241      ','
-        IL_BR Z242                 ;BR      Z242
-        IL_BE BE      ;Z241       BE      * !123
-        IL_NX                 ;NX
-RETN_   DB 089h, 052h, 045h       ;BC      :END      'RETURN'
-        DB 054h, 055h, 052h             ;--
-        DB 0CEh                ;--
+        IL_SV                   ;SV
+        IL_RB                   ;RB
+        DB 082h, 0ACh           ;BC      Z241      ','
+        IL_BR Z242              ;BR      Z242
+        IL_BE BE                ;Z241      BE      * !123
+        IL_NX                   ;NX
+RETN_   DB 089h, 052h, 045h     ;BC      :END      'RETURN'
+        DB 054h, 055h, 052h     ;--
+        DB 0CEh                 ;--
         DB 0E0h                 ;BE      * !132
         DB 015h                 ;RS
-        IL_NX                 ;NX
-END     DB 085h, 045h, 04Eh        ;BC      :LIST     'END'
-        DB 0C4h                ;--
+        IL_NX                   ;NX
+END     DB 085h, 045h, 04Eh     ;BC      :LIST     'END'
+        DB 0C4h                 ;--
         DB 0E0h                 ;BE      * !139
-        IL_WS                 ;WS
-LIST_   DB 09Ah, 04Ch, 049h       ;BC      :RUN      'LIST'
+        IL_WS                   ;WS
+LIST_   DB 09Ah, 04Ch, 049h     ;BC      :RUN      'LIST'
         DB 053h, 0D4h               ;--
         IL_BE Z243                 ;BE      Z243
         DB 00Ah, 000h, 001h             ;LN      #0001
@@ -521,7 +514,7 @@ PEEK_   DB 08Fh, 050h, 045h       ;BC      Z272      'PEEK('
         IL_J EXPR
         IL_DS      ;Z275       DS
         DB 02Fh                 ;RT
-        DB 084h, 0BDh    ;Z237       BC      Z276      '='
+RELOP   DB 084h, 0BDh    ;Z237       BC      Z276      '='
         DB 009h, 002h               ;LB      2
         DB 02Fh                 ;RT
         DB 08Eh, 0BCh    ;Z276       BC      Z277      '<'
