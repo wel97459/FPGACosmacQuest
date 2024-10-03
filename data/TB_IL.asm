@@ -288,7 +288,7 @@ PLOT    IL_BC PO1, 'PLO','T'    ;BC      Z246      'PLOT'
         IL_DS                   ;DS
         IL_DS                   ;DS
         IL_LN 42                ;LN      42
-        DB 032h, 062h           ;JS      Z248      COMPARE >0 AND <42
+        IL_JS RELOP1            ;JS      Z248      COMPARE >0 AND <42
         IL_LN 64                ;LN      64        MULTIPLY BY 64
         IL_MP                   ;MP
         IL_LN 64                ;LN      64
@@ -320,7 +320,7 @@ PO3     DB 00Ah, 06Dh, 080h     ;Z250       LN      BUFF<<3         BUFF*8
         IL_SV                   ;SV                 STORE NEW CURSOR
         DB 08Fh, 0ACh           ;BC      Z252      ','
         IL_JS EXPR
-        IL_BE $+1               ;Z251       BE      * !245
+PO4     IL_BE $+1               ;Z251       BE      * !245
         DB 00Ah, 001h, 009h     ;LN      TYPEV
         IL_SX 2                 ;SX 2
         IL_SX 1                 ;SX 1
@@ -512,23 +512,23 @@ PE4     DB 083h, 0ACh           ;Z245       BC      Z275      ','
 RELOP   DB 084h, 0BDh           ;Z237       BC      Z276      '='
         DB 009h, 002h           ;LB      2
         DB 02Fh                 ;RT
-        DB 08Eh, 0BCh           ;Z276       BC      Z277      '<'
+RELESS  DB 08Eh, 0BCh           ;Z276       BC      Z277      '<'
         DB 084h, 0BDh           ;BC      Z278      '='
         DB 009h, 003h           ;LB      3
         DB 02Fh                 ;RT
-        DB 084h, 0BEh           ;Z278       BC      Z279      '>'
+REMORE  DB 084h, 0BEh           ;Z278       BC      Z279      '>'
         DB 009h, 005h           ;LB      5
         DB 02Fh                 ;RT
-        DB 009h, 001h           ;Z279       LB      1
+REMORE1 DB 009h, 001h           ;Z279       LB      1
         DB 02Fh                 ;RT
-        DB 080h, 0BEh           ;Z277       BC      * !589    '>'
+REMORE2 DB 080h, 0BEh           ;Z277       BC      * !589    '>'
         DB 084h, 0BDh           ;BC      Z280      '='
         DB 009h, 006h           ;LB      6
         DB 02Fh                 ;RT
-        DB 084h, 0BCh           ;Z280       BC      Z281      '<'
+RELESS1 DB 084h, 0BCh           ;Z280       BC      Z281      '<'
         DB 009h, 005h           ;LB      5
         DB 02Fh                 ;RT
-        DB 009h, 004h           ;Z281       LB      4
+RELESS2 DB 009h, 004h           ;Z281       LB      4
         DB 02Fh                 ;RT
         IL_JS EXPR
         IL_DS                   ;DS
@@ -537,7 +537,7 @@ RELOP   DB 084h, 0BDh           ;Z237       BC      Z276      '='
         IL_SX 1                 ;SX 1
         IL_SX 7                 ;SX 7
         IL_SX 1                 ;SX 1
-        DB 009h, 001h           ;Z248       LB      1
+RELOP1  IL_LB 1                 ;Z248       LB      1
         IL_SX 2                 ;SX 2
         IL_SX 1                 ;SX 1
         IL_CP                   ;CP
