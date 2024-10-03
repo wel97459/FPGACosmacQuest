@@ -1,1001 +1,1013 @@
- AS V1.42 Beta [Bld 275] - Source File TB_IL.asm - Page 1 - 10/02/2024 02:46:21 PM
+ AS V1.42 Beta [Bld 275] - Source File TB_IL.asm - Page 1 - 10/02/2024 11:14:07 PM
 
 
-    1/   0 :                            IL_SX   MACRO stack                  ;Duplicate Top number (two bytes) on Stack
+    1/   0 :                            IL_SX   MACRO stack             ;Duplicate Top number (two bytes) on Stack
     2/   0 :                                    DB 00h + (stack & 07h)
     3/   0 :                                ENDM
     4/   0 :                            
     5/   0 :                            IL_NO   MACRO                   ;Duplicate Top number (two bytes) on Stack
     6/   0 :                                    DB 08h
     7/   0 :                                ENDM
-    8/   0 :                            IL_LB   MACRO val               ;Push Literal byte onto stack
-    9/   0 :                                    DW 0900H | val & FFh
+    8/   0 :                            IL_LB   MACRO val
+    9/   0 :                                    DB 09H, val & 0FFh      ;Push Literal byte onto stack
    10/   0 :                                ENDM
    11/   0 :                            
    12/   0 :                            IL_LN   MACRO val               ;Push Literal number
-   13/   0 :                                    DW 0A0000H | val & FFFFh
-   14/   0 :                                ENDM
-   15/   0 :                            
-   16/   0 :                            IL_DS   MACRO                   ;Duplicate Top number (two bytes) on Stack
-   17/   0 :                                    DB 0Bh
-   18/   0 :                                ENDM
-   19/   0 :                            
-   20/   0 :                            IL_SP   MACRO                   ;Stack Pop
-   21/   0 :                                    DB 0Ch
-   22/   0 :                                ENDM
-   23/   0 :                            
-   24/   0 :                            IL_SB   MACRO                   ;Save basic pointer
-   25/   0 :                                    DB 10h
-   26/   0 :                                ENDM
-   27/   0 :                            
-   28/   0 :                            IL_RB   MACRO                   ;Restore basic pointer
-   29/   0 :                                    DB 11h
-   30/   0 :                                ENDM
-   31/   0 :                            
-   32/   0 :                            IL_FV   MACRO                   ;Fetch Variable
-   33/   0 :                                    DB 12h
-   34/   0 :                                ENDM
-   35/   0 :                            
-   36/   0 :                            IL_SV   MACRO                   ;Store Variable
-   37/   0 :                                    DB 13H
-   38/   0 :                                ENDM
-   39/   0 :                            
-   40/   0 :                            IL_GS   MACRO                   ;GOSUB Save
-   41/   0 :                                    DB 14H
-   42/   0 :                                ENDM
-   43/   0 :                            
-   44/   0 :                            IL_RS   MACRO                   ;Restore Saved Line
-   45/   0 :                                    DB 15H
-   46/   0 :                                ENDM
-   47/   0 :                            
-   48/   0 :                            IL_GO   MACRO                   ;GOTO
-   49/   0 :                                    DB 16H
-   50/   0 :                                ENDM
-   51/   0 :                            
-   52/   0 :                            IL_NE   MACRO                   ;Negate(Two's Complement)
-   53/   0 :                                    DB 17H
-   54/   0 :                                ENDM
-   55/   0 :                            
-   56/   0 :                            IL_AD   MACRO                   ;Add
-   57/   0 :                                    DB 18H
-   58/   0 :                                ENDM
-   59/   0 :                            
-   60/   0 :                            IL_SU   MACRO                   ;Subtract
- AS V1.42 Beta [Bld 275] - Source File TB_IL.asm - Page 2 - 10/02/2024 02:46:21 PM
+   13/   0 :                                    DB 0Ah
+   14/   0 :                                    DW val & 0FFFFh
+   15/   0 :                                ENDM
+   16/   0 :                            
+   17/   0 :                            IL_DS   MACRO                   ;Duplicate Top number (two bytes) on Stack
+   18/   0 :                                    DB 0Bh
+   19/   0 :                                ENDM
+   20/   0 :                            
+   21/   0 :                            IL_SP   MACRO                   ;Stack Pop
+   22/   0 :                                    DB 0Ch
+   23/   0 :                                ENDM
+   24/   0 :                            
+   25/   0 :                            IL_SB   MACRO                   ;Save basic pointer
+   26/   0 :                                    DB 10h
+   27/   0 :                                ENDM
+   28/   0 :                            
+   29/   0 :                            IL_RB   MACRO                   ;Restore basic pointer
+   30/   0 :                                    DB 11h
+   31/   0 :                                ENDM
+   32/   0 :                            
+   33/   0 :                            IL_FV   MACRO                   ;Fetch Variable
+   34/   0 :                                    DB 12h
+   35/   0 :                                ENDM
+   36/   0 :                            
+   37/   0 :                            IL_SV   MACRO                   ;Store Variable
+   38/   0 :                                    DB 13H
+   39/   0 :                                ENDM
+   40/   0 :                            
+   41/   0 :                            IL_GS   MACRO                   ;GOSUB Save
+   42/   0 :                                    DB 14H
+   43/   0 :                                ENDM
+   44/   0 :                            
+   45/   0 :                            IL_RS   MACRO                   ;Restore Saved Line
+   46/   0 :                                    DB 15H
+   47/   0 :                                ENDM
+   48/   0 :                            
+   49/   0 :                            IL_GO   MACRO                   ;GOTO
+   50/   0 :                                    DB 16H
+   51/   0 :                                ENDM
+   52/   0 :                            
+   53/   0 :                            IL_NE   MACRO                   ;Negate(Two's Complement)
+   54/   0 :                                    DB 17H
+   55/   0 :                                ENDM
+   56/   0 :                            
+   57/   0 :                            IL_AD   MACRO                   ;Add
+   58/   0 :                                    DB 18H
+   59/   0 :                                ENDM
+   60/   0 :                            
+ AS V1.42 Beta [Bld 275] - Source File TB_IL.asm - Page 2 - 10/02/2024 11:14:07 PM
 
 
-   61/   0 :                                    DB 19H
-   62/   0 :                                ENDM
-   63/   0 :                            
-   64/   0 :                            IL_MP   MACRO                   ;Multiply
-   65/   0 :                                    DB 1AH
-   66/   0 :                                ENDM
-   67/   0 :                            
-   68/   0 :                            IL_DV   MACRO                   ;Divide
-   69/   0 :                                    DB 1BH
-   70/   0 :                                ENDM
-   71/   0 :                            
-   72/   0 :                            IL_CP   MACRO                   ;Compare
-   73/   0 :                                    DB 1CH
-   74/   0 :                                ENDM
-   75/   0 :                            
-   76/   0 :                            IL_NX   MACRO                   ;Next BASIC Statement
-   77/   0 :                                    DB 1DH
-   78/   0 :                                ENDM
-   79/   0 :                            
-   80/   0 :                            IL_LS   MACRO                   ;List the program
-   81/   0 :                                    DB 1FH
-   82/   0 :                                ENDM
-   83/   0 :                            
-   84/   0 :                            IL_PN   MACRO                   ;Print Number
-   85/   0 :                                    DB 20H
-   86/   0 :                                ENDM
-   87/   0 :                            
-   88/   0 :                            IL_PQ   MACRO                   ;Print String
-   89/   0 :                                    DB 21H
-   90/   0 :                                ENDM
-   91/   0 :                            
-   92/   0 :                            IL_PT   MACRO                   ;Print Tab
-   93/   0 :                                    DB 22H
-   94/   0 :                                ENDM
-   95/   0 :                            
-   96/   0 :                            IL_NL   MACRO                   ;New Line
-   97/   0 :                                    DB 23H
-   98/   0 :                                ENDM
-   99/   0 :                            
-  100/   0 :                            IL_PC   MACRO char, endchar     ;Print literal string  
-  101/   0 :                                    DB 24h
-  102/   0 :                                    DB char
-  103/   0 :                                    DB endchar | 80h                
-  104/   0 :                                ENDM
-  105/   0 :                            
-  106/   0 :                            IL_GL   MACRO                   ;Get Input Line.
-  107/   0 :                                    DB 27h
-  108/   0 :                                ENDM
-  109/   0 :                            
-  110/   0 :                            IL_IL   MACRO                   ;Insert Basic line  
-  111/   0 :                                    DB 2Ah
-  112/   0 :                                ENDM
-  113/   0 :                            
-  114/   0 :                            IL_MT   MACRO                   ;Mark the basic program space empty
-  115/   0 :                                    DB 2Bh
-  116/   0 :                                ENDM
-  117/   0 :                            
-  118/   0 :                            IL_XQ   MACRO                   ;Execute
-  119/   0 :                                    DB 2Ch
-  120/   0 :                                ENDM
- AS V1.42 Beta [Bld 275] - Source File TB_IL.asm - Page 3 - 10/02/2024 02:46:21 PM
+   61/   0 :                            IL_SU   MACRO                   ;Subtract
+   62/   0 :                                    DB 19H
+   63/   0 :                                ENDM
+   64/   0 :                            
+   65/   0 :                            IL_MP   MACRO                   ;Multiply
+   66/   0 :                                    DB 1AH
+   67/   0 :                                ENDM
+   68/   0 :                            
+   69/   0 :                            IL_DV   MACRO                   ;Divide
+   70/   0 :                                    DB 1BH
+   71/   0 :                                ENDM
+   72/   0 :                            
+   73/   0 :                            IL_CP   MACRO                   ;Compare
+   74/   0 :                                    DB 1CH
+   75/   0 :                                ENDM
+   76/   0 :                            
+   77/   0 :                            IL_NX   MACRO                   ;Next BASIC Statement
+   78/   0 :                                    DB 1DH
+   79/   0 :                                ENDM
+   80/   0 :                            
+   81/   0 :                            IL_LS   MACRO                   ;List the program
+   82/   0 :                                    DB 1FH
+   83/   0 :                                ENDM
+   84/   0 :                            
+   85/   0 :                            IL_PN   MACRO                   ;Print Number
+   86/   0 :                                    DB 20H
+   87/   0 :                                ENDM
+   88/   0 :                            
+   89/   0 :                            IL_PQ   MACRO                   ;Print String
+   90/   0 :                                    DB 21H
+   91/   0 :                                ENDM
+   92/   0 :                            
+   93/   0 :                            IL_PT   MACRO                   ;Print Tab
+   94/   0 :                                    DB 22H
+   95/   0 :                                ENDM
+   96/   0 :                            
+   97/   0 :                            IL_NL   MACRO                   ;New Line
+   98/   0 :                                    DB 23H
+   99/   0 :                                ENDM
+  100/   0 :                            
+  101/   0 :                            IL_PC   MACRO char, endchar     ;Print literal string  
+  102/   0 :                                    DB 24h
+  103/   0 :                                    IF char>0
+  104/   0 :                                    DB char
+  105/   0 :                                    ENDIF
+  106/   0 :                                    IF endchar>0
+  107/   0 :                                    DB endchar | 80h
+  108/   0 :                                    ENDIF             
+  109/   0 :                                ENDM
+  110/   0 :                            
+  111/   0 :                            IL_GL   MACRO                   ;Get Input Line.
+  112/   0 :                                    DB 27h
+  113/   0 :                                ENDM
+  114/   0 :                            
+  115/   0 :                            IL_IL   MACRO                   ;Insert Basic line  
+  116/   0 :                                    DB 2Ah
+  117/   0 :                                ENDM
+  118/   0 :                            
+  119/   0 :                            IL_MT   MACRO                   ;Mark the basic program space empty
+  120/   0 :                                    DB 2Bh
+ AS V1.42 Beta [Bld 275] - Source File TB_IL.asm - Page 3 - 10/02/2024 11:14:07 PM
 
 
-  121/   0 :                            
-  122/   0 :                            IL_WS   MACRO                   ;Stop
-  123/   0 :                                    DB 2Dh
-  124/   0 :                                ENDM
-  125/   0 :                            
-  126/   0 :                            IL_US   MACRO                   ;Machine Language Subroutine
-  127/   0 :                                    DB 2Eh
-  128/   0 :                                ENDM
-  129/   0 :                            
-  130/   0 :                            IL_RT   MACRO                   ;IL Subroutine Return
-  131/   0 :                                    DB 2Fh
-  132/   0 :                                ENDM
-  133/   0 :                            
-  134/   0 :                            IL_JS   MACRO addr              ;IL Subroutine Call
-  135/   0 :                                    DW 3000H | addr-STRT & 7FFh
-  136/   0 :                                ENDM
-  137/   0 :                            
-  138/   0 :                            IL_J    MACRO addr              ;Jump
-  139/   0 :                                    DW 3800H | addr-STRT & 7FFh
-  140/   0 :                                ENDM
-  141/   0 :                            
-  142/   0 :                            IL_BR_B MACRO  addr             ;Relative Branch Back
-  143/   0 :                                    DB 60h - (1+$-addr)
-  144/   0 :                                ENDM
-  145/   0 :                            
-  146/   0 :                            IL_BR_F MACRO  addr             ;Relative Branch Forward
-  147/   0 :                                    DB 60h + (addr-$+1)
-  148/   0 :                                ENDM
-  149/   0 :                            
-  150/   0 :                            IL_BC MACRO  addr, char, endchar;String Match Branch
-  151/   0 :                                    DB 80h + ((addr-$-1)&31)
-  152/   0 :                                    IF char>0
-  153/   0 :                                    DB char
-  154/   0 :                                    ENDIF
-  155/   0 :                                    DB endchar | 80h               
-  156/   0 :                                ENDM
-  157/   0 :                            
-  158/   0 :                            IL_BV MACRO  addr               ;Branch if not a Variable
-  159/   0 :                                    DB 0A0h + ((addr-$-1)&31)
-  160/   0 :                                ENDM
-  161/   0 :                            
-  162/   0 :                            IL_BN   MACRO  addr             ;Branch if not a number
-  163/   0 :                                    DB 0C0h + ((addr-$-1)&31)
-  164/   0 :                                ENDM
-  165/   0 :                            
-  166/   0 :                            IL_BE   MACRO  addr             ;Branch if not end of line
-  167/   0 :                                    DB 0E0h + ((addr-$-1)&31)
-  168/   0 :                                ENDM
-  169/   0 :                            
-  170/   0 :                            IL_ENDCHAR  MACRO char
-  171/   0 :                                    DB char | 80h
-  172/   0 :                                ENDM
-  173/   0 :                            
-  174/   0 :                            IL_CHAR  MACRO char, endchar
-  175/   0 :                                    DB char
-  176/   0 :                                    DB endchar | 80h
+  121/   0 :                                ENDM
+  122/   0 :                            
+  123/   0 :                            IL_XQ   MACRO                   ;Execute
+  124/   0 :                                    DB 2Ch
+  125/   0 :                                ENDM
+  126/   0 :                            
+  127/   0 :                            IL_WS   MACRO                   ;Stop
+  128/   0 :                                    DB 2Dh
+  129/   0 :                                ENDM
+  130/   0 :                            
+  131/   0 :                            IL_US   MACRO                   ;Machine Language Subroutine
+  132/   0 :                                    DB 2Eh
+  133/   0 :                                ENDM
+  134/   0 :                            
+  135/   0 :                            IL_RT   MACRO                   ;IL Subroutine Return
+  136/   0 :                                    DB 2Fh
+  137/   0 :                                ENDM
+  138/   0 :                            
+  139/   0 :                            IL_JS   MACRO addr              ;IL Subroutine Call
+  140/   0 :                                    DW 3000H | addr-STRT & 7FFh
+  141/   0 :                                ENDM
+  142/   0 :                            
+  143/   0 :                            IL_J    MACRO addr              ;Jump
+  144/   0 :                                    DW 3800H | addr-STRT & 7FFh
+  145/   0 :                                ENDM
+  146/   0 :                            
+  147/   0 :                            IL_BR_B MACRO  addr             ;Relative Branch Back
+  148/   0 :                                    DB 60h - (1+$-addr)
+  149/   0 :                                ENDM
+  150/   0 :                            
+  151/   0 :                            IL_BR_F MACRO  addr             ;Relative Branch Forward
+  152/   0 :                                    DB 60h + (addr-$-1)
+  153/   0 :                                ENDM
+  154/   0 :                            
+  155/   0 :                            IL_BC MACRO  addr, char, endchar;String Match Branch
+  156/   0 :                                    DB 80h + ((addr-$-1)&31)
+  157/   0 :                                    IF char>0
+  158/   0 :                                    DB char
+  159/   0 :                                    ENDIF
+  160/   0 :                                    DB endchar | 80h               
+  161/   0 :                                ENDM
+  162/   0 :                            
+  163/   0 :                            IL_BV MACRO  addr               ;Branch if not a Variable
+  164/   0 :                                    DB 0A0h + ((addr-$-1)&31)
+  165/   0 :                                ENDM
+  166/   0 :                            
+  167/   0 :                            IL_BN   MACRO  addr             ;Branch if not a number
+  168/   0 :                                    DB 0C0h + ((addr-$-1)&31)
+  169/   0 :                                ENDM
+  170/   0 :                            
+  171/   0 :                            IL_BE   MACRO  addr             ;Branch if not end of line
+  172/   0 :                                    DB 0E0h + ((addr-$-1)&31)
+  173/   0 :                                ENDM
+  174/   0 :                            
+  175/   0 :                            IL_ENDCHAR  MACRO char
+  176/   0 :                                    DB char | 80h
   177/   0 :                                ENDM
   178/   0 :                            
-  179/   0 : (MACRO)                    STRT    IL_PC ':', 11h        ;':Q^'  Start Of IL Program
-  179/   0 : 24                                 DB 24h
- AS V1.42 Beta [Bld 275] - Source File TB_IL.asm - Page 4 - 10/02/2024 02:46:21 PM
+  179/   0 :                            IL_CHAR  MACRO char, endchar
+  180/   0 :                                    IF char>0
+ AS V1.42 Beta [Bld 275] - Source File TB_IL.asm - Page 4 - 10/02/2024 11:14:07 PM
 
 
-  179/   1 : 3A                                 DB ':'
-  179/   2 : 91                                 DB 11H | 80h                
-  180/   3 : (MACRO)                            IL_GL                   ;GL
-  180/   3 : 27                                 DB 27h
-  181/   4 : (MACRO)                            IL_SB                   ;SB
-  181/   4 : 10                                 DB 10h
-  182/   5 : (MACRO)                            IL_BE LO                ;BE      :LO
-  182/   5 : FF                                 DB 0E0h + ((LO-$-1)&31)
-  183/   6 : (MACRO)                            IL_BR_B STRT            ;BR      :STRT
-  183/   6 : 59                                 DB 60h - (1+$-STRT)
-  184/   7 : (MACRO)                    LO      IL_BN STMT              ;BN      :STMT
-  184/   7 : DF                                 DB 0C0h + ((STMT-$-1)&31)
-  185/   8 : (MACRO)                            IL_IL                   ;IL
-  185/   8 : 2A                                 DB 2Ah
-  186/   9 : (MACRO)                            IL_BR_B STRT            ;BR      :STRT
-  186/   9 : 56                                 DB 60h - (1+$-STRT)
-  187/   A : (MACRO)                    XEC     IL_SB                   ;SB
-  187/   A : 10                                 DB 10h
-  188/   B : (MACRO)                            IL_RB                   ;RB
-  188/   B : 11                                 DB 11h
-  189/   C : (MACRO)                            IL_XQ                   ;XQ
-  189/   C : 2C                                 DB 2Ch
-  190/   D : (MACRO)                    STMT    IL_BC GOTO, 'LE', 'T'   ;BC      :GOTO     'LET'
-  190/   D : 9F                                 DB 80h + ((GOTO-$-1)&31)
-  190/   E : =>TRUE                             IF 'LE'>0
-  190/   E : 4C 45                              DB 'LE'
-  190/  10 : [190]                              ENDIF
-  190/  10 : D4                                 DB 'T' | 80h               
-  191/  11 : (MACRO)                            IL_BV $+1               ;BV      * !18
-  191/  11 : A0                                 DB 0A0h + (($+1-$-1)&31)
-  192/  12 : (MACRO)                            IL_BC $+1, 0, '='       ;BC      * !20     '='         
-  192/  12 : 80                                 DB 80h + (($+1-$-1)&31)
-  192/  13 : =>FALSE                            IF 0>0
-  192/  13 :                                    DB 0
-  192/  13 : [192]                              ENDIF
-  192/  13 : BD                                 DB '=' | 80h               
-  193/  14 : (MACRO)                    LET     IL_JS EXPR              ;JS      :EXPR
-  193/  14 : 30 14                              DW 3000H | EXPR-STRT & 7FFh
-  194/  16 : (MACRO)                            IL_BE $+1               ;BE      * !23
-  194/  16 : E0                                 DB 0E0h + (($+1-$-1)&31)
-  195/  17 : (MACRO)                            IL_SV                   ;SV
-  195/  17 : 13                                 DB 13H
-  196/  18 : (MACRO)                            IL_NX                   ;NX
-  196/  18 : 1D                                 DB 1DH
-  197/  19 : (MACRO)                    GOTO    IL_BC PRNT, 'G','O'     ;BC      :PRNT     'GO'      
-  197/  19 : 9F                                 DB 80h + ((PRNT-$-1)&31)
-  197/  1A : =>TRUE                             IF 'G'>0
-  197/  1A : 47                                 DB 'G'
-  197/  1B : [197]                              ENDIF
-  197/  1B : CF                                 DB 'O' | 80h               
-  198/  1C : (MACRO)                            IL_BC GOSB, 'T','O'     ;BC      :GOSB     'TO'
-  198/  1C : 9F                                 DB 80h + ((GOSB-$-1)&31)
-  198/  1D : =>TRUE                             IF 'T'>0
-  198/  1D : 54                                 DB 'T'
-  198/  1E : [198]                              ENDIF
-  198/  1E : CF                                 DB 'O' | 80h               
-  199/  1F : (MACRO)                            IL_JS EXPR              ;JS      :EXPR
-  199/  1F : 30 1F                              DW 3000H | EXPR-STRT & 7FFh
-  200/  21 : (MACRO)                            IL_BE $+1               ;BE      * !34
-  200/  21 : E0                                 DB 0E0h + (($+1-$-1)&31)
- AS V1.42 Beta [Bld 275] - Source File TB_IL.asm - Page 5 - 10/02/2024 02:46:21 PM
+  181/   0 :                                    DB char
+  182/   0 :                                    ENDIF
+  183/   0 :                                    DB endchar | 80h
+  184/   0 :                                ENDM
+  185/   0 :                            
+  186/   0 : (MACRO)                    STRT    IL_PC ':', 11h          ;':Q^'  Start Of IL Program
+  186/   0 : 24                                 DB 24h
+  186/   1 : =>TRUE                             IF ':'>0
+  186/   1 : 3A                                 DB ':'
+  186/   2 : [186]                              ENDIF
+  186/   2 : =>TRUE                             IF 11H>0
+  186/   2 : 91                                 DB 11H | 80h
+  186/   3 : [186]                              ENDIF             
+  187/   3 : (MACRO)                            IL_GL                   ;GL
+  187/   3 : 27                                 DB 27h
+  188/   4 : (MACRO)                            IL_SB                   ;SB
+  188/   4 : 10                                 DB 10h
+  189/   5 : (MACRO)                            IL_BE LO                ;BE      :LO
+  189/   5 : E1                                 DB 0E0h + ((LO-$-1)&31)
+  190/   6 : (MACRO)                            IL_BR_B STRT            ;BR      :STRT
+  190/   6 : 59                                 DB 60h - (1+$-STRT)
+  191/   7 : (MACRO)                    LO      IL_BN STMT              ;BN      :STMT
+  191/   7 : C5                                 DB 0C0h + ((STMT-$-1)&31)
+  192/   8 : (MACRO)                            IL_IL                   ;IL
+  192/   8 : 2A                                 DB 2Ah
+  193/   9 : (MACRO)                            IL_BR_B STRT            ;BR      :STRT
+  193/   9 : 56                                 DB 60h - (1+$-STRT)
+  194/   A : (MACRO)                    XEC     IL_SB                   ;SB
+  194/   A : 10                                 DB 10h
+  195/   B : (MACRO)                            IL_RB                   ;RB
+  195/   B : 11                                 DB 11h
+  196/   C : (MACRO)                            IL_XQ                   ;XQ
+  196/   C : 2C                                 DB 2Ch
+  197/   D : (MACRO)                    STMT    IL_BC GOTO, 'LE', 'T'   ;BC      :GOTO     'LET'
+  197/   D : 8B                                 DB 80h + ((GOTO-$-1)&31)
+  197/   E : =>TRUE                             IF 'LE'>0
+  197/   E : 4C 45                              DB 'LE'
+  197/  10 : [197]                              ENDIF
+  197/  10 : D4                                 DB 'T' | 80h               
+  198/  11 : (MACRO)                            IL_BV $+1               ;BV      * !18
+  198/  11 : A0                                 DB 0A0h + (($+1-$-1)&31)
+  199/  12 : (MACRO)                            IL_BC $+1, 0, '='       ;BC      * !20     '='         
+  199/  12 : 80                                 DB 80h + (($+1-$-1)&31)
+  199/  13 : =>FALSE                            IF 0>0
+  199/  13 :                                    DB 0
+  199/  13 : [199]                              ENDIF
+  199/  13 : BD                                 DB '=' | 80h               
+  200/  14 : (MACRO)                    LET     IL_JS EXPR              ;JS      :EXPR
+  200/  14 : 31 8F                              DW 3000H | EXPR-STRT & 7FFh
+  201/  16 : (MACRO)                            IL_BE $+1               ;BE      * !23
+  201/  16 : E0                                 DB 0E0h + (($+1-$-1)&31)
+  202/  17 : (MACRO)                            IL_SV                   ;SV
+  202/  17 : 13                                 DB 13H
+  203/  18 : (MACRO)                            IL_NX                   ;NX
+  203/  18 : 1D                                 DB 1DH
+  204/  19 : (MACRO)                    GOTO    IL_BC PRNT, 'G','O'     ;BC      :PRNT     'GO'      
+  204/  19 : 94                                 DB 80h + ((PRNT-$-1)&31)
+  204/  1A : =>TRUE                             IF 'G'>0
+  204/  1A : 47                                 DB 'G'
+  204/  1B : [204]                              ENDIF
+ AS V1.42 Beta [Bld 275] - Source File TB_IL.asm - Page 5 - 10/02/2024 11:14:07 PM
 
 
-  201/  22 : (MACRO)                            IL_SB                   ;SB
-  201/  22 : 10                                 DB 10h
-  202/  23 : (MACRO)                            IL_RB                   ;RB
-  202/  23 : 11                                 DB 11h
-  203/  24 : (MACRO)                            IL_GO                   ;GO
-  203/  24 : 16                                 DB 16H
-  204/  25 : (MACRO)                    GOSB    IL_BC $+1
-  204/  25 : 80                                 DB 80h + (($+1-$-1)&31)
-> > > TB_IL.asm(204) IL_BC(2): error: expression must be evaluatable in first pass
-  204/  26 : =>TRUE                             IF >0
-  204/  26 :                                    DB 
-  204/  26 : [204]                              ENDIF
-  204/  26 : 26                                 DB  | 80h               
-  205/  27 : 53 55                              DB 'S', 'U'             ;BC      * !39     'SUB'
-  206/  29 : (MACRO)                            IL_ENDCHAR 'B'          ;--
-  206/  29 : C2                                 DB 'B' | 80h
-  207/  2A : (MACRO)                            IL_JS EXPR              ;JS      :EXPR
-  207/  2A : 30 2A                              DW 3000H | EXPR-STRT & 7FFh
-  208/  2C : (MACRO)                            IL_BE $+1               ;BE      * !44
-  208/  2C : E0                                 DB 0E0h + (($+1-$-1)&31)
-  209/  2D : (MACRO)                            IL_GS                   ;GS
-  209/  2D : 14                                 DB 14H
-  210/  2E : (MACRO)                            IL_GO                   ;GO
-  210/  2E : 16                                 DB 16H
-  211/  2F : (MACRO)                    PRNT    IL_BC SKIP_             ;BC      :SKIP     'PR'
-  211/  2F : 9F                                 DB 80h + ((SKIP_-$-1)&31)
-> > > TB_IL.asm(211) IL_BC(2): error: expression must be evaluatable in first pass
-  211/  30 : =>TRUE                             IF >0
-  211/  30 :                                    DB 
-  211/  30 : [211]                              ENDIF
-  211/  30 : 30                                 DB  | 80h               
-  212/  31 : 50                                 DB 'P'
-  213/  32 : (MACRO)                            IL_ENDCHAR 'R'
-  213/  32 : D2                                 DB 'R' | 80h
-  214/  33 : (MACRO)                            IL_BC P0                ;BC      :P0       'INT'
-  214/  33 : 9F                                 DB 80h + ((P0-$-1)&31)
-> > > TB_IL.asm(214) IL_BC(2): error: expression must be evaluatable in first pass
-  214/  34 : =>TRUE                             IF >0
-  214/  34 :                                    DB 
-  214/  34 : [214]                              ENDIF
-  214/  34 : 34                                 DB  | 80h               
-  215/  35 : 49 4E                              DB 'IN'    
-  216/  37 : (MACRO)                            IL_ENDCHAR 'T'          ;--
-  216/  37 : D4                                 DB 'T' | 80h
-  217/  38 : (MACRO)                    P0      IL_BE P3                ;BE      :P3
-  217/  38 : FF                                 DB 0E0h + ((P3-$-1)&31)
-  218/  39 : (MACRO)                            IL_BR_F S3              ;BR      Z233
-  218/  39 : 61                                 DB 60h + (S3-$+1)
-  219/  3A : (MACRO)                    P1      IL_BC S1                ;BC      Z234      ';'
-  219/  3A : 9F                                 DB 80h + ((S1-$-1)&31)
-> > > TB_IL.asm(219) IL_BC(2): error: expression must be evaluatable in first pass
-  219/  3B : =>TRUE                             IF >0
-  219/  3B :                                    DB 
-  219/  3B : [219]                              ENDIF
-  219/  3B : 3B                                 DB  | 80h               
-  220/  3C : (MACRO)                            IL_ENDCHAR ';'
-  220/  3C : BB                                 DB ';' | 80h
-  221/  3D : (MACRO)                    P2      IL_BE P3                ;BE      :P3
-  221/  3D : FF                                 DB 0E0h + ((P3-$-1)&31)
-  222/  3E : (MACRO)                            IL_NX                   ;NX
- AS V1.42 Beta [Bld 275] - Source File TB_IL.asm - Page 6 - 10/02/2024 02:46:21 PM
+  204/  1B : CF                                 DB 'O' | 80h               
+  205/  1C : (MACRO)                            IL_BC GOSB, 'T','O'     ;BC      :GOSB     'TO'
+  205/  1C : 88                                 DB 80h + ((GOSB-$-1)&31)
+  205/  1D : =>TRUE                             IF 'T'>0
+  205/  1D : 54                                 DB 'T'
+  205/  1E : [205]                              ENDIF
+  205/  1E : CF                                 DB 'O' | 80h               
+  206/  1F : (MACRO)                            IL_JS EXPR              ;JS      :EXPR
+  206/  1F : 31 8F                              DW 3000H | EXPR-STRT & 7FFh
+  207/  21 : (MACRO)                            IL_BE $+1               ;BE      * !34
+  207/  21 : E0                                 DB 0E0h + (($+1-$-1)&31)
+  208/  22 : (MACRO)                            IL_SB                   ;SB
+  208/  22 : 10                                 DB 10h
+  209/  23 : (MACRO)                            IL_RB                   ;RB
+  209/  23 : 11                                 DB 11h
+  210/  24 : (MACRO)                            IL_GO                   ;GO
+  210/  24 : 16                                 DB 16H
+  211/  25 : (MACRO)                    GOSB    IL_BC $+1, 'SU', 'B'    ;BC      * !39     'SUB'
+  211/  25 : 80                                 DB 80h + (($+1-$-1)&31)
+  211/  26 : =>TRUE                             IF 'SU'>0
+  211/  26 : 53 55                              DB 'SU'
+  211/  28 : [211]                              ENDIF
+  211/  28 : C2                                 DB 'B' | 80h               
+  212/  29 : (MACRO)                            IL_JS EXPR              ;JS      :EXPR
+  212/  29 : 31 8F                              DW 3000H | EXPR-STRT & 7FFh
+  213/  2B : (MACRO)                            IL_BE $+1               ;BE      * !44
+  213/  2B : E0                                 DB 0E0h + (($+1-$-1)&31)
+  214/  2C : (MACRO)                            IL_GS                   ;GS
+  214/  2C : 14                                 DB 14H
+  215/  2D : (MACRO)                            IL_GO                   ;GO
+  215/  2D : 16                                 DB 16H
+  216/  2E : (MACRO)                    PRNT    IL_BC SKIP_, 'P', 'R'   ;BC      :SKIP     'PR'
+  216/  2E : 90                                 DB 80h + ((SKIP_-$-1)&31)
+  216/  2F : =>TRUE                             IF 'P'>0
+  216/  2F : 50                                 DB 'P'
+  216/  30 : [216]                              ENDIF
+  216/  30 : D2                                 DB 'R' | 80h               
+  217/  31 : (MACRO)                            IL_BC P0, 'IN', 'T'     ;BC      :P0       'INT'
+  217/  31 : 83                                 DB 80h + ((P0-$-1)&31)
+  217/  32 : =>TRUE                             IF 'IN'>0
+  217/  32 : 49 4E                              DB 'IN'
+  217/  34 : [217]                              ENDIF
+  217/  34 : D4                                 DB 'T' | 80h               
+  218/  35 : (MACRO)                    P0      IL_BE P3                ;BE      :P3
+  218/  35 : E5                                 DB 0E0h + ((P3-$-1)&31)
+  219/  36 : (MACRO)                            IL_BR_F S3              ;BR      Z233
+  219/  36 : 71                                 DB 60h + (S3-$-1)
+  220/  37 : (MACRO)                    P1      IL_BC S1, 0, ';'        ;BC      Z234      ';'
+  220/  37 : 88                                 DB 80h + ((S1-$-1)&31)
+  220/  38 : =>FALSE                            IF 0>0
+  220/  38 :                                    DB 0
+  220/  38 : [220]                              ENDIF
+  220/  38 : BB                                 DB ';' | 80h               
+  221/  39 : (MACRO)                    P2      IL_BE P3                ;BE      :P3
+  221/  39 : E1                                 DB 0E0h + ((P3-$-1)&31)
+  222/  3A : (MACRO)                            IL_NX                   ;NX
+  222/  3A : 1D                                 DB 1DH
+  223/  3B : (MACRO)                    P3      IL_BC S4, 0, '"'        ;BC      Z235      '"'
+  223/  3B : 8F                                 DB 80h + ((S4-$-1)&31)
+  223/  3C : =>FALSE                            IF 0>0
+ AS V1.42 Beta [Bld 275] - Source File TB_IL.asm - Page 6 - 10/02/2024 11:14:07 PM
 
 
-  222/  3E : 1D                                 DB 1DH
-  223/  3F : (MACRO)                    P3      IL_BC S5                ;BC      Z235      '"'
-  223/  3F : 9F                                 DB 80h + ((S5-$-1)&31)
-> > > TB_IL.asm(223) IL_BC(2): error: expression must be evaluatable in first pass
-  223/  40 : =>TRUE                             IF >0
-  223/  40 :                                    DB 
-  223/  40 : [223]                              ENDIF
-  223/  40 : 40                                 DB  | 80h               
-  224/  41 : (MACRO)                            IL_ENDCHAR '"'
-  224/  41 : A2                                 DB '"' | 80h
-  225/  42 : (MACRO)                            IL_PQ                   ;PQ
-  225/  42 : 21                                 DB 21H
-  226/  43 : (MACRO)                            IL_BR_B P1              ;BR      :P1
-  226/  43 : 56                                 DB 60h - (1+$-P1)
-  227/  44 : (MACRO)                    SKIP_   IL_BR_B IF_             ;BR      :IF
-  227/  44 : 5F                                 DB 60h - (1+$-IF_)
-  228/  45 : (MACRO)                    S1      IL_BC S2                ;Z234       BC      Z236      ','
-  228/  45 : 9F                                 DB 80h + ((S2-$-1)&31)
-> > > TB_IL.asm(228) IL_BC(2): error: expression must be evaluatable in first pass
-  228/  46 : =>TRUE                             IF >0
-  228/  46 :                                    DB 
-  228/  46 : [228]                              ENDIF
-  228/  46 : 46                                 DB  | 80h               
-  229/  47 : (MACRO)                            IL_ENDCHAR ','
-  229/  47 : AC                                 DB ',' | 80h
-  230/  48 : (MACRO)                            IL_PT                   ;PT
-  230/  48 : 22                                 DB 22H
-  231/  49 : (MACRO)                            IL_BR_B P2              ;BR      :P2
-  231/  49 : 53                                 DB 60h - (1+$-P2)
-  232/  4A : (MACRO)                    S2      IL_BC S4                ;Z236       BC      Z233      ':'
-  232/  4A : 9F                                 DB 80h + ((S4-$-1)&31)
-> > > TB_IL.asm(232) IL_BC(2): error: expression must be evaluatable in first pass
-  232/  4B : =>TRUE                             IF >0
-  232/  4B :                                    DB 
-  232/  4B : [232]                              ENDIF
-  232/  4B : 4B                                 DB  | 80h               
-  233/  4C : (MACRO)                            IL_ENDCHAR ':'
-  233/  4C : BA                                 DB ':' | 80h
-  234/  4D : (MACRO)                    S3      IL_PC                   ;PC                'S^'
-  234/  4D : 24                                 DB 24h
-  234/  4E :                                    DB 
-  234/  4E : 4E                                 DB  | 80h                
-  235/  4F : (MACRO)                            IL_ENDCHAR 13h
-  235/  4F : 93                                 DB 13H | 80h
-  236/  50 : (MACRO)                    S4      IL_BE P3                ;Z233       BE      * !73
-  236/  50 : EE                                 DB 0E0h + ((P3-$-1)&31)
-  237/  51 : (MACRO)                            IL_NL                   ;NL
-  237/  51 : 23                                 DB 23H
-  238/  52 : (MACRO)                            IL_NX                   ;NX
-  238/  52 : 1D                                 DB 1DH
-  239/  53 : (MACRO)                    S5      IL_JS EXPR
-  239/  53 : 30 53                              DW 3000H | EXPR-STRT & 7FFh
-  240/  55 : (MACRO)                            IL_PN                   ;PN
-  240/  55 : 20                                 DB 20H
-  241/  56 : (MACRO)                            IL_BR_B P1
-  241/  56 : 43                                 DB 60h - (1+$-P1)
-  242/  57 : (MACRO)                    IF_     IL_BC INPT              ;BC      :INPT     'IF'
-  242/  57 : 9F                                 DB 80h + ((INPT-$-1)&31)
-> > > TB_IL.asm(242) IL_BC(2): error: expression must be evaluatable in first pass
-  242/  58 : =>TRUE                             IF >0
- AS V1.42 Beta [Bld 275] - Source File TB_IL.asm - Page 7 - 10/02/2024 02:46:21 PM
+  223/  3C :                                    DB 0
+  223/  3C : [223]                              ENDIF
+  223/  3C : A2                                 DB '"' | 80h               
+  224/  3D : (MACRO)                            IL_PQ                   ;PQ
+  224/  3D : 21                                 DB 21H
+  225/  3E : (MACRO)                            IL_BR_B P1              ;BR      :P1
+  225/  3E : 58                                 DB 60h - (1+$-P1)
+  226/  3F : (MACRO)                    SKIP_   IL_BR_B IF_             ;BR      :IF
+  226/  3F : 6F                                 DB 60h - (1+$-IF_)
+  227/  40 : (MACRO)                    S1      IL_BC S2, 0, ','        ;Z234       BC      Z236      ','
+  227/  40 : 83                                 DB 80h + ((S2-$-1)&31)
+  227/  41 : =>FALSE                            IF 0>0
+  227/  41 :                                    DB 0
+  227/  41 : [227]                              ENDIF
+  227/  41 : AC                                 DB ',' | 80h               
+  228/  42 : (MACRO)                            IL_PT                   ;PT
+  228/  42 : 22                                 DB 22H
+  229/  43 : (MACRO)                            IL_BR_B P2              ;BR      :P2
+  229/  43 : 55                                 DB 60h - (1+$-P2)
+  230/  44 : (MACRO)                    S2      IL_BC S3, 0, ':'        ;Z236       BC      Z233      ':'
+  230/  44 : 83                                 DB 80h + ((S3-$-1)&31)
+  230/  45 : =>FALSE                            IF 0>0
+  230/  45 :                                    DB 0
+  230/  45 : [230]                              ENDIF
+  230/  45 : BA                                 DB ':' | 80h               
+  231/  46 : (MACRO)                            IL_PC 0, 13h            ;PC                'S^'
+  231/  46 : 24                                 DB 24h
+  231/  47 : =>FALSE                            IF 0>0
+  231/  47 :                                    DB 0
+  231/  47 : [231]                              ENDIF
+  231/  47 : =>TRUE                             IF 13H>0
+  231/  47 : 93                                 DB 13H | 80h
+  231/  48 : [231]                              ENDIF             
+  232/  48 : (MACRO)                    S3      IL_BE $+1               ;Z233       BE      * !73
+  232/  48 : E0                                 DB 0E0h + (($+1-$-1)&31)
+  233/  49 : (MACRO)                            IL_NL                   ;NL
+  233/  49 : 23                                 DB 23H
+  234/  4A : (MACRO)                            IL_NX                   ;NX
+  234/  4A : 1D                                 DB 1DH
+  235/  4B : (MACRO)                    S4      IL_JS EXPR
+  235/  4B : 31 8F                              DW 3000H | EXPR-STRT & 7FFh
+  236/  4D : (MACRO)                            IL_PN                   ;PN
+  236/  4D : 20                                 DB 20H
+  237/  4E : (MACRO)                            IL_BR_B P1
+  237/  4E : 48                                 DB 60h - (1+$-P1)
+  238/  4F : (MACRO)                    IF_     IL_BC INPT, 'I', 'F'    ;BC      :INPT     'IF'
+  238/  4F : 91                                 DB 80h + ((INPT-$-1)&31)
+  238/  50 : =>TRUE                             IF 'I'>0
+  238/  50 : 49                                 DB 'I'
+  238/  51 : [238]                              ENDIF
+  238/  51 : C6                                 DB 'F' | 80h               
+  239/  52 : (MACRO)                            IL_JS EXPR
+  239/  52 : 31 8F                              DW 3000H | EXPR-STRT & 7FFh
+  240/  54 : (MACRO)                            IL_JS RELOP             ;JS      RELOP
+  240/  54 : 32 37                              DW 3000H | RELOP-STRT & 7FFh
+  241/  56 : (MACRO)                            IL_JS EXPR
+  241/  56 : 31 8F                              DW 3000H | EXPR-STRT & 7FFh
+  242/  58 : (MACRO)                            IL_BC I1, 'THE', 'N'    ;BC      :I1       'THEN' 
+  242/  58 : 84                                 DB 80h + ((I1-$-1)&31)
+  242/  59 : =>TRUE                             IF 'THE'>0
+ AS V1.42 Beta [Bld 275] - Source File TB_IL.asm - Page 7 - 10/02/2024 11:14:07 PM
 
 
-  242/  58 :                                    DB 
-  242/  58 : [242]                              ENDIF
-  242/  58 : 58                                 DB  | 80h               
-  243/  59 : 49                                 DB 'I'
-  244/  5A : (MACRO)                            IL_ENDCHAR 'F'
-  244/  5A : C6                                 DB 'F' | 80h
-  245/  5B : (MACRO)                            IL_JS EXPR
-  245/  5B : 30 5B                              DW 3000H | EXPR-STRT & 7FFh
-  246/  5D : (MACRO)                            IL_JS RELOP               ;JS      RELOP
-  246/  5D : 30 5D                              DW 3000H | RELOP-STRT & 7FFh
-  247/  5F : (MACRO)                            IL_JS EXPR
-  247/  5F : 30 5F                              DW 3000H | EXPR-STRT & 7FFh
-  248/  61 : (MACRO)                            IL_BC I1 
-  248/  61 : 9F                                 DB 80h + ((I1-$-1)&31)
-> > > TB_IL.asm(248) IL_BC(2): error: expression must be evaluatable in first pass
-  248/  62 : =>TRUE                             IF >0
-  248/  62 :                                    DB 
-  248/  62 : [248]                              ENDIF
-  248/  62 : 62                                 DB  | 80h               
-  249/  63 : 54 48                              DB 054h, 048h             ;BC      :I1       'THEN'
-  250/  65 : 45 CE                              DB 045h, 0CEh               ;--
-  251/  67 : (MACRO)                    I1      IL_CP         ;CP
-  251/  67 : 1C                                 DB 1CH
-  252/  68 : (MACRO)                            IL_NX                 ;NX
-  252/  68 : 1D                                 DB 1DH
-  253/  69 : (MACRO)                            IL_J STMT
-  253/  69 : 38 0D                              DW 3800H | STMT-STRT & 7FFh
-  254/  6B : 9A 49 4E                   INPT    DB 09Ah, 049h, 04Eh       ;BC      :RETN     'INPUT'
-  255/  6E : 50 55 D4                           DB 050h, 055h, 0D4h             ;--
-  256/  71 : (MACRO)                            IL_BV BV      ;Z242       BV      * !104
-  256/  71 : BF                                 DB 0A0h + ((BV-$-1)&31)
-  257/  72 : (MACRO)                            IL_SB                 ;SB
-  257/  72 : 10                                 DB 10h
-  258/  73 : (MACRO)                            IL_BE Z238                 ;BE      Z238
-  258/  73 : FF                                 DB 0E0h + ((Z238-$-1)&31)
-  259/  74 : 24 3F 20                           DB 024h, 03Fh, 020h  ;Z239       PC                '? Q^'
-  260/  77 : 91                                 DB 091h                ;--
-  261/  78 : (MACRO)                            IL_GL                 ;GL
-  261/  78 : 27                                 DB 27h
-  262/  79 : (MACRO)                            IL_BE Z238                 ;BE      Z238
-  262/  79 : FF                                 DB 0E0h + ((Z238-$-1)&31)
-> > > TB_IL.asm(263):9: error: unknown instruction
-> > > IL_BR
-> > >         IL_BR Z239                 ;BR      Z239
-> > >         ~~~~~
-  263/  7A :                                    IL_BR Z239                 ;BR      Z239
-  264/  7A : 81 AC                              DB 081h, 0ACh    ;Z238       BC      Z240      ','
-  265/  7C : (MACRO)                            IL_JS EXPR
-  265/  7C : 30 7C                              DW 3000H | EXPR-STRT & 7FFh
-  266/  7E : (MACRO)                            IL_SV                 ;SV
-  266/  7E : 13                                 DB 13H
-  267/  7F : (MACRO)                            IL_RB                 ;RB
-  267/  7F : 11                                 DB 11h
-  268/  80 : 82 AC                              DB 082h, 0ACh               ;BC      Z241      ','
-> > > TB_IL.asm(269):9: error: unknown instruction
-> > > IL_BR
-> > >         IL_BR Z242                 ;BR      Z242
-> > >         ~~~~~
-  269/  82 :                                    IL_BR Z242                 ;BR      Z242
-  270/  82 : (MACRO)                            IL_BE BE      ;Z241       BE      * !123
- AS V1.42 Beta [Bld 275] - Source File TB_IL.asm - Page 8 - 10/02/2024 02:46:21 PM
+  242/  59 : 54 48 45                           DB 'THE'
+  242/  5C : [242]                              ENDIF
+  242/  5C : CE                                 DB 'N' | 80h               
+  243/  5D : (MACRO)                    I1      IL_CP                   ;CP
+  243/  5D : 1C                                 DB 1CH
+  244/  5E : (MACRO)                            IL_NX                   ;NX
+  244/  5E : 1D                                 DB 1DH
+  245/  5F : (MACRO)                            IL_J STMT
+  245/  5F : 38 0D                              DW 3800H | STMT-STRT & 7FFh
+  246/  61 : (MACRO)                    INPT    IL_BC RETN_, 'INPU', 'T' ;BC      :RETN     'INPUT'
+  246/  61 : 9A                                 DB 80h + ((RETN_-$-1)&31)
+  246/  62 : =>TRUE                             IF 'INPU'>0
+  246/  62 : 49 4E 50 55                        DB 'INPU'
+  246/  66 : [246]                              ENDIF
+  246/  66 : D4                                 DB 'T' | 80h               
+  247/  67 : (MACRO)                    I0      IL_BV $+1               ;Z242       BV      * !104
+  247/  67 : A0                                 DB 0A0h + (($+1-$-1)&31)
+  248/  68 : (MACRO)                            IL_SB                   ;SB
+  248/  68 : 10                                 DB 10h
+  249/  69 : (MACRO)                            IL_BE I3                ;BE      Z238
+  249/  69 : E7                                 DB 0E0h + ((I3-$-1)&31)
+  250/  6A : (MACRO)                    I2      IL_PC '? ', 11h         ;Z239       PC                '? Q^'
+  250/  6A : 24                                 DB 24h
+  250/  6B : =>TRUE                             IF '? '>0
+  250/  6B : 3F 20                              DB '? '
+  250/  6D : [250]                              ENDIF
+  250/  6D : =>TRUE                             IF 11H>0
+  250/  6D : 91                                 DB 11H | 80h
+  250/  6E : [250]                              ENDIF             
+  251/  6E : (MACRO)                            IL_GL                   ;GL
+  251/  6E : 27                                 DB 27h
+  252/  6F : (MACRO)                            IL_BE I3                ;BE      Z238
+  252/  6F : E1                                 DB 0E0h + ((I3-$-1)&31)
+  253/  70 : (MACRO)                            IL_BR_B I2              ;BR      Z239
+  253/  70 : 59                                 DB 60h - (1+$-I2)
+  254/  71 : (MACRO)                    I3      IL_BC I4, 0, ","        ;Z238       BC      Z240      ','
+  254/  71 : 81                                 DB 80h + ((I4-$-1)&31)
+  254/  72 : =>FALSE                            IF 0>0
+  254/  72 :                                    DB 0
+  254/  72 : [254]                              ENDIF
+  254/  72 : AC                                 DB "," | 80h               
+  255/  73 : (MACRO)                    I4      IL_JS EXPR
+  255/  73 : 31 8F                              DW 3000H | EXPR-STRT & 7FFh
+  256/  75 : (MACRO)                            IL_SV                   ;SV
+  256/  75 : 13                                 DB 13H
+  257/  76 : (MACRO)                            IL_RB                   ;RB
+  257/  76 : 11                                 DB 11h
+  258/  77 : (MACRO)                            IL_BC I5, 0, ','        ;BC      Z241      ','
+  258/  77 : 82                                 DB 80h + ((I5-$-1)&31)
+  258/  78 : =>FALSE                            IF 0>0
+  258/  78 :                                    DB 0
+  258/  78 : [258]                              ENDIF
+  258/  78 : AC                                 DB ',' | 80h               
+  259/  79 : (MACRO)                            IL_BR_B I0              ;BR      Z242
+  259/  79 : 4D                                 DB 60h - (1+$-I0)
+  260/  7A : (MACRO)                    I5      IL_BE $+1               ;Z241      BE      * !123
+  260/  7A : E0                                 DB 0E0h + (($+1-$-1)&31)
+  261/  7B : (MACRO)                            IL_NX                   ;NX
+  261/  7B : 1D                                 DB 1DH
+  262/  7C : (MACRO)                    RETN_   IL_BC END, 'RETUR', 'N' ;BC      :END      'RETURN'
+ AS V1.42 Beta [Bld 275] - Source File TB_IL.asm - Page 8 - 10/02/2024 11:14:07 PM
 
 
-  270/  82 : FF                                 DB 0E0h + ((BE-$-1)&31)
-  271/  83 : (MACRO)                            IL_NX                 ;NX
-  271/  83 : 1D                                 DB 1DH
-  272/  84 : 89 52 45                   RETN_   DB 089h, 052h, 045h       ;BC      :END      'RETURN'
-  273/  87 : 54 55 52                           DB 054h, 055h, 052h             ;--
-  274/  8A : CE                                 DB 0CEh                ;--
-  275/  8B : E0                                 DB 0E0h                 ;BE      * !132
-  276/  8C : 15                                 DB 015h                 ;RS
-  277/  8D : (MACRO)                            IL_NX                 ;NX
-  277/  8D : 1D                                 DB 1DH
-  278/  8E : 85 45 4E                   END     DB 085h, 045h, 04Eh        ;BC      :LIST     'END'
-  279/  91 : C4                                 DB 0C4h                ;--
-  280/  92 : E0                                 DB 0E0h                 ;BE      * !139
-  281/  93 : (MACRO)                            IL_WS                 ;WS
-  281/  93 : 2D                                 DB 2Dh
-  282/  94 : 9A 4C 49                   LIST_   DB 09Ah, 04Ch, 049h       ;BC      :RUN      'LIST'
-  283/  97 : 53 D4                              DB 053h, 0D4h               ;--
-  284/  99 : (MACRO)                            IL_BE Z243                 ;BE      Z243
-  284/  99 : FF                                 DB 0E0h + ((Z243-$-1)&31)
-  285/  9A : 0A 00 01                           DB 00Ah, 000h, 001h             ;LN      #0001
-  286/  9D : 0A 7F FF                           DB 00Ah, 07Fh, 0FFh             ;LN      #7FFF
-> > > TB_IL.asm(287):9: error: unknown instruction
-> > > IL_BR
-> > >         IL_BR Z244                 ;BR      Z244
-> > >         ~~~~~
-  287/  A0 :                                    IL_BR Z244                 ;BR      Z244
-  288/  A0 : (MACRO)                            IL_JS EXPR
-  288/  A0 : 30 A0                              DW 3000H | EXPR-STRT & 7FFh
-  289/  A2 : 32 31                              DB 032h, 031h               ;JS      Z245
-  290/  A4 : E0                                 DB 0E0h                 ;BE      * !158
-  291/  A5 : 24 00 00                           DB 024h, 000h, 000h  ;Z244       PC                '@^@^@^@^J^@^'
-  292/  A8 : 00 00 0A                           DB 000h, 000h, 00Ah             ;--
-  293/  AB : 80                                 DB 080h                ;--
-  294/  AC : 1F                                 DB 01Fh                 ;LS
-  295/  AD : (MACRO)                            IL_NX                 ;NX
-  295/  AD : 1D                                 DB 1DH
-  296/  AE : 85 52 55                   RUN_    DB 085h, 052h, 055h        ;BC      :CLER     'RUN'
-  297/  B1 : CE                                 DB 0CEh                ;--
-  298/  B2 : (MACRO)                            IL_J XEC
-  298/  B2 : 38 0A                              DW 3800H | XEC-STRT & 7FFh
-  299/  B4 : 86 43 4C                   CLER    DB 086h, 043h, 04Ch       ;BC      :PLOT     'CLEAR'
-  300/  B7 : 45 41 D2                           DB 045h, 041h, 0D2h             ;--
-  301/  BA : (MACRO)                            IL_MT                 ;MT
-  301/  BA : 2B                                 DB 2Bh
-  302/  BB : 9A 50 4C                   PLOT    DB 09Ah, 050h, 04Ch       ;BC      Z246      'PLOT'
-  303/  BE : 4F D4                              DB 04Fh, 0D4h               ;--
-  304/  C0 : (MACRO)                            IL_JS EXPR
-  304/  C0 : 30 C0                              DW 3000H | EXPR-STRT & 7FFh
-  305/  C2 : 95 AC                              DB 095h, 0ACh               ;BC      Z247      ','
-  306/  C4 : (MACRO)                            IL_DS                 ;DS
-  306/  C4 : 0B                                 DB 0Bh
-  307/  C5 : (MACRO)                            IL_DS                 ;DS
-  307/  C5 : 0B                                 DB 0Bh
-  308/  C6 : 0A 00 2A                           DB 00Ah, 000h, 02Ah             ;LN      42
-  309/  C9 : 32 62                              DB 032h, 062h               ;JS      Z248      COMPARE >0 AND <42
-  310/  CB : 0A 00 40                           DB 00Ah, 000h, 040h             ;LN      64        MULTIPLY BY 64
-  311/  CE : (MACRO)                            IL_MP                  ;MP
-  311/  CE : 1A                                 DB 1AH
-  312/  CF : 0A 00 40                           DB 00Ah, 000h, 040h             ;LN      64
-  313/  D2 : 32 5A                              DB 032h, 05Ah               ;JS      Z249      GET NEXT EXPR AND COMP >0 AND <64
- AS V1.42 Beta [Bld 275] - Source File TB_IL.asm - Page 9 - 10/02/2024 02:46:21 PM
+  262/  7C : 89                                 DB 80h + ((END-$-1)&31)
+  262/  7D : =>TRUE                             IF 'RETUR'>0
+  262/  7D : 52 45 54 55 52                     DB 'RETUR'
+  262/  82 : [262]                              ENDIF
+  262/  82 : CE                                 DB 'N' | 80h               
+  263/  83 : (MACRO)                            IL_BE $+1               ;BE      * !132
+  263/  83 : E0                                 DB 0E0h + (($+1-$-1)&31)
+  264/  84 : (MACRO)                            IL_RS                   ;RS
+  264/  84 : 15                                 DB 15H
+  265/  85 : (MACRO)                            IL_NX                   ;NX
+  265/  85 : 1D                                 DB 1DH
+  266/  86 : (MACRO)                    END     IL_BC LIST_, 'EN', 'D'  ;BC      :LIST     'END'
+  266/  86 : 85                                 DB 80h + ((LIST_-$-1)&31)
+  266/  87 : =>TRUE                             IF 'EN'>0
+  266/  87 : 45 4E                              DB 'EN'
+  266/  89 : [266]                              ENDIF
+  266/  89 : C4                                 DB 'D' | 80h               
+  267/  8A : (MACRO)                            IL_BE $+1               ;BE      * !139
+  267/  8A : E0                                 DB 0E0h + (($+1-$-1)&31)
+  268/  8B : (MACRO)                            IL_WS                   ;WS
+  268/  8B : 2D                                 DB 2Dh
+  269/  8C : (MACRO)                    LIST_   IL_BC RUN_, 'LIS', 'T'  ;BC      :RUN      'LIST'
+  269/  8C : 9A                                 DB 80h + ((RUN_-$-1)&31)
+  269/  8D : =>TRUE                             IF 'LIS'>0
+  269/  8D : 4C 49 53                           DB 'LIS'
+  269/  90 : [269]                              ENDIF
+  269/  90 : D4                                 DB 'T' | 80h               
+  270/  91 : (MACRO)                            IL_BE L1                ;BE      Z243
+  270/  91 : E7                                 DB 0E0h + ((L1-$-1)&31)
+  271/  92 : (MACRO)                            IL_LN 0001h             ;LN      #0001
+  271/  92 : 0A                                 DB 0Ah
+  271/  93 : 00 01                              DW 0001H & 0FFFFh
+  272/  95 : (MACRO)                            IL_LN 7FFFh             ;LN      #7FFF
+  272/  95 : 0A                                 DB 0Ah
+  272/  96 : 7F FF                              DW 7FFFH & 0FFFFh
+  273/  98 : (MACRO)                            IL_BR_F L2              ;BR      Z244
+  273/  98 : 64                                 DB 60h + (L2-$-1)
+  274/  99 : (MACRO)                    L1      IL_JS EXPR
+  274/  99 : 31 8F                              DW 3000H | EXPR-STRT & 7FFh
+  275/  9B : (MACRO)                            IL_JS PE4               ;JS      Z245
+  275/  9B : 32 31                              DW 3000H | PE4-STRT & 7FFh
+  276/  9D : (MACRO)                    L2      IL_BE $+1               ;BE      * !158
+  276/  9D : E0                                 DB 0E0h + (($+1-$-1)&31)
+  277/  9E : (MACRO)                            IL_PC 0,0               ;Z244       PC                '@^@^@^@^J^@^'
+  277/  9E : 24                                 DB 24h
+  277/  9F : =>FALSE                            IF 0>0
+  277/  9F :                                    DB 0
+  277/  9F : [277]                              ENDIF
+  277/  9F : =>FALSE                            IF 0>0
+  277/  9F :                                    DB 0 | 80h
+  277/  9F : [277]                              ENDIF             
+  278/  9F : 00 00 00 00 0A 80                  DB 0,0,0,0,0Ah,80h      ;--
+  279/  A5 : (MACRO)                            IL_LS                   ;LS
+  279/  A5 : 1F                                 DB 1FH
+  280/  A6 : (MACRO)                            IL_NX                   ;NX
+  280/  A6 : 1D                                 DB 1DH
+  281/  A7 : (MACRO)                    RUN_    IL_BC CLER, 'RU','N'    ;BC      :CLER     'RUN'
+  281/  A7 : 85                                 DB 80h + ((CLER-$-1)&31)
+  281/  A8 : =>TRUE                             IF 'RU'>0
+  281/  A8 : 52 55                              DB 'RU'
+ AS V1.42 Beta [Bld 275] - Source File TB_IL.asm - Page 9 - 10/02/2024 11:14:07 PM
 
 
-  314/  D4 : (MACRO)                            IL_AD                 ;AD                ADD TOGETHER (X*64+Y)
-  314/  D4 : 18                                 DB 18H
-  315/  D5 : (MACRO)                            IL_BR_B SKIP_                 ;BR      Z250      SKIP JUMPS
-  315/  D5 : CE                                 DB 60h - (1+$-SKIP_)
-  316/  D6 : (MACRO)                            IL_J POKE
-  316/  D6 : 38 D6                              DW 3800H | POKE-STRT & 7FFh
-  317/  D8 : 38 F4                              DB 038h, 0F4h    ;Z247       J       Z251
-  318/  DA : 0A 6D 80                           DB 00Ah, 06Dh, 080h  ;Z250       LN      BUFF<<3         BUFF*8
-  319/  DD : (MACRO)                            IL_AD                 ;AD                ADD (BUFF*8)+(X*64+Y)
-  319/  DD : 18                                 DB 18H
-  320/  DE : (MACRO)                            IL_DS                 ;DS
-  320/  DE : 0B                                 DB 0Bh
-  321/  DF : 0A 00 08                           DB 00Ah, 000h, 008h             ;LN      8
-  322/  E2 : (MACRO)                            IL_DV                  ;DV                ((BUFF*8)+(X*64+Y))/8
-  322/  E2 : 1B                                 DB 1BH
-  323/  E3 : (MACRO)                            IL_DS                 ;DS
-  323/  E3 : 0B                                 DB 0Bh
-  324/  E4 : (MACRO)                            IL_SX 4                 ;SX 4
-  324/  E4 : 04                                 DB 00h + (4 & 07h)
-  325/  E5 : (MACRO)                            IL_SX 2                 ;SX 2
-  325/  E5 : 02                                 DB 00h + (2 & 07h)
-  326/  E6 : (MACRO)                            IL_SX 5                 ;SX 5
-  326/  E6 : 05                                 DB 00h + (5 & 07h)
-  327/  E7 : (MACRO)                            IL_SX 3                 ;SX 3
-  327/  E7 : 03                                 DB 00h + (3 & 07h)
-  328/  E8 : (MACRO)                            IL_SX 5                 ;SX 5
-  328/  E8 : 05                                 DB 00h + (5 & 07h)
-  329/  E9 : 0A 00 08                           DB 00Ah, 000h, 008h             ;LN      8
-  330/  EC : (MACRO)                            IL_MP                  ;MP                 MULTIPLY BY 8
-  330/  EC : 1A                                 DB 1AH
-  331/  ED : (MACRO)                            IL_SU                 ;SU                 GET REMANDER
-  331/  ED : 19                                 DB 19H
-  332/  EE : 09 0A                              DB 009h, 00Ah               ;LB      TVXY+2
-  333/  F0 : (MACRO)                            IL_SX 2                 ;SX 2
-  333/  F0 : 02                                 DB 00h + (2 & 07h)
-  334/  F1 : (MACRO)                            IL_SV                 ;SV                 STORE NEW BIT POINTER
-  334/  F1 : 13                                 DB 13H
-  335/  F2 : 09 08                              DB 009h, 008h               ;LB      TVXY
-  336/  F4 : (MACRO)                            IL_SX 2                 ;SX 2
-  336/  F4 : 02                                 DB 00h + (2 & 07h)
-  337/  F5 : (MACRO)                            IL_SX 1                 ;SX 1
-  337/  F5 : 01                                 DB 00h + (1 & 07h)
-  338/  F6 : (MACRO)                            IL_SV                 ;SV                 STORE NEW CURSOR
-  338/  F6 : 13                                 DB 13H
-  339/  F7 : 8F AC                              DB 08Fh, 0ACh               ;BC      Z252      ','
-  340/  F9 : (MACRO)                            IL_JS EXPR
-  340/  F9 : 30 F9                              DW 3000H | EXPR-STRT & 7FFh
-  341/  FB : (MACRO)                            IL_BE BE      ;Z251       BE      * !245
-  341/  FB : FF                                 DB 0E0h + ((BE-$-1)&31)
-  342/  FC : 0A 01 09                           DB 00Ah, 001h, 009h             ;LN      TYPEV
-  343/  FF : (MACRO)                            IL_SX 2                 ;SX 2
-  343/  FF : 02                                 DB 00h + (2 & 07h)
-  344/ 100 : (MACRO)                            IL_SX 1                 ;SX 1
-  344/ 100 : 01                                 DB 00h + (1 & 07h)
-  345/ 101 : (MACRO)                            IL_SX 3                 ;SX 3
-  345/ 101 : 03                                 DB 00h + (3 & 07h)
-  346/ 102 : (MACRO)                            IL_SX 1                 ;SX 1
-  346/ 102 : 01                                 DB 00h + (1 & 07h)
-  347/ 103 : (MACRO)                            IL_DS                 ;DS
-  347/ 103 : 0B                                 DB 0Bh
- AS V1.42 Beta [Bld 275] - Source File TB_IL.asm - Page 10 - 10/02/2024 02:46:21 PM
+  281/  AA : [281]                              ENDIF
+  281/  AA : CE                                 DB 'N' | 80h               
+  282/  AB : (MACRO)                            IL_J XEC
+  282/  AB : 38 0A                              DW 3800H | XEC-STRT & 7FFh
+  283/  AD : (MACRO)                    CLER    IL_BC PLOT, 'CLEA','R'  ;BC      :PLOT     'CLEAR'
+  283/  AD : 86                                 DB 80h + ((PLOT-$-1)&31)
+  283/  AE : =>TRUE                             IF 'CLEA'>0
+  283/  AE : 43 4C 45 41                        DB 'CLEA'
+  283/  B2 : [283]                              ENDIF
+  283/  B2 : D2                                 DB 'R' | 80h               
+  284/  B3 : (MACRO)                            IL_MT                   ;MT
+  284/  B3 : 2B                                 DB 2Bh
+  285/  B4 : (MACRO)                    PLOT    IL_BC PO1, 'PLO','T'    ;BC      Z246      'PLOT'
+  285/  B4 : 9A                                 DB 80h + ((PO1-$-1)&31)
+  285/  B5 : =>TRUE                             IF 'PLO'>0
+  285/  B5 : 50 4C 4F                           DB 'PLO'
+  285/  B8 : [285]                              ENDIF
+  285/  B8 : D4                                 DB 'T' | 80h               
+  286/  B9 : (MACRO)                            IL_JS EXPR
+  286/  B9 : 31 8F                              DW 3000H | EXPR-STRT & 7FFh
+  287/  BB : (MACRO)                            IL_BC PO2, 0, ','       ;BC      Z247      ','
+  287/  BB : 95                                 DB 80h + ((PO2-$-1)&31)
+  287/  BC : =>FALSE                            IF 0>0
+  287/  BC :                                    DB 0
+  287/  BC : [287]                              ENDIF
+  287/  BC : AC                                 DB ',' | 80h               
+  288/  BD : (MACRO)                            IL_DS                   ;DS
+  288/  BD : 0B                                 DB 0Bh
+  289/  BE : (MACRO)                            IL_DS                   ;DS
+  289/  BE : 0B                                 DB 0Bh
+  290/  BF : (MACRO)                            IL_LN 42                ;LN      42
+  290/  BF : 0A                                 DB 0Ah
+  290/  C0 : 00 2A                              DW 42 & 0FFFFh
+  291/  C2 : 32 62                              DB 032h, 062h           ;JS      Z248      COMPARE >0 AND <42
+  292/  C4 : (MACRO)                            IL_LN 64                ;LN      64        MULTIPLY BY 64
+  292/  C4 : 0A                                 DB 0Ah
+  292/  C5 : 00 40                              DW 64 & 0FFFFh
+  293/  C7 : (MACRO)                            IL_MP                   ;MP
+  293/  C7 : 1A                                 DB 1AH
+  294/  C8 : (MACRO)                            IL_LN 64                ;LN      64
+  294/  C8 : 0A                                 DB 0Ah
+  294/  C9 : 00 40                              DW 64 & 0FFFFh
+  295/  CB : 32 5A                              DB 032h, 05Ah           ;JS      Z249      GET NEXT EXPR AND COMP >0 AND <64
+  296/  CD : (MACRO)                            IL_AD                   ;AD                ADD TOGETHER (X*64+Y)
+  296/  CD : 18                                 DB 18H
+  297/  CE : (MACRO)                            IL_BR_F PO3             ;BR      Z250      SKIP JUMPS
+  297/  CE : 64                                 DB 60h + (PO3-$-1)
+  298/  CF : (MACRO)                    PO1     IL_J POKE
+  298/  CF : 39 02                              DW 3800H | POKE-STRT & 7FFh
+  299/  D1 : 38 F4                      PO2     DB 038h, 0F4h           ;Z247       J       Z251
+  300/  D3 : 0A 6D 80                   PO3     DB 00Ah, 06Dh, 080h     ;Z250       LN      BUFF<<3         BUFF*8
+  301/  D6 : (MACRO)                            IL_AD                   ;AD                ADD (BUFF*8)+(X*64+Y)
+  301/  D6 : 18                                 DB 18H
+  302/  D7 : (MACRO)                            IL_DS                   ;DS
+  302/  D7 : 0B                                 DB 0Bh
+  303/  D8 : 0A 00 08                           DB 00Ah, 000h, 008h     ;LN      8
+  304/  DB : (MACRO)                            IL_DV                   ;DV                ((BUFF*8)+(X*64+Y))/8
+  304/  DB : 1B                                 DB 1BH
+  305/  DC : (MACRO)                            IL_DS                   ;DS
+  305/  DC : 0B                                 DB 0Bh
+ AS V1.42 Beta [Bld 275] - Source File TB_IL.asm - Page 10 - 10/02/2024 11:14:07 PM
 
 
-  348/ 104 : (MACRO)                            IL_US                 ;US                CALL TYPEV AND OUTPUT BYTE
-  348/ 104 : 2E                                 DB 2Eh
-  349/ 105 : (MACRO)                            IL_SP                 ;SP                POP RETURNED VALUE
-  349/ 105 : 0C                                 DB 0Ch
-  350/ 106 : (MACRO)                            IL_NX                 ;NX                NEXT STATEMENT
-  350/ 106 : 1D                                 DB 1DH
-  351/ 107 : (MACRO)                            IL_BE BE      ;Z252       BE      * !257
-  351/ 107 : FF                                 DB 0E0h + ((BE-$-1)&31)
-  352/ 108 : (MACRO)                            IL_NX                 ;NX
-  352/ 108 : 1D                                 DB 1DH
-  353/ 109 : 8A 50 4F                   POKE    DB 08Ah, 050h, 04Fh       ;BC      :OUT      'POKE'
-  354/ 10C : 4B C5                              DB 04Bh, 0C5h               ;--
-  355/ 10E : 0A 01 18                           DB 00Ah, 001h, 018h             ;LN      ILPOKE
-  356/ 111 : (MACRO)                            IL_JS EXPR
-  356/ 111 : 31 11                              DW 3000H | EXPR-STRT & 7FFh
-> > > TB_IL.asm(357):9: error: unknown instruction
-> > > IL_BR
-> > >         IL_BR Z253                 ;BR      Z253
-> > >         ~~~~~
-  357/ 113 :                                    IL_BR Z253                 ;BR      Z253
-  358/ 113 : 91 4F 55                   OUT_    DB 091h, 04Fh, 055h        ;BC      :SAVE     'OUT'
-  359/ 116 : D4                                 DB 0D4h                ;--
-  360/ 117 : 0A 01 26                           DB 00Ah, 001h, 026h             ;LN      ILINPOUT
-  361/ 11A : 0A 00 08                           DB 00Ah, 000h, 008h             ;LN      8
-  362/ 11D : 32 5A                              DB 032h, 05Ah               ;JS      Z249      GET EXPR AND COMP >0 AND <8
-  363/ 11F : 32 31                              DB 032h, 031h    ;Z253       JS      Z245      CHECK FOR ,AND GET EXPR
-  364/ 121 : E0                                 DB 0E0h                 ;BE      * !284
-  365/ 122 : (MACRO)                            IL_US                 ;US                CALL ILINPOUT OR ILPOKE
-  365/ 122 : 2E                                 DB 2Eh
-  366/ 123 : (MACRO)                            IL_SP                 ;SP                POP RETURNED VALUE
-  366/ 123 : 0C                                 DB 0Ch
-  367/ 124 : (MACRO)                            IL_NX                 ;NX                NEXT STATEMENT
-  367/ 124 : 1D                                 DB 1DH
-  368/ 125 : 9E 53 41                   SAVE    DB 09Eh, 053h, 041h       ;BC      Z254      'SAVE'
-  369/ 128 : 56 C5                              DB 056h, 0C5h               ;--
-  370/ 12A : E0                                 DB 0E0h                 ;BE      * !293
-  371/ 12B : 24 54 55                           DB 024h, 054h, 055h             ;PC                'TURN ON RECORD'
-  372/ 12E : 52 4E 20                           DB 052h, 04Eh, 020h             ;--
-  373/ 131 : 4F 4E 20                           DB 04Fh, 04Eh, 020h             ;--
-  374/ 134 : 52 45 43                           DB 052h, 045h, 043h             ;--
-  375/ 137 : 4F 52 C4                           DB 04Fh, 052h, 0C4h             ;--
-  376/ 13A : (MACRO)                            IL_NL                 ;NL
-  376/ 13A : 23                                 DB 23H
-  377/ 13B : 24 48 49                           DB 024h, 048h, 049h             ;PC                'HIT KEY'
-  378/ 13E : 54 20 4B                           DB 054h, 020h, 04Bh             ;--
-  379/ 141 : 45 D9                              DB 045h, 0D9h               ;--
-> > > TB_IL.asm(380):9: error: unknown instruction
-> > > IL_BR
-> > >         IL_BR Z255                 ;BR      Z255
-> > >         ~~~~~
-  380/ 143 :                                    IL_BR Z255                 ;BR      Z255
-  381/ 143 : (MACRO)                            IL_J LOAD
-  381/ 143 : 39 43                              DW 3800H | LOAD-STRT & 7FFh
-  382/ 145 : 0A 01 06                           DB 00Ah, 001h, 006h  ;Z255       LN      KEYV
-  383/ 148 : (MACRO)                            IL_DS                 ;DS
-  383/ 148 : 0B                                 DB 0Bh
-  384/ 149 : (MACRO)                            IL_DS                 ;DS
-  384/ 149 : 0B                                 DB 0Bh
-  385/ 14A : (MACRO)                            IL_US                 ;US                CALL KEY INPUT
-  385/ 14A : 2E                                 DB 2Eh
- AS V1.42 Beta [Bld 275] - Source File TB_IL.asm - Page 11 - 10/02/2024 02:46:21 PM
+  306/  DD : (MACRO)                            IL_SX 4                 ;SX 4
+  306/  DD : 04                                 DB 00h + (4 & 07h)
+  307/  DE : (MACRO)                            IL_SX 2                 ;SX 2
+  307/  DE : 02                                 DB 00h + (2 & 07h)
+  308/  DF : (MACRO)                            IL_SX 5                 ;SX 5
+  308/  DF : 05                                 DB 00h + (5 & 07h)
+  309/  E0 : (MACRO)                            IL_SX 3                 ;SX 3
+  309/  E0 : 03                                 DB 00h + (3 & 07h)
+  310/  E1 : (MACRO)                            IL_SX 5                 ;SX 5
+  310/  E1 : 05                                 DB 00h + (5 & 07h)
+  311/  E2 : 0A 00 08                           DB 00Ah, 000h, 008h     ;LN      8
+  312/  E5 : (MACRO)                            IL_MP                   ;MP                 MULTIPLY BY 8
+  312/  E5 : 1A                                 DB 1AH
+  313/  E6 : (MACRO)                            IL_SU                   ;SU                 GET REMANDER
+  313/  E6 : 19                                 DB 19H
+  314/  E7 : 09 0A                              DB 009h, 00Ah           ;LB      TVXY+2
+  315/  E9 : (MACRO)                            IL_SX 2                 ;SX 2
+  315/  E9 : 02                                 DB 00h + (2 & 07h)
+  316/  EA : (MACRO)                            IL_SV                   ;SV                 STORE NEW BIT POINTER
+  316/  EA : 13                                 DB 13H
+  317/  EB : 09 08                              DB 009h, 008h           ;LB      TVXY
+  318/  ED : (MACRO)                            IL_SX 2                 ;SX 2
+  318/  ED : 02                                 DB 00h + (2 & 07h)
+  319/  EE : (MACRO)                            IL_SX 1                 ;SX 1
+  319/  EE : 01                                 DB 00h + (1 & 07h)
+  320/  EF : (MACRO)                            IL_SV                   ;SV                 STORE NEW CURSOR
+  320/  EF : 13                                 DB 13H
+  321/  F0 : 8F AC                              DB 08Fh, 0ACh           ;BC      Z252      ','
+  322/  F2 : (MACRO)                            IL_JS EXPR
+  322/  F2 : 31 8F                              DW 3000H | EXPR-STRT & 7FFh
+  323/  F4 : (MACRO)                            IL_BE $+1               ;Z251       BE      * !245
+  323/  F4 : E0                                 DB 0E0h + (($+1-$-1)&31)
+  324/  F5 : 0A 01 09                           DB 00Ah, 001h, 009h     ;LN      TYPEV
+  325/  F8 : (MACRO)                            IL_SX 2                 ;SX 2
+  325/  F8 : 02                                 DB 00h + (2 & 07h)
+  326/  F9 : (MACRO)                            IL_SX 1                 ;SX 1
+  326/  F9 : 01                                 DB 00h + (1 & 07h)
+  327/  FA : (MACRO)                            IL_SX 3                 ;SX 3
+  327/  FA : 03                                 DB 00h + (3 & 07h)
+  328/  FB : (MACRO)                            IL_SX 1                 ;SX 1
+  328/  FB : 01                                 DB 00h + (1 & 07h)
+  329/  FC : (MACRO)                            IL_DS                   ;DS
+  329/  FC : 0B                                 DB 0Bh
+  330/  FD : (MACRO)                            IL_US                   ;US                CALL TYPEV AND OUTPUT BYTE
+  330/  FD : 2E                                 DB 2Eh
+  331/  FE : (MACRO)                            IL_SP                   ;SP                POP RETURNED VALUE
+  331/  FE : 0C                                 DB 0Ch
+  332/  FF : (MACRO)                            IL_NX                   ;NX                NEXT STATEMENT
+  332/  FF : 1D                                 DB 1DH
+  333/ 100 : (MACRO)                            IL_BE $+1               ;Z252       BE      * !257
+  333/ 100 : E0                                 DB 0E0h + (($+1-$-1)&31)
+  334/ 101 : (MACRO)                            IL_NX                   ;NX
+  334/ 101 : 1D                                 DB 1DH
+  335/ 102 : 8A 50 4F                   POKE    DB 08Ah, 050h, 04Fh     ;BC      :OUT      'POKE'
+  336/ 105 : 4B C5                              DB 04Bh, 0C5h           ;--
+  337/ 107 : 0A 01 18                           DB 00Ah, 001h, 018h     ;LN      ILPOKE
+  338/ 10A : (MACRO)                            IL_JS EXPR
+  338/ 10A : 31 8F                              DW 3000H | EXPR-STRT & 7FFh
+  339/ 10C : (MACRO)                            IL_BR_F OU1             ;BR      Z253
+  339/ 10C : 6C                                 DB 60h + (OU1-$-1)
+ AS V1.42 Beta [Bld 275] - Source File TB_IL.asm - Page 11 - 10/02/2024 11:14:07 PM
 
 
-  386/ 14B : (MACRO)                            IL_SP                 ;SP                POP RETURNED VALUE
-  386/ 14B : 0C                                 DB 0Ch
-  387/ 14C : (MACRO)                            IL_NL                 ;NL                NEW LINE
-  387/ 14C : 23                                 DB 23H
-  388/ 14D : 0A 09 FD                           DB 00Ah, 009h, 0FDh             ;LN      ILSAVE
-  389/ 150 : 09 24                              DB 009h, 024h               ;LB      MEND
-  390/ 152 : (MACRO)                            IL_FV                 ;FV
-  390/ 152 : 12                                 DB 12h
-  391/ 153 : 09 20                              DB 009h, 020h               ;LB      BASIC
-  392/ 155 : (MACRO)                            IL_FV                 ;FV
-  392/ 155 : 12                                 DB 12h
-  393/ 156 : (MACRO)                            IL_SU                 ;SU                END PROGRAM-BEGIN PROGRAM
-  393/ 156 : 19                                 DB 19H
-  394/ 157 : 0A 01 00                           DB 00Ah, 001h, 000h             ;LN      256
-  395/ 15A : (MACRO)                            IL_AD                 ;AD                ADD 256 ????
-  395/ 15A : 18                                 DB 18H
-  396/ 15B : 09 20                              DB 009h, 020h               ;LB      BASIC
-  397/ 15D : (MACRO)                            IL_FV                 ;FV
-  397/ 15D : 12                                 DB 12h
-  398/ 15E : (MACRO)                            IL_US                 ;US                CALL ILSAVE
-  398/ 15E : 2E                                 DB 2Eh
-  399/ 15F : (MACRO)                            IL_SP                 ;SP                POP RETURNED VALUE
-  399/ 15F : 0C                                 DB 0Ch
-  400/ 160 : (MACRO)                            IL_NX                 ;NX                NEXT STATEMENT
-  400/ 160 : 1D                                 DB 1DH
-  401/ 161 : 86 4C 4F                   LOAD    DB 086h, 04Ch, 04Fh             ;BC      Z256      'LOAD'
-  402/ 164 : 41 C4                              DB 041h, 0C4h               ;--
-  403/ 166 : E0                                 DB 0E0h                 ;BE      * !354
-> > > TB_IL.asm(404):9: error: unknown instruction
-> > > IL_BR
-> > >         IL_BR Z257                 ;BR      Z257
-> > >         ~~~~~
-  404/ 167 :                                    IL_BR Z257                 ;BR      Z257
-  405/ 167 : 39 85                              DB 039h, 085h    ;Z256       J       Z258
-  406/ 169 : 09 24                              DB 009h, 024h    ;Z257       LB      MEND
-  407/ 16B : 0A 09 FA                           DB 00Ah, 009h, 0FAh             ;LN      ILLOAD
-  408/ 16E : 0A 00 01                           DB 00Ah, 000h, 001h             ;LN      1
-  409/ 171 : 09 20                              DB 009h, 020h               ;LB      BASIC
-  410/ 173 : (MACRO)                            IL_FV                 ;FV
-  410/ 173 : 12                                 DB 12h
-  411/ 174 : (MACRO)                            IL_US                 ;US                CALL ILLOAD
-  411/ 174 : 2E                                 DB 2Eh
-> > > TB_IL.asm(412):9: error: unknown instruction
-> > > IL_BR
-> > >         IL_BR Z259                 ;BR      Z259      ILLOAD SKIPS THIS IF NO ERROR
-> > >         ~~~~~
-  412/ 175 :                                    IL_BR Z259                 ;BR      Z259      ILLOAD SKIPS THIS IF NO ERROR
-  413/ 175 : 0A 00 18                           DB 00Ah, 000h, 018h             ;LN      0x18      SPARE STACK SIZE-1,DOES NOT GET IT?
-  414/ 178 : (MACRO)                            IL_AD                 ;AD                ADD TO RETURN VALUE
-  414/ 178 : 18                                 DB 18H
-  415/ 179 : (MACRO)                            IL_SV                 ;SV                SAVE MEM END
-  415/ 179 : 13                                 DB 13H
-  416/ 17A : (MACRO)                            IL_WS                 ;WS                WARM START
-  416/ 17A : 2D                                 DB 2Dh
-  417/ 17B : (MACRO)                            IL_NL      ;Z259       NL
-  417/ 17B : 23                                 DB 23H
-  418/ 17C : 24 54 41                           DB 024h, 054h, 041h             ;PC                'TAPE ERROR'
-  419/ 17F : 50 45 20                           DB 050h, 045h, 020h             ;--
-  420/ 182 : 45 52 52                           DB 045h, 052h, 052h             ;--
-  421/ 185 : 4F D2                              DB 04Fh, 0D2h               ;--
- AS V1.42 Beta [Bld 275] - Source File TB_IL.asm - Page 12 - 10/02/2024 02:46:21 PM
+  340/ 10D : 91 4F 55                   OUT_    DB 091h, 04Fh, 055h     ;BC      :SAVE     'OUT'
+  341/ 110 : D4                                 DB 0D4h                 ;--
+  342/ 111 : 0A 01 26                           DB 00Ah, 001h, 026h     ;LN      ILINPOUT
+  343/ 114 : 0A 00 08                           DB 00Ah, 000h, 008h     ;LN      8
+  344/ 117 : 32 5A                              DB 032h, 05Ah           ;JS      Z249      GET EXPR AND COMP >0 AND <8
+  345/ 119 : (MACRO)                    OU1     IL_JS PE4               ;Z253       JS      Z245      CHECK FOR ,AND GET EXPR
+  345/ 119 : 32 31                              DW 3000H | PE4-STRT & 7FFh
+  346/ 11B : E0                                 DB 0E0h                 ;BE      * !284
+  347/ 11C : (MACRO)                            IL_US                   ;US                CALL ILINPOUT OR ILPOKE
+  347/ 11C : 2E                                 DB 2Eh
+  348/ 11D : (MACRO)                            IL_SP                   ;SP                POP RETURNED VALUE
+  348/ 11D : 0C                                 DB 0Ch
+  349/ 11E : (MACRO)                            IL_NX                   ;NX                NEXT STATEMENT
+  349/ 11E : 1D                                 DB 1DH
+  350/ 11F : 9E 53 41                   SAVE    DB 09Eh, 053h, 041h     ;BC      Z254      'SAVE'
+  351/ 122 : 56 C5                              DB 056h, 0C5h           ;--
+  352/ 124 : E0                                 DB 0E0h                 ;BE      * !293
+  353/ 125 : 24 54 55                           DB 024h, 054h, 055h     ;PC                'TURN ON RECORD'
+  354/ 128 : 52 4E 20                           DB 052h, 04Eh, 020h     ;--
+  355/ 12B : 4F 4E 20                           DB 04Fh, 04Eh, 020h     ;--
+  356/ 12E : 52 45 43                           DB 052h, 045h, 043h     ;--
+  357/ 131 : 4F 52 C4                           DB 04Fh, 052h, 0C4h     ;--
+  358/ 134 : (MACRO)                            IL_NL                   ;NL
+  358/ 134 : 23                                 DB 23H
+  359/ 135 : 24 48 49                           DB 024h, 048h, 049h     ;PC                'HIT KEY'
+  360/ 138 : 54 20 4B                           DB 054h, 020h, 04Bh     ;--
+  361/ 13B : 45 D9                              DB 045h, 0D9h           ;--
+  362/ 13D : (MACRO)                            IL_BR_F SA1             ;BR      Z255
+  362/ 13D : 62                                 DB 60h + (SA1-$-1)
+  363/ 13E : (MACRO)                            IL_J LOAD
+  363/ 13E : 39 5C                              DW 3800H | LOAD-STRT & 7FFh
+  364/ 140 : 0A 01 06                   SA1     DB 00Ah, 001h, 006h     ;Z255       LN      KEYV
+  365/ 143 : (MACRO)                            IL_DS                   ;DS
+  365/ 143 : 0B                                 DB 0Bh
+  366/ 144 : (MACRO)                            IL_DS                   ;DS
+  366/ 144 : 0B                                 DB 0Bh
+  367/ 145 : (MACRO)                            IL_US                   ;US                CALL KEY INPUT
+  367/ 145 : 2E                                 DB 2Eh
+  368/ 146 : (MACRO)                            IL_SP                   ;SP                POP RETURNED VALUE
+  368/ 146 : 0C                                 DB 0Ch
+  369/ 147 : (MACRO)                            IL_NL                   ;NL                NEW LINE
+  369/ 147 : 23                                 DB 23H
+  370/ 148 : 0A 09 FD                           DB 00Ah, 009h, 0FDh     ;LN      ILSAVE
+  371/ 14B : 09 24                              DB 009h, 024h           ;LB      MEND
+  372/ 14D : (MACRO)                            IL_FV                   ;FV
+  372/ 14D : 12                                 DB 12h
+  373/ 14E : 09 20                              DB 009h, 020h           ;LB      BASIC
+  374/ 150 : (MACRO)                            IL_FV                   ;FV
+  374/ 150 : 12                                 DB 12h
+  375/ 151 : (MACRO)                            IL_SU                   ;SU                END PROGRAM-BEGIN PROGRAM
+  375/ 151 : 19                                 DB 19H
+  376/ 152 : 0A 01 00                           DB 00Ah, 001h, 000h     ;LN      256
+  377/ 155 : (MACRO)                            IL_AD                   ;AD                ADD 256 ????
+  377/ 155 : 18                                 DB 18H
+  378/ 156 : 09 20                              DB 009h, 020h           ;LB      BASIC
+  379/ 158 : (MACRO)                            IL_FV                   ;FV
+  379/ 158 : 12                                 DB 12h
+  380/ 159 : (MACRO)                            IL_US                   ;US                CALL ILSAVE
+  380/ 159 : 2E                                 DB 2Eh
+  381/ 15A : (MACRO)                            IL_SP                   ;SP                POP RETURNED VALUE
+ AS V1.42 Beta [Bld 275] - Source File TB_IL.asm - Page 12 - 10/02/2024 11:14:07 PM
 
 
-  422/ 187 : (MACRO)                            IL_MT                 ;MT
-  422/ 187 : 2B                                 DB 2Bh
-  423/ 188 : 84 52 45                           DB 084h, 052h, 045h  ;Z258       BC      :DFLT     'REM'
-  424/ 18B : CD                                 DB 0CDh                ;--
-  425/ 18C : (MACRO)                            IL_NX                 ;NX
-  425/ 18C : 1D                                 DB 1DH
-  426/ 18D : A0                         DFLT    DB 0A0h                 ;BV      * !395
-  427/ 18E : 80 BD                              DB 080h, 0BDh               ;BC      * !397    '='
-  428/ 190 : (MACRO)                            IL_J LET
-  428/ 190 : 38 14                              DW 3800H | LET-STRT & 7FFh
-  429/ 192 : 85 AD                      EXPR    DB 085h, 0ADh       ;BC      Z260      '-'
-  430/ 194 : (MACRO)                            IL_JS TERM
-  430/ 194 : 31 94                              DW 3000H | TERM-STRT & 7FFh
-  431/ 196 : (MACRO)                            IL_NE                 ;NE
-  431/ 196 : 17                                 DB 17H
-> > > TB_IL.asm(432):9: error: unknown instruction
-> > > IL_BR
-> > >         IL_BR Z261                 ;BR      Z261
-> > >         ~~~~~
-  432/ 197 :                                    IL_BR Z261                 ;BR      Z261
-  433/ 197 : 81 AB                              DB 081h, 0ABh    ;Z260       BC      Z262      '+'
-  434/ 199 : (MACRO)                            IL_JS TERM
-  434/ 199 : 31 99                              DW 3000H | TERM-STRT & 7FFh
-  435/ 19B : 85 AB                              DB 085h, 0ABh    ;Z261       BC      Z263      '+'
-  436/ 19D : (MACRO)                            IL_JS TERM
-  436/ 19D : 31 9D                              DW 3000H | TERM-STRT & 7FFh
-  437/ 19F : (MACRO)                            IL_AD                 ;AD
-  437/ 19F : 18                                 DB 18H
-> > > TB_IL.asm(438):9: error: unknown instruction
-> > > IL_BR
-> > >         IL_BR Z261                 ;BR      Z261
-> > >         ~~~~~
-  438/ 1A0 :                                    IL_BR Z261                 ;BR      Z261
-  439/ 1A0 : 85 AD                              DB 085h, 0ADh    ;Z263       BC      Z264      '-'
-  440/ 1A2 : (MACRO)                            IL_JS TERM
-  440/ 1A2 : 31 A2                              DW 3000H | TERM-STRT & 7FFh
-  441/ 1A4 : (MACRO)                            IL_SU                 ;SU
-  441/ 1A4 : 19                                 DB 19H
-> > > TB_IL.asm(442):9: error: unknown instruction
-> > > IL_BR
-> > >         IL_BR Z261                 ;BR      Z261
-> > >         ~~~~~
-  442/ 1A5 :                                    IL_BR Z261                 ;BR      Z261
-  443/ 1A5 : (MACRO)                            IL_RT       ;Z264       RT
-  443/ 1A5 : 2F                                 DB 2Fh
-  444/ 1A6 : 31 B5                      TERM    DB 031h, 0B5h       ;JS      :RND
-  445/ 1A8 : 85 AA                              DB 085h, 0AAh    ;Z266       BC      Z265      '*'
-  446/ 1AA : (MACRO)                            IL_JS RND
-  446/ 1AA : 31 AA                              DW 3000H | RND-STRT & 7FFh
-  447/ 1AC : (MACRO)                            IL_MP                  ;MP
-  447/ 1AC : 1A                                 DB 1AH
-> > > TB_IL.asm(448):9: error: unknown instruction
-> > > IL_BR
-> > >         IL_BR Z266                 ;BR      Z266
-> > >         ~~~~~
-  448/ 1AD :                                    IL_BR Z266                 ;BR      Z266
-  449/ 1AD : 85 AF                              DB 085h, 0AFh    ;Z265       BC      Z267      '/'
-  450/ 1AF : (MACRO)                            IL_JS RND
-  450/ 1AF : 31 AF                              DW 3000H | RND-STRT & 7FFh
-  451/ 1B1 : (MACRO)                            IL_DV                  ;DV
- AS V1.42 Beta [Bld 275] - Source File TB_IL.asm - Page 13 - 10/02/2024 02:46:21 PM
+  381/ 15A : 0C                                 DB 0Ch
+  382/ 15B : (MACRO)                            IL_NX                   ;NX                NEXT STATEMENT
+  382/ 15B : 1D                                 DB 1DH
+  383/ 15C : 86 4C 4F                   LOAD    DB 086h, 04Ch, 04Fh     ;BC      Z256      'LOAD'
+  384/ 15F : 41 C4                              DB 041h, 0C4h           ;--
+  385/ 161 : E0                                 DB 0E0h                 ;BE      * !354
+  386/ 162 : (MACRO)                            IL_BR_F LO2             ;BR      Z257
+  386/ 162 : 62                                 DB 60h + (LO2-$-1)
+  387/ 163 : 39 85                      LO1     DB 039h, 085h           ;Z256       J       Z258
+  388/ 165 : 09 24                      LO2     DB 009h, 024h           ;Z257       LB      MEND
+  389/ 167 : 0A 09 FA                           DB 00Ah, 009h, 0FAh     ;LN      ILLOAD
+  390/ 16A : 0A 00 01                           DB 00Ah, 000h, 001h     ;LN      1
+  391/ 16D : 09 20                              DB 009h, 020h           ;LB      BASIC
+  392/ 16F : (MACRO)                            IL_FV                   ;FV
+  392/ 16F : 12                                 DB 12h
+  393/ 170 : (MACRO)                            IL_US                   ;US                CALL ILLOAD
+  393/ 170 : 2E                                 DB 2Eh
+  394/ 171 : (MACRO)                            IL_BR_F LO3             ;BR      Z259      ILLOAD SKIPS THIS IF NO ERROR
+  394/ 171 : 66                                 DB 60h + (LO3-$-1)
+  395/ 172 : 0A 00 18                           DB 00Ah, 000h, 018h     ;LN      0x18      SPARE STACK SIZE-1,DOES NOT GET IT?
+  396/ 175 : (MACRO)                            IL_AD                   ;AD                ADD TO RETURN VALUE
+  396/ 175 : 18                                 DB 18H
+  397/ 176 : (MACRO)                            IL_SV                   ;SV                SAVE MEM END
+  397/ 176 : 13                                 DB 13H
+  398/ 177 : (MACRO)                            IL_WS                   ;WS                WARM START
+  398/ 177 : 2D                                 DB 2Dh
+  399/ 178 : (MACRO)                    LO3     IL_NL                   ;Z259       NL
+  399/ 178 : 23                                 DB 23H
+  400/ 179 : 24 54 41                           DB 024h, 054h, 041h     ;PC                'TAPE ERROR'
+  401/ 17C : 50 45 20                           DB 050h, 045h, 020h     ;--
+  402/ 17F : 45 52 52                           DB 045h, 052h, 052h     ;--
+  403/ 182 : 4F D2                              DB 04Fh, 0D2h           ;--
+  404/ 184 : (MACRO)                            IL_MT                   ;MT
+  404/ 184 : 2B                                 DB 2Bh
+  405/ 185 : 84 52 45                           DB 084h, 052h, 045h     ;Z258       BC      :DFLT     'REM'
+  406/ 188 : CD                                 DB 0CDh                 ;--
+  407/ 189 : (MACRO)                            IL_NX                   ;NX
+  407/ 189 : 1D                                 DB 1DH
+  408/ 18A : A0                         DFLT    DB 0A0h                 ;BV      * !395
+  409/ 18B : 80 BD                              DB 080h, 0BDh           ;BC      * !397    '='
+  410/ 18D : (MACRO)                            IL_J LET
+  410/ 18D : 38 14                              DW 3800H | LET-STRT & 7FFh
+  411/ 18F : 85 AD                      EXPR    DB 085h, 0ADh           ;BC      Z260      '-'
+  412/ 191 : (MACRO)                            IL_JS TERM
+  412/ 191 : 31 A6                              DW 3000H | TERM-STRT & 7FFh
+  413/ 193 : (MACRO)                            IL_NE                   ;NE
+  413/ 193 : 17                                 DB 17H
+  414/ 194 : (MACRO)                            IL_BR_F EX2             ;BR      Z261
+  414/ 194 : 64                                 DB 60h + (EX2-$-1)
+  415/ 195 : 81 AB                      EX1     DB 081h, 0ABh           ;Z260       BC      Z262      '+'
+  416/ 197 : (MACRO)                            IL_JS TERM
+  416/ 197 : 31 A6                              DW 3000H | TERM-STRT & 7FFh
+  417/ 199 : 85 AB                      EX2     DB 085h, 0ABh           ;Z261       BC      Z263      '+'
+  418/ 19B : (MACRO)                            IL_JS TERM
+  418/ 19B : 31 A6                              DW 3000H | TERM-STRT & 7FFh
+  419/ 19D : (MACRO)                            IL_AD                   ;AD
+  419/ 19D : 18                                 DB 18H
+  420/ 19E : (MACRO)                            IL_BR_B EX2             ;BR      Z261
+  420/ 19E : 5A                                 DB 60h - (1+$-EX2)
+  421/ 19F : 85 AD                              DB 085h, 0ADh           ;Z263       BC      Z264      '-'
+ AS V1.42 Beta [Bld 275] - Source File TB_IL.asm - Page 13 - 10/02/2024 11:14:07 PM
 
 
-  451/ 1B1 : 1B                                 DB 1BH
-> > > TB_IL.asm(452):9: error: unknown instruction
-> > > IL_BR
-> > >         IL_BR Z266                 ;BR      Z266
-> > >         ~~~~~
-  452/ 1B2 :                                    IL_BR Z266                 ;BR      Z266
-  453/ 1B2 : (MACRO)                            IL_RT       ;Z267       RT
-  453/ 1B2 : 2F                                 DB 2Fh
-  454/ 1B3 : 99 52 4E                   RND     DB 099h, 052h, 04Eh        ;BC      Z268      'RND('
-  455/ 1B6 : 44 A8                              DB 044h, 0A8h               ;--
-  456/ 1B8 : 0A 80 80                           DB 00Ah, 080h, 080h             ;LN      0x8080
-  457/ 1BB : (MACRO)                            IL_FV                 ;FV
-  457/ 1BB : 12                                 DB 12h
-  458/ 1BC : 0A 09 29                           DB 00Ah, 009h, 029h             ;LN      0x0929
-  459/ 1BF : (MACRO)                            IL_MP                  ;MP
-  459/ 1BF : 1A                                 DB 1AH
-  460/ 1C0 : 0A 1A 85                           DB 00Ah, 01Ah, 085h             ;LN      0x1A85
-  461/ 1C3 : (MACRO)                            IL_AD                 ;AD
-  461/ 1C3 : 18                                 DB 18H
-  462/ 1C4 : (MACRO)                            IL_SV                 ;SV
-  462/ 1C4 : 13                                 DB 13H
-  463/ 1C5 : 09 80                              DB 009h, 080h               ;LB      0x80
-  464/ 1C7 : (MACRO)                            IL_FV                 ;FV
-  464/ 1C7 : 12                                 DB 12h
-  465/ 1C8 : (MACRO)                            IL_SX 1                 ;SX 1
-  465/ 1C8 : 01                                 DB 00h + (1 & 07h)
-  466/ 1C9 : (MACRO)                            IL_DS                 ;DS
-  466/ 1C9 : 0B                                 DB 0Bh
-  467/ 1CA : 32 2C                              DB 032h, 02Ch               ;JS      Z269
-> > > TB_IL.asm(468):9: error: unknown instruction
-> > > IL_BR
-> > >         IL_BR Z270                 ;BR      Z270
-> > >         ~~~~~
-  468/ 1CC :                                    IL_BR Z270                 ;BR      Z270
-> > > TB_IL.asm(469):9: error: unknown instruction
-> > > IL_BR
-> > >         IL_BR USR
-> > >         ~~~~~
-  469/ 1CC :                                    IL_BR USR
-  470/ 1CC : (MACRO)                            IL_DS      ;Z270       DS
-  470/ 1CC : 0B                                 DB 0Bh
-  471/ 1CD : (MACRO)                            IL_SX 4                 ;SX 4
-  471/ 1CD : 04                                 DB 00h + (4 & 07h)
-  472/ 1CE : (MACRO)                            IL_SX 2                 ;SX 2
-  472/ 1CE : 02                                 DB 00h + (2 & 07h)
-  473/ 1CF : (MACRO)                            IL_SX 3                 ;SX 3
-  473/ 1CF : 03                                 DB 00h + (3 & 07h)
-  474/ 1D0 : (MACRO)                            IL_SX 5                 ;SX 5
-  474/ 1D0 : 05                                 DB 00h + (5 & 07h)
-  475/ 1D1 : (MACRO)                            IL_SX 3                 ;SX 3
-  475/ 1D1 : 03                                 DB 00h + (3 & 07h)
-  476/ 1D2 : (MACRO)                            IL_DV                  ;DV
-  476/ 1D2 : 1B                                 DB 1BH
-  477/ 1D3 : (MACRO)                            IL_MP                  ;MP
-  477/ 1D3 : 1A                                 DB 1AH
-  478/ 1D4 : (MACRO)                            IL_SU                 ;SU
-  478/ 1D4 : 19                                 DB 19H
-  479/ 1D5 : (MACRO)                            IL_DS                 ;DS
-  479/ 1D5 : 0B                                 DB 0Bh
-  480/ 1D6 : 09 06                              DB 009h, 006h               ;LB      6
- AS V1.42 Beta [Bld 275] - Source File TB_IL.asm - Page 14 - 10/02/2024 02:46:21 PM
+  422/ 1A1 : (MACRO)                            IL_JS TERM
+  422/ 1A1 : 31 A6                              DW 3000H | TERM-STRT & 7FFh
+  423/ 1A3 : (MACRO)                            IL_SU                   ;SU
+  423/ 1A3 : 19                                 DB 19H
+  424/ 1A4 : (MACRO)                            IL_BR_B EX2             ;BR      Z261
+  424/ 1A4 : 54                                 DB 60h - (1+$-EX2)
+  425/ 1A5 : (MACRO)                            IL_RT                   ;Z264       RT
+  425/ 1A5 : 2F                                 DB 2Fh
+  426/ 1A6 : 31 B5                      TERM    DB 031h, 0B5h           ;JS      :RND
+  427/ 1A8 : 85 AA                      TE1     DB 085h, 0AAh           ;Z266       BC      Z265      '*'
+  428/ 1AA : (MACRO)                            IL_JS RND
+  428/ 1AA : 31 B5                              DW 3000H | RND-STRT & 7FFh
+  429/ 1AC : (MACRO)                            IL_MP                   ;MP
+  429/ 1AC : 1A                                 DB 1AH
+  430/ 1AD : (MACRO)                            IL_BR_B TE1             ;BR      Z266
+  430/ 1AD : 5A                                 DB 60h - (1+$-TE1)
+  431/ 1AE : 85 AF                              DB 085h, 0AFh           ;Z265       BC      Z267      '/'
+  432/ 1B0 : (MACRO)                            IL_JS RND
+  432/ 1B0 : 31 B5                              DW 3000H | RND-STRT & 7FFh
+  433/ 1B2 : (MACRO)                            IL_DV                   ;DV
+  433/ 1B2 : 1B                                 DB 1BH
+  434/ 1B3 : (MACRO)                            IL_BR_B TE1             ;BR      Z266
+  434/ 1B3 : 54                                 DB 60h - (1+$-TE1)
+  435/ 1B4 : (MACRO)                            IL_RT                   ;Z267       RT
+  435/ 1B4 : 2F                                 DB 2Fh
+  436/ 1B5 : 99 52 4E                   RND     DB 099h, 052h, 04Eh     ;BC      Z268      'RND('
+  437/ 1B8 : 44 A8                              DB 044h, 0A8h           ;--
+  438/ 1BA : 0A 80 80                           DB 00Ah, 080h, 080h             ;LN      0x8080
+  439/ 1BD : (MACRO)                            IL_FV                   ;FV
+  439/ 1BD : 12                                 DB 12h
+  440/ 1BE : 0A 09 29                           DB 00Ah, 009h, 029h             ;LN      0x0929
+  441/ 1C1 : (MACRO)                            IL_MP                   ;MP
+  441/ 1C1 : 1A                                 DB 1AH
+  442/ 1C2 : 0A 1A 85                           DB 00Ah, 01Ah, 085h             ;LN      0x1A85
+  443/ 1C5 : (MACRO)                            IL_AD                   ;AD
+  443/ 1C5 : 18                                 DB 18H
+  444/ 1C6 : (MACRO)                            IL_SV                   ;SV
+  444/ 1C6 : 13                                 DB 13H
+  445/ 1C7 : 09 80                              DB 009h, 080h           ;LB      0x80
+  446/ 1C9 : (MACRO)                            IL_FV                   ;FV
+  446/ 1C9 : 12                                 DB 12h
+  447/ 1CA : (MACRO)                            IL_SX 1                 ;SX 1
+  447/ 1CA : 01                                 DB 00h + (1 & 07h)
+  448/ 1CB : (MACRO)                            IL_DS                   ;DS
+  448/ 1CB : 0B                                 DB 0Bh
+  449/ 1CC : 32 2C                              DB 032h, 02Ch           ;JS      Z269
+  450/ 1CE : (MACRO)                            IL_BR_F RN1             ;BR      Z270
+  450/ 1CE : 61                                 DB 60h + (RN1-$-1)
+  451/ 1CF : (MACRO)                            IL_BR_F USR
+  451/ 1CF : 72                                 DB 60h + (USR-$-1)
+  452/ 1D0 : (MACRO)                    RN1     IL_DS                   ;Z270       DS
+  452/ 1D0 : 0B                                 DB 0Bh
+  453/ 1D1 : (MACRO)                            IL_SX 4                 ;SX 4
+  453/ 1D1 : 04                                 DB 00h + (4 & 07h)
+  454/ 1D2 : (MACRO)                            IL_SX 2                 ;SX 2
+  454/ 1D2 : 02                                 DB 00h + (2 & 07h)
+  455/ 1D3 : (MACRO)                            IL_SX 3                 ;SX 3
+  455/ 1D3 : 03                                 DB 00h + (3 & 07h)
+  456/ 1D4 : (MACRO)                            IL_SX 5                 ;SX 5
+  456/ 1D4 : 05                                 DB 00h + (5 & 07h)
+ AS V1.42 Beta [Bld 275] - Source File TB_IL.asm - Page 14 - 10/02/2024 11:14:07 PM
 
 
-  481/ 1D8 : 0A 00 00                           DB 00Ah, 000h, 000h             ;LN      0
-  482/ 1DB : (MACRO)                            IL_CP                 ;CP
-  482/ 1DB : 1C                                 DB 1CH
-  483/ 1DC : (MACRO)                            IL_NE                 ;NE
-  483/ 1DC : 17                                 DB 17H
-  484/ 1DD : 2F                                 DB 02Fh                 ;RT
-  485/ 1DE : 8E 55 53                   USR     DB 08Eh, 055h, 053h        ;BC      :INP      'USR('
-  486/ 1E1 : 52 A8                              DB 052h, 0A8h               ;--
-  487/ 1E3 : (MACRO)                            IL_JS EXPR
-  487/ 1E3 : 31 92                              DW 3000H | EXPR-STRT & 7FFh
-  488/ 1E5 : 32 31                              DB 032h, 031h               ;JS      Z245
-  489/ 1E7 : 32 31                              DB 032h, 031h               ;JS      Z245
-  490/ 1E9 : 80 A9                              DB 080h, 0A9h               ;BC      * !495    ')'
-  491/ 1EB : (MACRO)                            IL_US                 ;US
-  491/ 1EB : 2E                                 DB 2Eh
-  492/ 1EC : 2F                                 DB 02Fh                 ;RT
-  493/ 1ED : 91 49 4E                   INP     DB 091h, 049h, 04Eh        ;BC      :FLG      'INP('
-  494/ 1F0 : 50 A8                              DB 050h, 0A8h               ;--
-  495/ 1F2 : 0A 01 26                           DB 00Ah, 001h, 026h             ;LN      ILINPOUT
-  496/ 1F5 : 0A 00 08                           DB 00Ah, 000h, 008h             ;LN      8
-  497/ 1F8 : 32 5A                              DB 032h, 05Ah               ;JS      Z249      GET EXPR AND COMP >0 AND <8
-  498/ 1FA : 0A 00 08                           DB 00Ah, 000h, 008h             ;LN      8         ADD 8 TO OP FOR INPUT
-  499/ 1FD : (MACRO)                            IL_AD                 ;AD
-  499/ 1FD : 18                                 DB 18H
-> > > TB_IL.asm(500):9: error: unknown instruction
-> > > IL_BR
-> > >         IL_BR Z271                 ;BR      Z271
-> > >         ~~~~~
-  500/ 1FE :                                    IL_BR Z271                 ;BR      Z271
-  501/ 1FE : 91 46 4C                   FLG     DB 091h, 046h, 04Ch        ;BC      :PEEK     'FLG('
-  502/ 201 : 47 A8                              DB 047h, 0A8h               ;--
-  503/ 203 : 0A 09 F8                           DB 00Ah, 009h, 0F8h             ;LN      ILFLG     FLG WAS NEVER DOCUMENTED
-  504/ 206 : 0A 00 05                           DB 00Ah, 000h, 005h             ;LN      5
-  505/ 209 : 32 5A                              DB 032h, 05Ah               ;JS      Z249      GET EXPR AND COMP >0 AND <5
-  506/ 20B : 0A 00 01                           DB 00Ah, 000h, 001h             ;LN      1
-  507/ 20E : (MACRO)                            IL_SU                 ;SU                SUB 1
-  507/ 20E : 19                                 DB 19H
-> > > TB_IL.asm(508):9: error: unknown instruction
-> > > IL_BR
-> > >         IL_BR Z271                 ;BR      Z271
-> > >         ~~~~~
-  508/ 20F :                                    IL_BR Z271                 ;BR      Z271
-  509/ 20F : 8F 50 45                   PEEK_   DB 08Fh, 050h, 045h       ;BC      Z272      'PEEK('
-  510/ 212 : 45 4B A8                           DB 045h, 04Bh, 0A8h             ;--
-  511/ 215 : 0A 01 14                           DB 00Ah, 001h, 014h             ;LN      ILPEEK
-  512/ 218 : (MACRO)                            IL_JS EXPR
-  512/ 218 : 31 92                              DW 3000H | EXPR-STRT & 7FFh
-  513/ 21A : 80 A9                              DB 080h, 0A9h    ;Z271       BC      * !546    ')'
-  514/ 21C : (MACRO)                            IL_DS                 ;DS
-  514/ 21C : 0B                                 DB 0Bh
-  515/ 21D : (MACRO)                            IL_US                 ;US
-  515/ 21D : 2E                                 DB 2Eh
-  516/ 21E : 2F                                 DB 02Fh                 ;RT
-  517/ 21F : (MACRO)                            IL_BV Z273      ;Z272       BV      Z273
-  517/ 21F : BF                                 DB 0A0h + ((Z273-$-1)&31)
-  518/ 220 : (MACRO)                            IL_FV                 ;FV
-  518/ 220 : 12                                 DB 12h
-  519/ 221 : 2F                                 DB 02Fh                 ;RT
-  520/ 222 : (MACRO)                            IL_BN Z274      ;Z273       BN      Z274
-  520/ 222 : DF                                 DB 0C0h + ((Z274-$-1)&31)
- AS V1.42 Beta [Bld 275] - Source File TB_IL.asm - Page 15 - 10/02/2024 02:46:21 PM
+  457/ 1D5 : (MACRO)                            IL_SX 3                 ;SX 3
+  457/ 1D5 : 03                                 DB 00h + (3 & 07h)
+  458/ 1D6 : (MACRO)                            IL_DV                   ;DV
+  458/ 1D6 : 1B                                 DB 1BH
+  459/ 1D7 : (MACRO)                            IL_MP                   ;MP
+  459/ 1D7 : 1A                                 DB 1AH
+  460/ 1D8 : (MACRO)                            IL_SU                   ;SU
+  460/ 1D8 : 19                                 DB 19H
+  461/ 1D9 : (MACRO)                            IL_DS                   ;DS
+  461/ 1D9 : 0B                                 DB 0Bh
+  462/ 1DA : 09 06                              DB 009h, 006h           ;LB      6
+  463/ 1DC : 0A 00 00                           DB 00Ah, 000h, 000h     ;LN      0
+  464/ 1DF : (MACRO)                            IL_CP                   ;CP
+  464/ 1DF : 1C                                 DB 1CH
+  465/ 1E0 : (MACRO)                            IL_NE                   ;NE
+  465/ 1E0 : 17                                 DB 17H
+  466/ 1E1 : 2F                                 DB 02Fh                 ;RT
+  467/ 1E2 : 8E 55 53                   USR     DB 08Eh, 055h, 053h     ;BC      :INP      'USR('
+  468/ 1E5 : 52 A8                              DB 052h, 0A8h           ;--
+  469/ 1E7 : (MACRO)                            IL_JS EXPR
+  469/ 1E7 : 31 8F                              DW 3000H | EXPR-STRT & 7FFh
+  470/ 1E9 : (MACRO)                            IL_JS PE4               ;JS      Z245
+  470/ 1E9 : 32 31                              DW 3000H | PE4-STRT & 7FFh
+  471/ 1EB : (MACRO)                            IL_JS PE4               ;JS      Z245
+  471/ 1EB : 32 31                              DW 3000H | PE4-STRT & 7FFh
+  472/ 1ED : 80 A9                              DB 080h, 0A9h           ;BC      * !495    ')'
+  473/ 1EF : (MACRO)                            IL_US                   ;US
+  473/ 1EF : 2E                                 DB 2Eh
+  474/ 1F0 : 2F                                 DB 02Fh                 ;RT
+  475/ 1F1 : 91 49 4E                   INP     DB 091h, 049h, 04Eh     ;BC      :FLG      'INP('
+  476/ 1F4 : 50 A8                              DB 050h, 0A8h           ;--
+  477/ 1F6 : 0A 01 26                           DB 00Ah, 001h, 026h     ;LN      ILINPOUT
+  478/ 1F9 : 0A 00 08                           DB 00Ah, 000h, 008h     ;LN      8
+  479/ 1FC : 32 5A                              DB 032h, 05Ah           ;JS      Z249      GET EXPR AND COMP >0 AND <8
+  480/ 1FE : 0A 00 08                           DB 00Ah, 000h, 008h     ;LN      8         ADD 8 TO OP FOR INPUT
+  481/ 201 : (MACRO)                            IL_AD                   ;AD
+  481/ 201 : 18                                 DB 18H
+  482/ 202 : (MACRO)                            IL_BR_F PE1             ;BR      Z271
+  482/ 202 : 7D                                 DB 60h + (PE1-$-1)
+  483/ 203 : 91 46 4C                   FLG     DB 091h, 046h, 04Ch     ;BC      :PEEK     'FLG('
+  484/ 206 : 47 A8                              DB 047h, 0A8h           ;--
+  485/ 208 : 0A 09 F8                           DB 00Ah, 009h, 0F8h     ;LN      ILFLG     FLG WAS NEVER DOCUMENTED
+  486/ 20B : 0A 00 05                           DB 00Ah, 000h, 005h     ;LN      5
+  487/ 20E : 32 5A                              DB 032h, 05Ah           ;JS      Z249      GET EXPR AND COMP >0 AND <5
+  488/ 210 : 0A 00 01                           DB 00Ah, 000h, 001h     ;LN      1
+  489/ 213 : (MACRO)                            IL_SU                   ;SU                SUB 1
+  489/ 213 : 19                                 DB 19H
+  490/ 214 : (MACRO)                            IL_BR_F PE1             ;BR      Z271
+  490/ 214 : 6B                                 DB 60h + (PE1-$-1)
+  491/ 215 : 8F 50 45                   PEEK_   DB 08Fh, 050h, 045h     ;BC      Z272      'PEEK('
+  492/ 218 : 45 4B A8                           DB 045h, 04Bh, 0A8h     ;--
+  493/ 21B : 0A 01 14                           DB 00Ah, 001h, 014h     ;LN      ILPEEK
+  494/ 21E : (MACRO)                            IL_JS EXPR
+  494/ 21E : 31 8F                              DW 3000H | EXPR-STRT & 7FFh
+  495/ 220 : 80 A9                      PE1     DB 080h, 0A9h           ;Z271       BC      * !546    ')'
+  496/ 222 : (MACRO)                            IL_DS                   ;DS
+  496/ 222 : 0B                                 DB 0Bh
+  497/ 223 : (MACRO)                            IL_US                   ;US
+  497/ 223 : 2E                                 DB 2Eh
+  498/ 224 : 2F                                 DB 02Fh                 ;RT
+ AS V1.42 Beta [Bld 275] - Source File TB_IL.asm - Page 15 - 10/02/2024 11:14:07 PM
 
 
-  521/ 223 : 2F                                 DB 02Fh                 ;RT
-  522/ 224 : 80 A8                              DB 080h, 0A8h    ;Z274       BC      * !556    '('
-  523/ 226 : (MACRO)                            IL_JS EXPR
-  523/ 226 : 31 92                              DW 3000H | EXPR-STRT & 7FFh
-  524/ 228 : 80 A9                              DB 080h, 0A9h               ;BC      * !560    ')'
-  525/ 22A : 2F                                 DB 02Fh                 ;RT
-  526/ 22B : 83 AC                              DB 083h, 0ACh    ;Z245       BC      Z275      ','
-  527/ 22D : (MACRO)                            IL_J EXPR
-  527/ 22D : 39 92                              DW 3800H | EXPR-STRT & 7FFh
-  528/ 22F : (MACRO)                            IL_DS      ;Z275       DS
-  528/ 22F : 0B                                 DB 0Bh
-  529/ 230 : 2F                                 DB 02Fh                 ;RT
-  530/ 231 : 84 BD                      RELOP   DB 084h, 0BDh    ;Z237       BC      Z276      '='
-  531/ 233 : 09 02                              DB 009h, 002h               ;LB      2
-  532/ 235 : 2F                                 DB 02Fh                 ;RT
-  533/ 236 : 8E BC                              DB 08Eh, 0BCh    ;Z276       BC      Z277      '<'
-  534/ 238 : 84 BD                              DB 084h, 0BDh               ;BC      Z278      '='
-  535/ 23A : 09 03                              DB 009h, 003h               ;LB      3
-  536/ 23C : 2F                                 DB 02Fh                 ;RT
-  537/ 23D : 84 BE                              DB 084h, 0BEh    ;Z278       BC      Z279      '>'
-  538/ 23F : 09 05                              DB 009h, 005h               ;LB      5
-  539/ 241 : 2F                                 DB 02Fh                 ;RT
-  540/ 242 : 09 01                              DB 009h, 001h    ;Z279       LB      1
-  541/ 244 : 2F                                 DB 02Fh                 ;RT
-  542/ 245 : 80 BE                              DB 080h, 0BEh    ;Z277       BC      * !589    '>'
-  543/ 247 : 84 BD                              DB 084h, 0BDh               ;BC      Z280      '='
-  544/ 249 : 09 06                              DB 009h, 006h               ;LB      6
-  545/ 24B : 2F                                 DB 02Fh                 ;RT
-  546/ 24C : 84 BC                              DB 084h, 0BCh    ;Z280       BC      Z281      '<'
-  547/ 24E : 09 05                              DB 009h, 005h               ;LB      5
-  548/ 250 : 2F                                 DB 02Fh                 ;RT
-  549/ 251 : 09 04                              DB 009h, 004h    ;Z281       LB      4
-  550/ 253 : 2F                                 DB 02Fh                 ;RT
-  551/ 254 : (MACRO)                            IL_JS EXPR
-  551/ 254 : 31 92                              DW 3000H | EXPR-STRT & 7FFh
-  552/ 256 : (MACRO)                            IL_DS                 ;DS
-  552/ 256 : 0B                                 DB 0Bh
-  553/ 257 : (MACRO)                            IL_DS                 ;DS
-  553/ 257 : 0B                                 DB 0Bh
-  554/ 258 : (MACRO)                            IL_SX 6                 ;SX 6
-  554/ 258 : 06                                 DB 00h + (6 & 07h)
-  555/ 259 : (MACRO)                            IL_SX 1                 ;SX 1
-  555/ 259 : 01                                 DB 00h + (1 & 07h)
-  556/ 25A : (MACRO)                            IL_SX 7                 ;SX 7
-  556/ 25A : 07                                 DB 00h + (7 & 07h)
-  557/ 25B : (MACRO)                            IL_SX 1                 ;SX 1
-  557/ 25B : 01                                 DB 00h + (1 & 07h)
-  558/ 25C : 09 01                              DB 009h, 001h    ;Z248       LB      1
-  559/ 25E : (MACRO)                            IL_SX 2                 ;SX 2
-  559/ 25E : 02                                 DB 00h + (2 & 07h)
-  560/ 25F : (MACRO)                            IL_SX 1                 ;SX 1
-  560/ 25F : 01                                 DB 00h + (1 & 07h)
-  561/ 260 : (MACRO)                            IL_CP                 ;CP
-  561/ 260 : 1C                                 DB 1CH
-> > > TB_IL.asm(562):9: error: unknown instruction
-> > > IL_BR
-> > >         IL_BR $+1                 ;BR      * !616
-> > >         ~~~~~
-  562/ 261 :                                    IL_BR $+1                 ;BR      * !616
-  563/ 261 : 09 06                              DB 009h, 006h               ;LB      6
- AS V1.42 Beta [Bld 275] - Source File TB_IL.asm - Page 16 - 10/02/2024 02:46:21 PM
+  499/ 225 : (MACRO)                            IL_BV PE2               ;Z272       BV      Z273
+  499/ 225 : A2                                 DB 0A0h + ((PE2-$-1)&31)
+  500/ 226 : (MACRO)                            IL_FV                   ;FV
+  500/ 226 : 12                                 DB 12h
+  501/ 227 : 2F                                 DB 02Fh                 ;RT
+  502/ 228 : (MACRO)                    PE2     IL_BN PE3               ;Z273       BN      Z274
+  502/ 228 : C1                                 DB 0C0h + ((PE3-$-1)&31)
+  503/ 229 : 2F                                 DB 02Fh                 ;RT
+  504/ 22A : 80 A8                      PE3     DB 080h, 0A8h           ;Z274       BC      * !556    '('
+  505/ 22C : (MACRO)                            IL_JS EXPR
+  505/ 22C : 31 8F                              DW 3000H | EXPR-STRT & 7FFh
+  506/ 22E : 80 A9                              DB 080h, 0A9h           ;BC      * !560    ')'
+  507/ 230 : 2F                                 DB 02Fh                 ;RT
+  508/ 231 : 83 AC                      PE4     DB 083h, 0ACh           ;Z245       BC      Z275      ','
+  509/ 233 : (MACRO)                            IL_J EXPR
+  509/ 233 : 39 8F                              DW 3800H | EXPR-STRT & 7FFh
+  510/ 235 : (MACRO)                            IL_DS                   ;Z275       DS
+  510/ 235 : 0B                                 DB 0Bh
+  511/ 236 : 2F                                 DB 02Fh                 ;RT
+  512/ 237 : 84 BD                      RELOP   DB 084h, 0BDh           ;Z237       BC      Z276      '='
+  513/ 239 : 09 02                              DB 009h, 002h           ;LB      2
+  514/ 23B : 2F                                 DB 02Fh                 ;RT
+  515/ 23C : 8E BC                              DB 08Eh, 0BCh           ;Z276       BC      Z277      '<'
+  516/ 23E : 84 BD                              DB 084h, 0BDh           ;BC      Z278      '='
+  517/ 240 : 09 03                              DB 009h, 003h           ;LB      3
+  518/ 242 : 2F                                 DB 02Fh                 ;RT
+  519/ 243 : 84 BE                              DB 084h, 0BEh           ;Z278       BC      Z279      '>'
+  520/ 245 : 09 05                              DB 009h, 005h           ;LB      5
+  521/ 247 : 2F                                 DB 02Fh                 ;RT
+  522/ 248 : 09 01                              DB 009h, 001h           ;Z279       LB      1
+  523/ 24A : 2F                                 DB 02Fh                 ;RT
+  524/ 24B : 80 BE                              DB 080h, 0BEh           ;Z277       BC      * !589    '>'
+  525/ 24D : 84 BD                              DB 084h, 0BDh           ;BC      Z280      '='
+  526/ 24F : 09 06                              DB 009h, 006h           ;LB      6
+  527/ 251 : 2F                                 DB 02Fh                 ;RT
+  528/ 252 : 84 BC                              DB 084h, 0BCh           ;Z280       BC      Z281      '<'
+  529/ 254 : 09 05                              DB 009h, 005h           ;LB      5
+  530/ 256 : 2F                                 DB 02Fh                 ;RT
+  531/ 257 : 09 04                              DB 009h, 004h           ;Z281       LB      4
+  532/ 259 : 2F                                 DB 02Fh                 ;RT
+  533/ 25A : (MACRO)                            IL_JS EXPR
+  533/ 25A : 31 8F                              DW 3000H | EXPR-STRT & 7FFh
+  534/ 25C : (MACRO)                            IL_DS                   ;DS
+  534/ 25C : 0B                                 DB 0Bh
+  535/ 25D : (MACRO)                            IL_DS                   ;DS
+  535/ 25D : 0B                                 DB 0Bh
+  536/ 25E : (MACRO)                            IL_SX 6                 ;SX 6
+  536/ 25E : 06                                 DB 00h + (6 & 07h)
+  537/ 25F : (MACRO)                            IL_SX 1                 ;SX 1
+  537/ 25F : 01                                 DB 00h + (1 & 07h)
+  538/ 260 : (MACRO)                            IL_SX 7                 ;SX 7
+  538/ 260 : 07                                 DB 00h + (7 & 07h)
+  539/ 261 : (MACRO)                            IL_SX 1                 ;SX 1
+  539/ 261 : 01                                 DB 00h + (1 & 07h)
+  540/ 262 : 09 01                              DB 009h, 001h           ;Z248       LB      1
+  541/ 264 : (MACRO)                            IL_SX 2                 ;SX 2
+  541/ 264 : 02                                 DB 00h + (2 & 07h)
+  542/ 265 : (MACRO)                            IL_SX 1                 ;SX 1
+  542/ 265 : 01                                 DB 00h + (1 & 07h)
+  543/ 266 : (MACRO)                            IL_CP                   ;CP
+ AS V1.42 Beta [Bld 275] - Source File TB_IL.asm - Page 16 - 10/02/2024 11:14:07 PM
 
 
-  564/ 263 : 0A 00 00                           DB 00Ah, 000h, 000h             ;LN      0
-  565/ 266 : (MACRO)                            IL_CP                 ;CP
-  565/ 266 : 1C                                 DB 1CH
-> > > TB_IL.asm(566):9: error: unknown instruction
-> > > IL_BR
-> > >         IL_BR $+1                ;BR      * !623
-> > >         ~~~~~
-  566/ 267 :                                    IL_BR $+1                ;BR      * !623
-  567/ 267 : 2F                         ENDIL   DB 02Fh                ;RT                 End Of IL Program
-  568/ 268 : 00 00                              DB 0, 0
- AS V1.42 Beta [Bld 275] - Source File TB_IL.asm - Page 17 - 10/02/2024 02:46:21 PM
+  543/ 266 : 1C                                 DB 1CH
+  544/ 267 : (MACRO)                            IL_BR_F $+1             ;BR      * !616
+  544/ 267 : 60                                 DB 60h + ($+1-$-1)
+  545/ 268 : 09 06                              DB 009h, 006h           ;LB      6
+  546/ 26A : 0A 00 00                           DB 00Ah, 000h, 000h     ;LN      0
+  547/ 26D : (MACRO)                            IL_CP                   ;CP
+  547/ 26D : 1C                                 DB 1CH
+  548/ 26E : (MACRO)                            IL_BR_F $+1             ;BR      * !623
+  548/ 26E : 60                                 DB 60h + ($+1-$-1)
+  549/ 26F : 2F                         ENDIL   DB 02Fh                 ;RT                 End Of IL Program
+  550/ 270 : 00 00                              DB 0, 0
+ AS V1.42 Beta [Bld 275] - Source File TB_IL.asm - Page 17 - 10/02/2024 11:14:07 PM
 
 
   Symbol Table (* = unused):
   --------------------------
 
 *ARCHITECTURE :                                      "x86_64-unknown-linux" - |
-*CASESENSITIVE :                  0 - | *CLER :                         0B4 C |
+*CASESENSITIVE :                  0 - |  CLER :                         0AD C |
 *CONSTPI :     3.141592653589793239 - | *DATE :                "10/02/2024" - |
-*DFLT :                         18D C | *END :                           8E C |
-*ENDIL :                        267 C |  EXPR :                         192 C |
-*FALSE :                          0 - | *FLG :                          1FE C |
-*FLOATMAX :   1.18973149535725E4932 - | *GOSB :                          25 C |
-*GOTO :                          19 C | *HAS64 :                          1 - |
-*I1 :                            67 C | *IF_ :                           57 C |
-*INP :                          1ED C | *INPT :                          6B C |
- LET :                           14 C | *LISTON :                         1 - |
-*LIST_ :                         94 C | *LO :                             7 C |
-*LOAD :                         161 C | *MACEXP :                         7 - |
+*DFLT :                         18A C |  END :                           86 C |
+*ENDIL :                        26F C | *EX1 :                          195 C |
+ EX2 :                          199 C |  EXPR :                         18F C |
+*FALSE :                          0 - | *FLG :                          203 C |
+*FLOATMAX :   1.18973149535725E4932 - |  GOSB :                          25 C |
+ GOTO :                          19 C | *HAS64 :                          1 - |
+ I0 :                            67 C |  I1 :                            5D C |
+ I2 :                            6A C |  I3 :                            71 C |
+ I4 :                            73 C |  I5 :                            7A C |
+ IF_ :                           4F C | *INP :                          1F1 C |
+ INPT :                          61 C |  L1 :                            99 C |
+ L2 :                            9D C |  LET :                           14 C |
+*LISTON :                         1 - |  LIST_ :                         8C C |
+ LO :                             7 C | *LO1 :                          163 C |
+ LO2 :                          165 C |  LO3 :                          178 C |
+ LOAD :                         15C C | *MACEXP :                         7 - |
 *MOMCPU :                      1802 - | *MOMCPUNAME :                "1802" - |
-*NESTMAX :                      100 - | *OUT_ :                         113 C |
-*P0 :                            38 C |  P1 :                            3A C |
- P2 :                            3D C |  P3 :                            3F C |
-*PEEK_ :                        20F C | *PLOT :                         0BB C |
-*POKE :                         109 C | *PRNT :                          2F C |
-*RELAXED :                        0 - | *RELOP :                        231 C |
-*RETN_ :                         84 C | *RND :                          1B3 C |
-*RUN_ :                         0AE C | *S1 :                            45 C |
-*S2 :                            4A C | *S3 :                            4D C |
-*S4 :                            50 C | *S5 :                            53 C |
-*SAVE :                         125 C |  SKIP_ :                         44 C |
- STMT :                          0D C |  STRT :                           0 C |
-*TERM :                         1A6 C | *TIME :               "02:46:21 PM" - |
-*TRUE :                           1 - | *USR :                          1DE C |
+*NESTMAX :                      100 - |  OU1 :                          119 C |
+*OUT_ :                         10D C |  P0 :                            35 C |
+ P1 :                            37 C |  P2 :                            39 C |
+ P3 :                            3B C |  PE1 :                          220 C |
+ PE2 :                          228 C |  PE3 :                          22A C |
+ PE4 :                          231 C | *PEEK_ :                        215 C |
+ PLOT :                         0B4 C |  PO1 :                          0CF C |
+ PO2 :                          0D1 C |  PO3 :                          0D3 C |
+ POKE :                         102 C |  PRNT :                          2E C |
+*RELAXED :                        0 - |  RELOP :                        237 C |
+ RETN_ :                         7C C |  RN1 :                          1D0 C |
+ RND :                          1B5 C |  RUN_ :                         0A7 C |
+ S1 :                            40 C |  S2 :                            44 C |
+ S3 :                            48 C |  S4 :                            4B C |
+ SA1 :                          140 C | *SAVE :                         11F C |
+ SKIP_ :                         3F C |  STMT :                          0D C |
+ STRT :                           0 C |  TE1 :                          1A8 C |
+ TERM :                         1A6 C | *TIME :               "11:14:07 PM" - |
+*TRUE :                           1 - |  USR :                          1E2 C |
 *VERSION :                     142F - |  XEC :                           0A C |
 
-     57 symbols
-     48 unused symbols
+     79 symbols
+     25 unused symbols
 
- AS V1.42 Beta [Bld 275] - Source File TB_IL.asm - Page 18 - 10/02/2024 02:46:21 PM
+ AS V1.42 Beta [Bld 275] - Source File TB_IL.asm - Page 18 - 10/02/2024 11:14:07 PM
 
 
   Defined Macros:
@@ -1026,7 +1038,7 @@ IL_XQ                                 |
 
      43 macros
 
- AS V1.42 Beta [Bld 275] - Source File TB_IL.asm - Page 19 - 10/02/2024 02:46:21 PM
+ AS V1.42 Beta [Bld 275] - Source File TB_IL.asm - Page 19 - 10/02/2024 11:14:07 PM
 
 
   Code Pages:
@@ -1038,10 +1050,8 @@ STANDARD (0 changed characters)
 
 0.00 seconds assembly time
 
-    568 lines source file
-    829 lines incl. macro expansions
-      1 pass
-        Additional necessary passes not started due to
-        errors, listing possibly incorrect.
-     27 errors
+    550 lines source file
+    911 lines incl. macro expansions
+      2 passes
+      0 errors
       0 warnings
