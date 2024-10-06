@@ -141,7 +141,7 @@ LEND       DB      034h
 AEPTR      DB      080h
 TTYCC      DB      000h
 NXA        DW      00773h
-AIL        DW      00766h
+AIL        DW      STRT       ;START OF IL
 BASIC      DW      00F40h     ;LOWEST ADD. FOR PROGRAM
 STACK      DW      03FF7h     ;HIGHEST ADD. FOR PROGRAM
 MEND       DW      0109Bh     ;PROGRAM END + STACK RESERVE

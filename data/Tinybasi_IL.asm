@@ -141,7 +141,7 @@ LEND       DB      034h
 AEPTR      DB      080h
 TTYCC      DB      000h
 NXA        DW      00773h
-AIL        DW      00766h
+AIL        DW      STRT       ;START OF IL
 BASIC      DW      00F40h     ;LOWEST ADD. FOR PROGRAM
 STACK      DW      03FF7h     ;HIGHEST ADD. FOR PROGRAM
 MEND       DW      0109Bh     ;PROGRAM END + STACK RESERVE
@@ -1440,7 +1440,8 @@ IO         STXD              ;PUSH OUT BYTE
            INC     R2        ;DO INCREMENT NOW
            SEP     PZ        ;GO EXECUTE, RESULT IN D
 
-           
+           include "TB_IL.asm"  
+
 TVON       LDI     (INTERUPT)&255  ;SETUP INTERRUPT ROUTINE
            PLO     R1
            LDI     (INTERUPT)>>8
@@ -1451,6 +1452,7 @@ TVON       LDI     (INTERUPT)&255  ;SETUP INTERRUPT ROUTINE
            SEX     R3
            RET               ;ENABLE INTERRUPTS
            RETURN
+           DB 00
 Z283       ORI     034h      ;MAKE FLG BRANCH
            PHI     RF        ;SAVE HIGH F
            DEC     RD
@@ -1637,6 +1639,7 @@ TVOFF      LDI     00Ch       ;TV OFF AND DELAY
 ;
 ; Character Formatter - ASCII character in ACC.
 ;
+           align 8
 TVD        ANI     07Fh       ;SET HIGH BIT TO 0
            PLO     RE         ;SAVE FOR EXIT
            SMI     060h       ;CHECK FOR UPPER CASE
