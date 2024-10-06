@@ -1,15 +1,18 @@
-BUFF       EQU     0DB0h     ;ONLY CHANGE PAGE, UNLESS YOU
-TVXY       EQU     8
-TYPEV      EQU     0109h
-ILPOKE     EQU     0118h
-ILINPOUT   EQU     0126h
-KEYV       EQU     0106h
-ILSAVE     EQU     09FDh
-ILLOAD     EQU     09FAh
-MEND       EQU     024h
-BASIC      EQU     020h
-ILFLG      EQU     9F8h
-ILPEEK     EQU     114h
+;        IF TESTING_IL
+;BUFF       EQU     0DB0h     ;ONLY CHANGE PAGE, UNLESS YOU
+;TVXY       EQU     8
+;TYPEV      EQU     0109h
+;ILPOKE     EQU     0118h
+;ILINPOUT   EQU     0126h
+;KEYV       EQU     0106h
+;ILSAVE     EQU     09FDh
+;ILLOAD     EQU     09FAh
+;MEND       EQU     024h
+;BASIC      EQU     020h
+;ILFLG      EQU     9F8h
+;ILPEEK     EQU     114h
+;        ENDIF
+
 IL_SX   MACRO stack             ;Duplicate Top number (two bytes) on Stack
         DB 00h + (stack & 07h)
     ENDM
@@ -255,7 +258,7 @@ IF_     IL_BC INPT, 'I', 'F'    ;BC      :INPT     'IF'
 I1      IL_CP                   ;CP
         IL_NX                   ;NX
         IL_J STMT
-INPT    IL_BC RETN_, "INPU", 'T' ;BC      :RETN     'INPUT'
+INPT    IL_BC RETN_, "INPU", 'T';BC      :RETN     'INPUT'
 I0      IL_BV $+1               ;Z242       BV      * !104
         IL_SB                   ;SB
         IL_BE I3                ;BE      Z238
@@ -344,7 +347,7 @@ PO4     IL_BE $+1               ;Z251       BE      * !245
         IL_NX                   ;NX                NEXT STATEMENT
 PO5     IL_BE $+1               ;Z252       BE      * !257
         IL_NX                   ;NX
-POKE    IL_BC OUT_, "POK", 'E'   ;BC      :OUT      'POKE'
+POKE    IL_BC OUT_, "POK", 'E'  ;BC      :OUT      'POKE'
         IL_LN ILPOKE            ;LN      ILPOKE
         IL_JS EXPR              ;JS      :EXPR
         IL_BR_F OU1             ;BR      Z253
@@ -370,7 +373,7 @@ SA2     IL_LN KEYV              ;Z255       LN      KEYV
         IL_US                   ;US                CALL KEY INPUT
         IL_SP                   ;SP                POP RETURNED VALUE
         IL_NL                   ;NL                NEW LINE
-        IL_LN ILSAVE             ;LN      ILSAVE
+        IL_LN ILSAVE            ;LN      ILSAVE
         IL_LB MEND              ;LB      MEND
         IL_FV                   ;FV
         IL_LB BASIC             ;LB      BASIC
@@ -401,7 +404,7 @@ LO2     IL_LB MEND              ;Z257       LB      MEND
 LO3     IL_NL                   ;Z259       NL
         IL_PC "TAPE ERRO", 'R'  ;PC                'TAPE ERROR'
         IL_MT                   ;MT
-REM     IL_BC DFLT, "RE",'M'          ;Z258       BC      :DFLT     'REM'
+REM     IL_BC DFLT, "RE",'M'    ;Z258       BC      :DFLT     'REM'
         IL_NX                   ;NX
 DFLT    IL_BV $+1               ;BV      * !395
         IL_BC $+1, '', '='      ;BC      * !397    '='
@@ -413,21 +416,21 @@ EXPR    IL_BC EX1, '', '-'      ;BC      Z260      '-'
 EX1     IL_BC EX2, '','+'       ;Z260       BC      Z262      '+'
 EX2     IL_JS TERM              ;Z262       JS      :TERM
 EX3     IL_BC EX4, '','+'       ;Z261       BC      Z263      '+'
-        IL_JS TERM
+        IL_JS TERM              ;JS      :TERM
         IL_AD                   ;AD
         IL_BR_B EX3             ;BR      Z261
 EX4     IL_BC ERT, '','-'       ;Z263       BC      Z264      '-'
-        IL_JS TERM
+        IL_JS TERM              ;JS      :TERM
         IL_SU                   ;SU
         IL_BR_B EX3             ;BR      Z261
 ERT     IL_RT                   ;Z264       RT
 TERM    IL_JS RND               ;JS      :RND
 TE1     IL_BC TE2, '','*'       ;Z266       BC      Z265      '*'
-        IL_JS RND
+        IL_JS RND               ;JS      :RND
         IL_MP                   ;MP
         IL_BR_B TE1             ;BR      Z266
 TE2     IL_BC TER, '','/'       ;Z265       BC      Z267      '/'
-        IL_JS RND
+        IL_JS RND               ;JS      :RND
         IL_DV                   ;DV
         IL_BR_B TE1             ;BR      Z266
 TER     IL_RT                   ;Z267       RT
@@ -475,7 +478,7 @@ INP     IL_BC FLG, "INP",'('    ;BC      :FLG      'INP('
         IL_LN 8                 ;LN      8         ADD 8 TO OP FOR INPUT
         IL_AD                   ;AD
         IL_BR_F PE1             ;BR      Z271
-FLG     IL_BC PEEK_, "FLG",'('   ;BC      :PEEK     'FLG('
+FLG     IL_BC PEEK_, "FLG",'('  ;BC      :PEEK     'FLG('
         IL_LN ILFLG             ;LN      ILFLG     FLG WAS NEVER DOCUMENTED
         IL_LN 5                 ;LN      5
         IL_JS EXPRJS            ;JS      Z249      GET EXPR AND COMP >0 AND <5
@@ -494,36 +497,36 @@ PE5     IL_BV PE2               ;Z272       BV      Z273
         IL_RT                   ;RT
 PE2     IL_BN PE3               ;Z273       BN      Z274
         IL_RT                   ;RT
-PE3     DB 080h, 0A8h           ;Z274       BC      * !556    '('
-PEXPR     IL_JS EXPR              ;JS      :EXPR
-        DB 080h, 0A9h           ;BC      * !560    ')'
+PE3     IL_BC $+1, '','('       ;Z274       BC      * !556    '('
+PEXPR   IL_JS EXPR              ;JS      :EXPR
+        IL_BC $+1, '', ')'      ;BC      * !560    ')'
         IL_RT                   ;RT
-PE4     DB 083h, 0ACh           ;Z245       BC      Z275      ','
+PE4     IL_BC PE6, '',','       ;Z245       BC      Z275      ','
         IL_J EXPR               ;JS      :EXPR
-        IL_DS                   ;Z275       DS
+PE6     IL_DS                   ;Z275       DS
         IL_RT                   ;RT
-RELOP   DB 084h, 0BDh           ;Z237       BC      Z276      '='
-        DB 009h, 002h           ;LB      2
+RELOP   IL_BC RELESS, '','='    ;Z237       BC      Z276      '='
+        IL_LB 2                 ;LB      2
         IL_RT                   ;RT
-RELESS  DB 08Eh, 0BCh           ;Z276       BC      Z277      '<'
-        DB 084h, 0BDh           ;BC      Z278      '='
-        DB 009h, 003h           ;LB      3
+RELESS  IL_BC REMORE2, '', '<'  ;Z276       BC      Z277      '<'
+        IL_BC REMORE, '', '='   ;BC      Z278      '='
+        IL_LB 3                 ;LB      3
         IL_RT                   ;RT
-REMORE  DB 084h, 0BEh           ;Z278       BC      Z279      '>'
-        DB 009h, 005h           ;LB      5
+REMORE  IL_BC REMORE1, '','>'   ;Z278       BC      Z279      '>'
+        IL_LB 5                 ;LB      5
         IL_RT                   ;RT
-REMORE1 DB 009h, 001h           ;Z279       LB      1
+REMORE1 IL_LB 1                 ;Z279       LB      1
         IL_RT                   ;RT
-REMORE2 DB 080h, 0BEh           ;Z277       BC      * !589    '>'
-        DB 084h, 0BDh           ;BC      Z280      '='
-        DB 009h, 006h           ;LB      6
+REMORE2 IL_BC $+1, '','>'       ;Z277       BC      * !589    '>'
+        IL_BC RELESS1, '','='   ;BC      Z280      '='
+        IL_LB 6                 ;LB      6
         IL_RT                   ;RT
-RELESS1 DB 084h, 0BCh           ;Z280       BC      Z281      '<'
-        DB 009h, 005h           ;LB      5
+RELESS1 IL_BC RELESS2, '','<'   ;Z280       BC      Z281      '<'
+        IL_LB 5                 ;LB      5
         IL_RT                   ;RT
-RELESS2 DB 009h, 004h           ;Z281       LB      4
+RELESS2 IL_LB 4                 ;Z281       LB      4
         IL_RT                   ;RT
-EXPRJS  IL_JS EXPR
+EXPRJS  IL_JS EXPR              ;JS      :EXPR
         IL_DS                   ;DS
         IL_DS                   ;DS
         IL_SX 6                 ;SX 6
