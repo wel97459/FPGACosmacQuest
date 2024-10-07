@@ -1977,20 +1977,20 @@ DISPLP     GLO     R0
            GHI     R0         ;LAST LINE
            XRI     (BUFE)>>8  ;IS NEW PAGE
            BNZ     DISPLP
-           PHI     R0
+           PHI     R0         ;R0.H to 0
            LDI     (TIME_+2)&255 ;NOW UPDATE CLOCK
            PLO     R0
            SHRC               ;SAVE CARRY
            STR     R2
            LDX
            ADI     1          ;INCREMENT FRAME COUNT
-           NOP     ;STR     R0
+           STR     R0
            SMI     03Dh       ;ONE SECOND
            BNF     Z327       ;NOT YET
            STXD               ;IF YES,
            LDX                ;BUMP SECONDS
            ADI     1
-           NOP     ;STR     R0
+           STR     R0
            BR      Z327
 CTBL       DW      08608h     ;SP MASK BYTE AND DATA POINTER
            DW      0820Ah     ;! MASK BYTE AND DATA POINTER

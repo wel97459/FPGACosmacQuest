@@ -10,7 +10,7 @@ cmake_minimum_required(VERSION 3.10)
 #set(MYAPP_PGO "-fprofile-use=./pgo") 
 set(MYAPP_PGO "-fopenmp") 
 if(NOT "${CMAKE_CXX_STANDARD}")
-  set(CMAKE_CXX_STANDARD 11)
+  set(CMAKE_CXX_STANDARD 14)
 endif()
 
 set(CMAKE_CXX_FLAGS "-DNDEBUG -O3 -march=native -flto ${MYAPP_PGO}")
@@ -58,6 +58,6 @@ add_executable(${CMAKE_PROJECT_NAME}
   src/crt_ntsc.c
 )
 
-#set_target_properties(${CMAKE_PROJECT_NAME} PROPERTIES COMPILE_DEFINITIONS TRACE)
+set_target_properties(${CMAKE_PROJECT_NAME} PROPERTIES COMPILE_DEFINITIONS TRACE)
 
 target_link_libraries(${CMAKE_PROJECT_NAME} dt_lib -lSDL2_ttf ${SDL2_LIBRARIES})
