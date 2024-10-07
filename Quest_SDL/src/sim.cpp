@@ -190,7 +190,25 @@ void sim_keyevent(int event, int key) {
     ){
         keyIn = key;
         if(key == '\'' && shift) keyIn = '"';
-        if(key != '\n') keyWait = true;
+        if(key == '=' && shift) keyIn = '+';
+        if(key == '1' && shift) keyIn = '!';
+        if(key == '2' && shift) keyIn = '@';
+        if(key == '3' && shift) keyIn = '#';
+        if(key == '4' && shift) keyIn = '$';
+        if(key == '5' && shift) keyIn = '%';
+        if(key == '6' && shift) keyIn = '^';
+        if(key == '7' && shift) keyIn = '&';
+        if(key == '8' && shift) keyIn = '*';
+        if(key == '9' && shift) keyIn = '(';
+        if(key == '0' && shift) keyIn = ')';
+        if(key == ',' && shift) keyIn = '<';
+        if(key == '.' && shift) keyIn = '>';
+        if(key == '/' && shift) keyIn = '?';
+        if(key == '\\' && shift) keyIn = '|';
+        if(key != '\n'){
+            keyWait = true;
+            printf("Key in: \"%c\"\n", key); 
+        }
     }else if(event == SDL_KEYDOWN && 
         key == SDLK_LSHIFT ||
         key == SDLK_RSHIFT){
@@ -499,7 +517,15 @@ void sim_run(){
     Video_Last = Quest->io_video;
 
     Quest->io_Debug_d1 = Quest->io_ram_addr >= 0x766 && Quest->io_ram_addr < 0x9d8 && !Quest->io_CPU_MRD;
-    Quest->io_Debug_d2 = Quest->io_ram_addr >= 0xcb8 && Quest->io_ram_addr < 0xDB9 && !Quest->io_CPU_MRD;
+    Quest->io_Debug_d2 = Quest->io_ram_addr >= 0x001E && Quest->io_ram_addr < 0x0020 && !Quest->io_CPU_MWR;
+    if(Quest->io_ram_addr >= 0x766 && Quest->io_ram_addr < 0x9d6 && !Quest->io_CPU_MRD && !MR_Last) {
+        printf("%li: IL Read 0x%04X: 0x%02X\n", main_time, Quest->io_ram_addr, Quest->io_ram_din);
+    }
+    if(Quest->io_ram_addr >= 0x1E && Quest->io_ram_addr < 0x0020 && !Quest->io_CPU_MWR && !MW_Last) {
+        printf("%li: ZERO PAGE WRITE 0x%04X: 0x%02X\n", main_time, Quest->io_ram_addr, Quest->io_ram_din);
+    }
+    MR_Last = !Quest->io_CPU_MRD;
+    MW_Last = !Quest->io_CPU_MWR;
 
     main_time++;
     Quest->clk = 1;

@@ -24,8 +24,18 @@ SET(CMAKE_BUILD_TYPE Relese)
 #set(CMAKE_BUILD_TYPE RelWithDebInfo)
 
 project(sim)
-execute_process(COMMAND sbt "runMain Cosmac.QuestSDLSim" WORKING_DIRECTORY ../)
-#execute_process(WORKING_DIRECTORY ../../../ COMMAND cp "./DisplayTest.v_toplevel_tft_initParamsRom.bin" "./src/testing/SDL_DisplayTest/")
+
+add_custom_command(
+  OUTPUT ../simWorkspace/Quest/rtl/Quest.v  # This file will be created when the command is run
+  COMMAND sbt "runMain Cosmac.QuestSDLSim"
+  WORKING_DIRECTORY ../
+  MAIN_DEPENDENCY ../src/main/scala/rtl/Quest.scala  # This file is checked for changes
+  COMMENT "Running SBT to genrate the verilog."
+)
+
+#execute_process(COMMAND sbt "runMain Cosmac.QuestSDLSim" WORKING_DIRECTORY ../)
+
+#add_custom_target(run_quest_sdlsim ALL DEPENDS ../simWorkspace/Quest/rtl/Quest.v)
 
 find_package(verilator HINTS $ENV{VERILATOR_ROOT})
 find_package(SDL2 REQUIRED)

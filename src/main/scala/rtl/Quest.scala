@@ -239,7 +239,7 @@ class Quest(val divideBy: BigInt, val withDebug: Boolean = false) extends Compon
         Pixie.io.SC := Cpu.io.SC
         Pixie.io.TPA := Cpu.io.TPA
         Pixie.io.TPB := Cpu.io.TPB
-        Pixie.io.Disp_On := (Cpu.io.N === 1 && Cpu.io.TPB && Cpu.io.MRD)
+        Pixie.io.Disp_On := (Cpu.io.N === 1 && Cpu.io.TPB && !Cpu.io.MWR)
         Pixie.io.Disp_Off := (Cpu.io.N === 1 && Cpu.io.TPB && !Cpu.io.MRD)
         Pixie.io.Reset_ := QLogic.io.CLEAR_
 

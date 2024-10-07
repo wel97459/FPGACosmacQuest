@@ -140,7 +140,7 @@ XEQ        DB      019h
 LEND       DB      034h
 AEPTR      DB      080h
 TTYCC      DB      000h
-NXA        DW      00773h
+NXA        DW      STMT       ;START OF Statements
 AIL        DW      STRT       ;START OF IL
 BASIC      DW      00F40h     ;LOWEST ADD. FOR PROGRAM
 STACK      DW      03FF7h     ;HIGHEST ADD. FOR PROGRAM
@@ -1019,9 +1019,9 @@ SHCL       PLO     AC        ;AND DIVIDE
 ;
 NXT        FETCH   XEQ       ;IF DIRECT EXECUTION
            LBZ     FIN       ;QUIT WITh, 0DFh =0
-           LDA     BP        ;ELSE SCAN TO NEXT <CR>
+-          LDA     BP        ;ELSE SCAN TO NEXT <CR>
            XRI     00Dh
-           BNZ     $-3
+           BNZ     -
            CALL    GLINO     ;GET LINE NUMBER
            BZ      BERR      ;ZERO IS ERROR
 CONT       CALL    BREAKV    ;TEST FOR BREAK
@@ -1273,7 +1273,7 @@ SAV        FETCH   TOPS ;ADJUST STACK TOP
            STXD
            LBR     NEXT
 ;
-GLINO      FETCH   LINO-1 ;SETUP POINTER
+GLINO      FETCH   LINO-1    ;SETUP POINTER
            LDA     BP        ;GET 1ST BYTE
            STR     PZ        ;STORE IN RAM
            INC     PZ
@@ -1968,7 +1968,7 @@ INTERUPT   NOP                ;> ENTRY DISPLAY INT. ROUTINE
            LDI     (BUFF)&255
            PLO     R0
 -          B1      -          ;SYNCHRONIZE
-Z326       GLO     R0
+DISPLP     GLO     R0
            DEC     R0
            PLO     R0
            SEX     R0         ;NOT A NOP
@@ -1976,7 +1976,7 @@ Z326       GLO     R0
            PLO     R0         ;THREE LINES PER PIXEL
            GHI     R0         ;LAST LINE
            XRI     (BUFE)>>8  ;IS NEW PAGE
-           BNZ     Z326
+           BNZ     DISPLP
            PHI     R0
            LDI     (TIME_+2)&255 ;NOW UPDATE CLOCK
            PLO     R0
@@ -1984,13 +1984,13 @@ Z326       GLO     R0
            STR     R2
            LDX
            ADI     1          ;INCREMENT FRAME COUNT
-           STR     R0
+           NOP     ;STR     R0
            SMI     03Dh       ;ONE SECOND
            BNF     Z327       ;NOT YET
            STXD               ;IF YES,
            LDX                ;BUMP SECONDS
            ADI     1
-           STR     R0
+           NOP     ;STR     R0
            BR      Z327
 CTBL       DW      08608h     ;SP MASK BYTE AND DATA POINTER
            DW      0820Ah     ;! MASK BYTE AND DATA POINTER
