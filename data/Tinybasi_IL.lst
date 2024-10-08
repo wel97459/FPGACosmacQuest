@@ -1,4 +1,4 @@
- AS V1.42 Beta [Bld 172] - Source File Tinybasi_IL.asm - Page 1 - 10/06/2024 11:59:58 PM
+ AS V1.42 Beta [Bld 172] - Source File Tinybasi_IL.asm - Page 1 - 10/07/24 19:32:40
 
 
        1/       0 :                     ; Netronic TinyBasic For The ELF II Recreation
@@ -61,7 +61,7 @@
       58/       0 :                     KB_INP MACRO address
       59/       0 :                     		INP   7
       60/       0 :                     		ENDM
- AS V1.42 Beta [Bld 172] - Source File Tinybasi_IL.asm - Page 2 - 10/06/2024 11:59:58 PM
+ AS V1.42 Beta [Bld 172] - Source File Tinybasi_IL.asm - Page 2 - 10/07/24 19:32:40
 
 
       61/       0 :                     
@@ -124,7 +124,7 @@
      118/       6 : D0                             SEP     R0
      119/       7 : 00                             IDL
      120/       8 :                     ;
- AS V1.42 Beta [Bld 172] - Source File Tinybasi_IL.asm - Page 3 - 10/06/2024 11:59:58 PM
+ AS V1.42 Beta [Bld 172] - Source File Tinybasi_IL.asm - Page 3 - 10/07/24 19:32:40
 
 
      121/       8 :                     ;  DATA AREA, COULD BE EQUATES
@@ -187,7 +187,7 @@
      178/      AC : 00 00                          DW      00000h     ;VAR. V
      179/      AE : 00 00                          DW      00000h     ;VAR. W
      180/      B0 : 00 00                          DW      00000h     ;VAR. X
- AS V1.42 Beta [Bld 172] - Source File Tinybasi_IL.asm - Page 4 - 10/06/2024 11:59:58 PM
+ AS V1.42 Beta [Bld 172] - Source File Tinybasi_IL.asm - Page 4 - 10/07/24 19:32:40
 
 
      181/      B2 : 00 00                          DW      00000h     ;VAR. Y
@@ -250,7 +250,7 @@
      227/      FF : (MACRO)             Z157       RETURN
      227/      FF : D5                          SEP R5
      228/     100 : C4                  COLDV      NOP                ;COLD START
- AS V1.42 Beta [Bld 172] - Source File Tinybasi_IL.asm - Page 5 - 10/06/2024 11:59:58 PM
+ AS V1.42 Beta [Bld 172] - Source File Tinybasi_IL.asm - Page 5 - 10/07/24 19:32:40
 
 
      229/     101 : 30 B0                          BR      COLD
@@ -313,7 +313,7 @@
      285/     146 : A6                             PLO     R6
      286/     147 : 9F                             GHI     RF
      287/     148 : 30 3B                          BR      RETURN_S
- AS V1.42 Beta [Bld 172] - Source File Tinybasi_IL.asm - Page 6 - 10/06/2024 11:59:58 PM
+ AS V1.42 Beta [Bld 172] - Source File Tinybasi_IL.asm - Page 6 - 10/07/24 19:32:40
 
 
      288/     14A : D3                             SEP     R3
@@ -376,7 +376,7 @@
      345/     1B0 :                     ; COLD START;
      346/     1B0 :                     ;
      347/     1B0 : F8 B3               COLD       LDI     ($+3)&255   ;CHANGE PROGRAM COUNTER
- AS V1.42 Beta [Bld 172] - Source File Tinybasi_IL.asm - Page 7 - 10/06/2024 11:59:58 PM
+ AS V1.42 Beta [Bld 172] - Source File Tinybasi_IL.asm - Page 7 - 10/07/24 19:32:40
 
 
      348/     1B2 : A3                             PLO     R3        ;FROM R0 TO R3
@@ -439,7 +439,7 @@
      405/     1F2 : F8 01                          LDI     ($)>>8
      406/     1F4 : B3                             PHI     R3
      407/     1F5 : D3                             SEP     R3
- AS V1.42 Beta [Bld 172] - Source File Tinybasi_IL.asm - Page 8 - 10/06/2024 11:59:58 PM
+ AS V1.42 Beta [Bld 172] - Source File Tinybasi_IL.asm - Page 8 - 10/07/24 19:32:40
 
 
      408/     1F6 : B4                             PHI     R4        ;INITIALIZE R4, R5, R7
@@ -502,7 +502,7 @@
      450/     22D :                     ; EXECUTE NEXT INTERMEDIATE LANGUAGE (IL) INSTRUCTION
      451/     22D :                     ;
      452/     22D : E2                  NEXT       SEX     R2        ;GET OPCODE
- AS V1.42 Beta [Bld 172] - Source File Tinybasi_IL.asm - Page 9 - 10/06/2024 11:59:58 PM
+ AS V1.42 Beta [Bld 172] - Source File Tinybasi_IL.asm - Page 9 - 10/07/24 19:32:40
 
 
      453/     22E : 49                             LDA     PC
@@ -565,7 +565,7 @@
      510/     276 : 73                             STXD
      511/     277 : (MACRO)                        CALL    STEST     ;CHECK STACK DEPTH
      511/     277 : D4                          SEP R4
- AS V1.42 Beta [Bld 172] - Source File Tinybasi_IL.asm - Page 10 - 10/06/2024 11:59:58 PM
+ AS V1.42 Beta [Bld 172] - Source File Tinybasi_IL.asm - Page 10 - 10/07/24 19:32:40
 
 
      511/     278 : 03 37                       dw STEST
@@ -628,7 +628,7 @@
      563/     2B6 :                     ;
      564/     2B6 : (MACRO)             STORE      CALL    APOP      ;GET VARIABLE
      564/     2B6 : D4                          SEP R4
- AS V1.42 Beta [Bld 172] - Source File Tinybasi_IL.asm - Page 11 - 10/06/2024 11:59:58 PM
+ AS V1.42 Beta [Bld 172] - Source File Tinybasi_IL.asm - Page 11 - 10/07/24 19:32:40
 
 
      564/     2B7 : 02 C5                       dw APOP
@@ -691,7 +691,7 @@
      605/     2F5 : 9D                          GHI RD 
      606/     2F6 : BA                             PHI     AC        ;INITIALLY 0
      607/     2F7 : AA                             PLO     AC
- AS V1.42 Beta [Bld 172] - Source File Tinybasi_IL.asm - Page 12 - 10/06/2024 11:59:58 PM
+ AS V1.42 Beta [Bld 172] - Source File Tinybasi_IL.asm - Page 12 - 10/07/24 19:32:40
 
 
      608/     2F8 : (MACRO)                        CALL    APUSH     ;PUSH ONTO STACK
@@ -754,7 +754,7 @@
      656/     338 : 24                          db (MEND)&255
      657/     339 : 82                             GLO     R2        ;COMPARE TO STACK TOP
      658/     33A : F5                             SD
- AS V1.42 Beta [Bld 172] - Source File Tinybasi_IL.asm - Page 13 - 10/06/2024 11:59:58 PM
+ AS V1.42 Beta [Bld 172] - Source File Tinybasi_IL.asm - Page 13 - 10/07/24 19:32:40
 
 
      659/     33B : 2D                             DEC     PZ
@@ -817,7 +817,7 @@
      702/     376 : (MACRO)                        CALL    TYPER
      702/     376 : D4                          SEP R4
      702/     377 : 03 F4                       dw TYPER
- AS V1.42 Beta [Bld 172] - Source File Tinybasi_IL.asm - Page 14 - 10/06/2024 11:59:58 PM
+ AS V1.42 Beta [Bld 172] - Source File Tinybasi_IL.asm - Page 14 - 10/07/24 19:32:40
 
 
      703/     379 : 4B                  PRS        LDA     BP        ;GET NEXT BYTE
@@ -880,7 +880,7 @@
      738/     3B3 : (MACRO)                        LDI0              ;TURN TAPE MODE OFF
      738/     3B3 : 9D                          GHI RD 
      739/     3B4 : 5D                             STR     PZ
- AS V1.42 Beta [Bld 172] - Source File Tinybasi_IL.asm - Page 15 - 10/06/2024 11:59:58 PM
+ AS V1.42 Beta [Bld 172] - Source File Tinybasi_IL.asm - Page 15 - 10/07/24 19:32:40
 
 
      740/     3B5 : (MACRO)             EXIT       FETCH   TOPS ;RESET STACK POINTER
@@ -943,7 +943,7 @@
      781/     3F0 : F8 8A                          LDI     08Ah      ;TYPE <LF>
      782/     3F2 :                     ;
      783/     3F2 : FF 80                          SMI     080h      ;FIX HI BIT
- AS V1.42 Beta [Bld 172] - Source File Tinybasi_IL.asm - Page 16 - 10/06/2024 11:59:58 PM
+ AS V1.42 Beta [Bld 172] - Source File Tinybasi_IL.asm - Page 16 - 10/07/24 19:32:40
 
 
      784/     3F4 : BF                  TYPER      PHI     X         ;SAVE CHAR
@@ -1006,7 +1006,7 @@
      819/     432 : F6                             SHR               ;BUT ;DOUBLED; HALVE IT
      820/     433 : F9 30                          ORI     030h      ;CONVERT TO ASCII
      821/     435 : 73                             STXD              ;PUSH ;IT
- AS V1.42 Beta [Bld 172] - Source File Tinybasi_IL.asm - Page 17 - 10/06/2024 11:59:58 PM
+ AS V1.42 Beta [Bld 172] - Source File Tinybasi_IL.asm - Page 17 - 10/07/24 19:32:40
 
 
      822/     436 : 1D                             INC     PZ        ;IS QUOTIENT=0?
@@ -1069,7 +1069,7 @@
      867/     46F : 9A                             GHI     AC        ;PUSH ONTO STACK WITH BIAS
      868/     470 : FB 80                          XRI     080h      ;(FOR 2'S COMPLEMENT)
      869/     472 : 73                             STXD              ;(BACKWARDS)
- AS V1.42 Beta [Bld 172] - Source File Tinybasi_IL.asm - Page 18 - 10/06/2024 11:59:58 PM
+ AS V1.42 Beta [Bld 172] - Source File Tinybasi_IL.asm - Page 18 - 10/07/24 19:32:40
 
 
      870/     473 : 8A                             GLO     AC
@@ -1132,7 +1132,7 @@
      915/     4AC : AF                             PLO     X
      916/     4AD : 4D                             LDA     PZ        ;MULTIPLICAND IN XX
      917/     4AE : B8                             PHI     XX
- AS V1.42 Beta [Bld 172] - Source File Tinybasi_IL.asm - Page 19 - 10/06/2024 11:59:58 PM
+ AS V1.42 Beta [Bld 172] - Source File Tinybasi_IL.asm - Page 19 - 10/07/24 19:32:40
 
 
      918/     4AF : 0D                             LDN     PZ
@@ -1195,7 +1195,7 @@
      964/     4E9 : AF                             PLO     X
      965/     4EA : ED                  DIVL       SEX     PZ        ;DO TRIAL SUBTRACT
      966/     4EB : 8A                             GLO     AC
- AS V1.42 Beta [Bld 172] - Source File Tinybasi_IL.asm - Page 20 - 10/06/2024 11:59:58 PM
+ AS V1.42 Beta [Bld 172] - Source File Tinybasi_IL.asm - Page 20 - 10/07/24 19:32:40
 
 
      967/     4EC : F7                             SM
@@ -1258,7 +1258,7 @@
     1017/     527 : BA                             PHI     AC
     1018/     528 : (MACRO)                        RETURN
     1018/     528 : D5                          SEP R5
- AS V1.42 Beta [Bld 172] - Source File Tinybasi_IL.asm - Page 21 - 10/06/2024 11:59:58 PM
+ AS V1.42 Beta [Bld 172] - Source File Tinybasi_IL.asm - Page 21 - 10/07/24 19:32:40
 
 
     1019/     529 :                     ;
@@ -1321,7 +1321,7 @@
     1056/     560 : D4                          SEP R4
     1056/     561 : 05 FE                       dw FIND
     1057/     563 : 32 38                          BZ      CONT      ;IF WE GOT IT, GO CONTINUE
- AS V1.42 Beta [Bld 172] - Source File Tinybasi_IL.asm - Page 22 - 10/06/2024 11:59:58 PM
+ AS V1.42 Beta [Bld 172] - Source File Tinybasi_IL.asm - Page 22 - 10/07/24 19:32:40
 
 
     1058/     565 : (MACRO)             GOAL       FETCH   LINO ;ELSE FAILED
@@ -1384,7 +1384,7 @@
     1102/     59E : (MACRO)             TAPE       FETCH   PAD+1 ;TURN OFF TYPEOUT
     1102/     59E : D7                          SEP R7
     1102/     59F : 16                          db (PAD+1)&255
- AS V1.42 Beta [Bld 172] - Source File Tinybasi_IL.asm - Page 23 - 10/06/2024 11:59:58 PM
+ AS V1.42 Beta [Bld 172] - Source File Tinybasi_IL.asm - Page 23 - 10/07/24 19:32:40
 
 
     1103/     5A0 : 38                             SKP
@@ -1447,7 +1447,7 @@
     1148/     5E5 : F8 07                          LDI     7         ;IF NOT, RING BELL
     1149/     5E7 : (MACRO)                        CALL    TYPER
     1149/     5E7 : D4                          SEP R4
- AS V1.42 Beta [Bld 172] - Source File Tinybasi_IL.asm - Page 24 - 10/06/2024 11:59:58 PM
+ AS V1.42 Beta [Bld 172] - Source File Tinybasi_IL.asm - Page 24 - 10/07/24 19:32:40
 
 
     1149/     5E8 : 03 F4                       dw TYPER
@@ -1510,7 +1510,7 @@
     1193/     628 : (MACRO)                        CALL    APOP      ;SET UP PARAMETERS:
     1193/     628 : D4                          SEP R4
     1193/     629 : 02 C5                       dw APOP
- AS V1.42 Beta [Bld 172] - Source File Tinybasi_IL.asm - Page 25 - 10/06/2024 11:59:58 PM
+ AS V1.42 Beta [Bld 172] - Source File Tinybasi_IL.asm - Page 25 - 10/07/24 19:32:40
 
 
     1194/     62B : 4D                             LDA     PZ        ;AC
@@ -1573,7 +1573,7 @@
     1238/     660 : 32 7B                          BZ      LIX       ;QUIT IF ZERO (PROGRAM END)
     1239/     662 : (MACRO)                        CALL    PRNA      ;ELSE PRINT LINE#
     1239/     662 : D4                          SEP R4
- AS V1.42 Beta [Bld 172] - Source File Tinybasi_IL.asm - Page 26 - 10/06/2024 11:59:58 PM
+ AS V1.42 Beta [Bld 172] - Source File Tinybasi_IL.asm - Page 26 - 10/07/24 19:32:40
 
 
     1239/     663 : 04 15                       dw PRNA
@@ -1636,7 +1636,7 @@
     1279/     69C : 1D                             INC     PZ
     1280/     69D : 4B                             LDA     BP        ;2ND BYTE
     1281/     69E : 73                             STXD
- AS V1.42 Beta [Bld 172] - Source File Tinybasi_IL.asm - Page 27 - 10/06/2024 11:59:58 PM
+ AS V1.42 Beta [Bld 172] - Source File Tinybasi_IL.asm - Page 27 - 10/07/24 19:32:40
 
 
     1282/     69F : F1                             OR                ;D=0 IF LINE#=0
@@ -1699,7 +1699,7 @@
     1327/     6DB : BA                             PHI     AC
     1328/     6DC : 4D                             LDA     PZ
     1329/     6DD : AA                             PLO     AC
- AS V1.42 Beta [Bld 172] - Source File Tinybasi_IL.asm - Page 28 - 10/06/2024 11:59:58 PM
+ AS V1.42 Beta [Bld 172] - Source File Tinybasi_IL.asm - Page 28 - 10/07/24 19:32:40
 
 
     1330/     6DE : (MACRO)                        FETCH   MEND ;=DISTANCE FROM INSERT
@@ -1762,7 +1762,7 @@
     1383/     71E : 9F                  MORE       GHI     X         ;SET UP POINTERS
     1384/     71F : AF                             PLO     X         ;X IS DESTINATION
     1385/     720 : 98                             GHI     XX
- AS V1.42 Beta [Bld 172] - Source File Tinybasi_IL.asm - Page 29 - 10/06/2024 11:59:58 PM
+ AS V1.42 Beta [Bld 172] - Source File Tinybasi_IL.asm - Page 29 - 10/07/24 19:32:40
 
 
     1386/     721 : BF                             PHI     X
@@ -1825,7 +1825,7 @@
     1434/     75B : FA 0F                          ANI     00Fh
     1435/     75D : F9 60                          ORI     060h
     1436/     75F : 5D                             STR     PZ
- AS V1.42 Beta [Bld 172] - Source File Tinybasi_IL.asm - Page 30 - 10/06/2024 11:59:58 PM
+ AS V1.42 Beta [Bld 172] - Source File Tinybasi_IL.asm - Page 30 - 10/07/24 19:32:40
 
 
     1437/     760 : FA 08                          ANI     8
@@ -1888,7 +1888,7 @@
 (1)   51/     766 :                     
 (1)   52/     766 :                     IL_SV   MACRO                   ;Store Variable
 (1)   53/     766 :                             DB 13H
- AS V1.42 Beta [Bld 172] - Source File Tinybasi_IL.asm(TB_IL.asm) - Page 31 - 10/06/2024 11:59:58 PM
+ AS V1.42 Beta [Bld 172] - Source File Tinybasi_IL.asm(TB_IL.asm) - Page 31 - 10/07/24 19:32:40
 
 
 (1)   54/     766 :                         ENDM
@@ -1951,7 +1951,7 @@
 (1)  111/     766 :                     
 (1)  112/     766 :                     IL_NL   MACRO                   ;New Line
 (1)  113/     766 :                             DB 23H
- AS V1.42 Beta [Bld 172] - Source File Tinybasi_IL.asm(TB_IL.asm) - Page 32 - 10/06/2024 11:59:58 PM
+ AS V1.42 Beta [Bld 172] - Source File Tinybasi_IL.asm(TB_IL.asm) - Page 32 - 10/07/24 19:32:40
 
 
 (1)  114/     766 :                         ENDM
@@ -2014,7 +2014,7 @@
 (1)  171/     766 :                             DB 80h + ((addr-$-1)&31)
 (1)  172/     766 :                             IF char > ''
 (1)  173/     766 :                             DB char
- AS V1.42 Beta [Bld 172] - Source File Tinybasi_IL.asm(TB_IL.asm) - Page 33 - 10/06/2024 11:59:58 PM
+ AS V1.42 Beta [Bld 172] - Source File Tinybasi_IL.asm(TB_IL.asm) - Page 33 - 10/07/24 19:32:40
 
 
 (1)  174/     766 :                             ENDIF
@@ -2077,7 +2077,7 @@
 (1)  212/     774 : =>TRUE                      IF "LE" > ''
 (1)  212/     774 : 4C 45                       DB "LE"
 (1)  212/     776 : [212]                       ENDIF
- AS V1.42 Beta [Bld 172] - Source File Tinybasi_IL.asm(TB_IL.asm) - Page 34 - 10/06/2024 11:59:58 PM
+ AS V1.42 Beta [Bld 172] - Source File Tinybasi_IL.asm(TB_IL.asm) - Page 34 - 10/07/24 19:32:40
 
 
 (1)  212/     776 : D4                          DB 'T' | 80h               
@@ -2140,7 +2140,7 @@
 (1)  231/     796 : [231]                       ENDIF
 (1)  231/     796 : D2                          DB 'R' | 80h               
 (1)  232/     797 : (MACRO)                     IL_BC P0, "IN", 'T'     ;BC      :P0       'INT'
- AS V1.42 Beta [Bld 172] - Source File Tinybasi_IL.asm(TB_IL.asm) - Page 35 - 10/06/2024 11:59:58 PM
+ AS V1.42 Beta [Bld 172] - Source File Tinybasi_IL.asm(TB_IL.asm) - Page 35 - 10/07/24 19:32:40
 
 
 (1)  232/     797 : 83                          DB 80h + ((P0-$-1)&31)
@@ -2203,7 +2203,7 @@
 (1)  248/     7AF : (MACRO)                     IL_NL                   ;NL
 (1)  248/     7AF : 23                          DB 23H
 (1)  249/     7B0 : (MACRO)                     IL_NX                   ;NX
- AS V1.42 Beta [Bld 172] - Source File Tinybasi_IL.asm(TB_IL.asm) - Page 36 - 10/06/2024 11:59:58 PM
+ AS V1.42 Beta [Bld 172] - Source File Tinybasi_IL.asm(TB_IL.asm) - Page 36 - 10/07/24 19:32:40
 
 
 (1)  249/     7B0 : 1D                          DB 1DH
@@ -2266,7 +2266,7 @@
 (1)  269/     7D7 : (MACRO)             I3      IL_BC I4, 0, ","        ;Z238       BC      Z240      ','
 (1)  269/     7D7 : 81                          DB 80h + ((I4-$-1)&31)
 (1)  269/     7D8 : =>FALSE                     IF 0 > ''
- AS V1.42 Beta [Bld 172] - Source File Tinybasi_IL.asm(TB_IL.asm) - Page 37 - 10/06/2024 11:59:58 PM
+ AS V1.42 Beta [Bld 172] - Source File Tinybasi_IL.asm(TB_IL.asm) - Page 37 - 10/07/24 19:32:40
 
 
 (1)  269/     7D8 :                             DB 0
@@ -2329,7 +2329,7 @@
 (1)  288/     7FE : (MACRO)                     IL_BR_F L2              ;BR      Z244
 (1)  288/     7FE : 64                          DB 60h + (L2-$-1)
 (1)  289/     7FF : (MACRO)             L1      IL_JS EXPR
- AS V1.42 Beta [Bld 172] - Source File Tinybasi_IL.asm(TB_IL.asm) - Page 38 - 10/06/2024 11:59:58 PM
+ AS V1.42 Beta [Bld 172] - Source File Tinybasi_IL.asm(TB_IL.asm) - Page 38 - 10/07/24 19:32:40
 
 
 (1)  289/     7FF : 31 8F                       DW 3000H | EXPR-STRT & 7FFh
@@ -2392,7 +2392,7 @@
 (1)  307/     82A : (MACRO)                     IL_LN 64                ;LN      64        MULTIPLY BY 64
 (1)  307/     82A : 0A                          DB 0Ah
 (1)  307/     82B : 00 40                       DW 64 & 0FFFFh
- AS V1.42 Beta [Bld 172] - Source File Tinybasi_IL.asm(TB_IL.asm) - Page 39 - 10/06/2024 11:59:58 PM
+ AS V1.42 Beta [Bld 172] - Source File Tinybasi_IL.asm(TB_IL.asm) - Page 39 - 10/07/24 19:32:40
 
 
 (1)  308/     82D : (MACRO)                     IL_MP                   ;MP
@@ -2455,7 +2455,7 @@
 (1)  334/     854 : 01                          DB 00h + (1 & 07h)
 (1)  335/     855 : (MACRO)                     IL_SV                   ;SV                 STORE NEW CURSOR
 (1)  335/     855 : 13                          DB 13H
- AS V1.42 Beta [Bld 172] - Source File Tinybasi_IL.asm(TB_IL.asm) - Page 40 - 10/06/2024 11:59:58 PM
+ AS V1.42 Beta [Bld 172] - Source File Tinybasi_IL.asm(TB_IL.asm) - Page 40 - 10/07/24 19:32:40
 
 
 (1)  336/     856 : (MACRO)                     IL_BC PO5, '', ','      ;BC      Z252      ','
@@ -2518,7 +2518,7 @@
 (1)  356/     87B : 00 08                       DW 8 & 0FFFFh
 (1)  357/     87D : (MACRO)                     IL_JS EXPRJS            ;JS      Z249      GET EXPR AND COMP >0 AND <8
 (1)  357/     87D : 32 5A                       DW 3000H | EXPRJS-STRT & 7FFh
- AS V1.42 Beta [Bld 172] - Source File Tinybasi_IL.asm(TB_IL.asm) - Page 41 - 10/06/2024 11:59:58 PM
+ AS V1.42 Beta [Bld 172] - Source File Tinybasi_IL.asm(TB_IL.asm) - Page 41 - 10/07/24 19:32:40
 
 
 (1)  358/     87F : (MACRO)             OU1     IL_JS PE4               ;Z253       JS      Z245      CHECK FOR ,AND GET EXPR
@@ -2581,7 +2581,7 @@
 (1)  376/     8AF : 09 FC                       DW ILSAVE & 0FFFFh
 (1)  377/     8B1 : (MACRO)                     IL_LB MEND              ;LB      MEND
 (1)  377/     8B1 : 09 24                       DB 09H, MEND & 0FFh      ;Push Literal byte onto stack
- AS V1.42 Beta [Bld 172] - Source File Tinybasi_IL.asm(TB_IL.asm) - Page 42 - 10/06/2024 11:59:58 PM
+ AS V1.42 Beta [Bld 172] - Source File Tinybasi_IL.asm(TB_IL.asm) - Page 42 - 10/07/24 19:32:40
 
 
 (1)  378/     8B3 : (MACRO)                     IL_FV                   ;FV
@@ -2644,7 +2644,7 @@
 (1)  402/     8DC : 13                          DB 13H
 (1)  403/     8DD : (MACRO)                     IL_WS                   ;WS                WARM START
 (1)  403/     8DD : 2D                          DB 2Dh
- AS V1.42 Beta [Bld 172] - Source File Tinybasi_IL.asm(TB_IL.asm) - Page 43 - 10/06/2024 11:59:58 PM
+ AS V1.42 Beta [Bld 172] - Source File Tinybasi_IL.asm(TB_IL.asm) - Page 43 - 10/07/24 19:32:40
 
 
 (1)  404/     8DE : (MACRO)             LO3     IL_NL                   ;Z259       NL
@@ -2707,7 +2707,7 @@
 (1)  419/     901 : (MACRO)                     IL_JS TERM              ;JS      :TERM
 (1)  419/     901 : 31 A6                       DW 3000H | TERM-STRT & 7FFh
 (1)  420/     903 : (MACRO)                     IL_AD                   ;AD
- AS V1.42 Beta [Bld 172] - Source File Tinybasi_IL.asm(TB_IL.asm) - Page 44 - 10/06/2024 11:59:58 PM
+ AS V1.42 Beta [Bld 172] - Source File Tinybasi_IL.asm(TB_IL.asm) - Page 44 - 10/07/24 19:32:40
 
 
 (1)  420/     903 : 18                          DB 18H
@@ -2770,7 +2770,7 @@
 (1)  440/     924 : 0A                          DB 0Ah
 (1)  440/     925 : 09 29                       DW 0929H & 0FFFFh
 (1)  441/     927 : (MACRO)                     IL_MP                   ;MP
- AS V1.42 Beta [Bld 172] - Source File Tinybasi_IL.asm(TB_IL.asm) - Page 45 - 10/06/2024 11:59:58 PM
+ AS V1.42 Beta [Bld 172] - Source File Tinybasi_IL.asm(TB_IL.asm) - Page 45 - 10/07/24 19:32:40
 
 
 (1)  441/     927 : 1A                          DB 1AH
@@ -2833,7 +2833,7 @@
 (1)  467/     94C : [467]                       ENDIF
 (1)  467/     94C : A8                          DB '(' | 80h               
 (1)  468/     94D : (MACRO)                     IL_JS EXPR              ;JS      :EXPR
- AS V1.42 Beta [Bld 172] - Source File Tinybasi_IL.asm(TB_IL.asm) - Page 46 - 10/06/2024 11:59:58 PM
+ AS V1.42 Beta [Bld 172] - Source File Tinybasi_IL.asm(TB_IL.asm) - Page 46 - 10/07/24 19:32:40
 
 
 (1)  468/     94D : 31 8F                       DW 3000H | EXPR-STRT & 7FFh
@@ -2896,7 +2896,7 @@
 (1)  488/     97B : (MACRO)             PEEK_   IL_BC PE5, "PEEK",'('   ;BC      Z272      'PEEK('
 (1)  488/     97B : 8F                          DB 80h + ((PE5-$-1)&31)
 (1)  488/     97C : =>TRUE                      IF "PEEK" > ''
- AS V1.42 Beta [Bld 172] - Source File Tinybasi_IL.asm(TB_IL.asm) - Page 47 - 10/06/2024 11:59:58 PM
+ AS V1.42 Beta [Bld 172] - Source File Tinybasi_IL.asm(TB_IL.asm) - Page 47 - 10/07/24 19:32:40
 
 
 (1)  488/     97C : 50 45 45 4B                 DB "PEEK"
@@ -2959,7 +2959,7 @@
 (1)  507/     99C : 2F                          DB 2Fh
 (1)  508/     99D : (MACRO)             RELOP   IL_BC RELESS, '','='    ;Z237       BC      Z276      '='
 (1)  508/     99D : 84                          DB 80h + ((RELESS-$-1)&31)
- AS V1.42 Beta [Bld 172] - Source File Tinybasi_IL.asm(TB_IL.asm) - Page 48 - 10/06/2024 11:59:58 PM
+ AS V1.42 Beta [Bld 172] - Source File Tinybasi_IL.asm(TB_IL.asm) - Page 48 - 10/07/24 19:32:40
 
 
 (1)  508/     99E : =>FALSE                     IF '' > ''
@@ -3022,7 +3022,7 @@
 (1)  524/     9B9 :                             DB ''
 (1)  524/     9B9 : [524]                       ENDIF
 (1)  524/     9B9 : BC                          DB '<' | 80h               
- AS V1.42 Beta [Bld 172] - Source File Tinybasi_IL.asm(TB_IL.asm) - Page 49 - 10/06/2024 11:59:58 PM
+ AS V1.42 Beta [Bld 172] - Source File Tinybasi_IL.asm(TB_IL.asm) - Page 49 - 10/07/24 19:32:40
 
 
 (1)  525/     9BA : (MACRO)                     IL_LB 5                 ;LB      5
@@ -3069,7 +3069,7 @@
 (1)  545/     9D5 : (MACRO)             ENDIL   IL_RT                   ;RT                 End Of IL Program
 (1)  545/     9D5 : 2F                          DB 2Fh
     1444/     9D6 :                     
-    1445/     9D6 : F8 82               TVON       LDI     (INTERUPT)&255  ;SETUP INTERRUPT ROUTINE
+    1445/     9D6 : F8 84               TVON       LDI     (INTERUPT)&255  ;SETUP INTERRUPT ROUTINE
     1446/     9D8 : A1                             PLO     R1
     1447/     9D9 : F8 0C                          LDI     (INTERUPT)>>8
     1448/     9DB : B1                             PHI     R1
@@ -3085,7 +3085,7 @@
     1457/     9E5 : BF                             PHI     RF        ;SAVE HIGH F
     1458/     9E6 : 2D                             DEC     RD
     1459/     9E7 : ED                             SEX     RD        ;X=D
- AS V1.42 Beta [Bld 172] - Source File Tinybasi_IL.asm - Page 50 - 10/06/2024 11:59:58 PM
+ AS V1.42 Beta [Bld 172] - Source File Tinybasi_IL.asm - Page 50 - 10/07/24 19:32:40
 
 
     1460/     9E8 : 8D                             GLO     RD        ;GLO D TO BRANCH TOO
@@ -3148,7 +3148,7 @@
     1516/     A31 : DC                  Z289       SEP     RC         ;GOSUB #F0BA ROM CALLS
     1517/     A32 : 3B 2E                          BNF     Z288
     1518/     A34 : 9D                             GHI     RD
- AS V1.42 Beta [Bld 172] - Source File Tinybasi_IL.asm - Page 51 - 10/06/2024 11:59:58 PM
+ AS V1.42 Beta [Bld 172] - Source File Tinybasi_IL.asm - Page 51 - 10/07/24 19:32:40
 
 
     1519/     A35 : 3A 31                          BNZ     Z289
@@ -3211,7 +3211,7 @@
     1567/     A76 : 3F 7A                               BN4 Z297
     1568/     A78 : F9 80                          ORI     080h
     1569/     A7A : 33 66               Z297       BDF     Z298
- AS V1.42 Beta [Bld 172] - Source File Tinybasi_IL.asm - Page 52 - 10/06/2024 11:59:58 PM
+ AS V1.42 Beta [Bld 172] - Source File Tinybasi_IL.asm - Page 52 - 10/07/24 19:32:40
 
 
     1570/     A7C :                     ;           GHI RE
@@ -3274,7 +3274,7 @@
     1613/     AB2 : (MACRO)             Z301       KB_BN     BLINK      ;WAIT FOR KEYIN
     1613/     AB2 : 3E A4                               BN3 BLINK
     1614/     AB4 : 9D                             GHI     RD
- AS V1.42 Beta [Bld 172] - Source File Tinybasi_IL.asm - Page 53 - 10/06/2024 11:59:58 PM
+ AS V1.42 Beta [Bld 172] - Source File Tinybasi_IL.asm - Page 53 - 10/07/24 19:32:40
 
 
     1615/     AB5 : (MACRO)                        CALL    TVD        ;TURN CURSOR OFF
@@ -3337,7 +3337,7 @@
     1661/     AEE : 98                             GHI     R8
     1662/     AEF : 73                             STXD
     1663/     AF0 : F8 1E                          LDI     (SHFT)&255       ;SET UP SHIFT PC
- AS V1.42 Beta [Bld 172] - Source File Tinybasi_IL.asm - Page 54 - 10/06/2024 11:59:58 PM
+ AS V1.42 Beta [Bld 172] - Source File Tinybasi_IL.asm - Page 54 - 10/07/24 19:32:40
 
 
     1664/     AF2 : AA                             PLO     RA
@@ -3400,7 +3400,7 @@
     1713/     B3A : 42                             LDA     R2
     1714/     B3B : A8                             PLO     R8
     1715/     B3C : 42                             LDA     R2         ;RESTORE R9
- AS V1.42 Beta [Bld 172] - Source File Tinybasi_IL.asm - Page 55 - 10/06/2024 11:59:58 PM
+ AS V1.42 Beta [Bld 172] - Source File Tinybasi_IL.asm - Page 55 - 10/07/24 19:32:40
 
 
     1716/     B3D : B9                             PHI     R9
@@ -3463,7 +3463,7 @@
     1772/     B8A : BF                             PHI     RF
     1773/     B8B : 7C 00                          ADCI    0
     1774/     B8D : BA                             PHI     RA
- AS V1.42 Beta [Bld 172] - Source File Tinybasi_IL.asm - Page 56 - 10/06/2024 11:59:58 PM
+ AS V1.42 Beta [Bld 172] - Source File Tinybasi_IL.asm - Page 56 - 10/07/24 19:32:40
 
 
     1775/     B8E : 4A                  Z308       LDA     RA         ;SCROLL SCREEN
@@ -3486,7 +3486,7 @@
     1792/     BA6 : 30 20                          BR      EXIT2
     1793/     BA8 : 8E                  CHAR       GLO     RE         ;20 BYTE - 5A BYTE ROUTINE
     1794/     BA9 : FE                             SHL                ;INDEX INTO CHARACTER TABLE
-    1795/     BAA : FC 6F                          ADI     (CTBL-64)&255
+    1795/     BAA : FC 76                          ADI     (CTBL-64)&255
     1796/     BAC : AF                             PLO     RF
     1797/     BAD : 9D                             GHI     RD
     1798/     BAE : 7C 0C                          ADCI    (CTBL-64)>>8
@@ -3497,7 +3497,7 @@
     1801/     BB3 : 4F                             LDA     RF         ;GET BIT MASK
     1802/     BB4 : 5D                             STR     RD         ;SAVE IT
     1803/     BB5 : 4F                             LDA     RF
-    1804/     BB6 : FC 2F                          ADI     (DOTS)&255
+    1804/     BB6 : FC 36                          ADI     (DOTS)&255
     1805/     BB8 : AF                             PLO     RF         ;POINT TO DOT MATRIX
     1806/     BB9 : 9D                             GHI     RD
     1807/     BBA : 7C 0D                          ADCI    (DOTS)>>8
@@ -3526,7 +3526,7 @@
     1830/     BD5 : ED                             SEX     RD
     1831/     BD6 : F2                             AND                ;MASK INTO THIS CHARACTER
     1832/     BD7 : DA                             SEP     RA         ;SHIFT IT
- AS V1.42 Beta [Bld 172] - Source File Tinybasi_IL.asm - Page 57 - 10/06/2024 11:59:58 PM
+ AS V1.42 Beta [Bld 172] - Source File Tinybasi_IL.asm - Page 57 - 10/07/24 19:32:40
 
 
     1833/     BD8 : F1                             OR                 ;INSERT INTO BUFFER
@@ -3589,7 +3589,7 @@
     1890/     C26 : 3B 47                          BNF     Z314       ;SO PROGRAM ISN'T DESTROYED
     1891/     C28 : 99                             GHI     R9         ;LOOK AT COUNTER
     1892/     C29 : FA 87                          ANI     087h       ;MASK OUT WORD COUNTER
- AS V1.42 Beta [Bld 172] - Source File Tinybasi_IL.asm - Page 58 - 10/06/2024 11:59:58 PM
+ AS V1.42 Beta [Bld 172] - Source File Tinybasi_IL.asm - Page 58 - 10/07/24 19:32:40
 
 
     1893/     C2B : A9                             PLO     R9
@@ -3652,188 +3652,199 @@
     1950/     C78 : 30 1D                          BR      Z324       ;C=1
     1951/     C7A :                     ;
     1952/     C7A :                     ; Interrupt service routine for 1861
- AS V1.42 Beta [Bld 172] - Source File Tinybasi_IL.asm - Page 59 - 10/06/2024 11:59:58 PM
+ AS V1.42 Beta [Bld 172] - Source File Tinybasi_IL.asm - Page 59 - 10/07/24 19:32:40
 
 
     1953/     C7A :                     ;
     1954/     C7A : F8 03               Z327       LDI     3
     1955/     C7C : A0                             PLO     R0
     1956/     C7D : E2                             SEX     R2
-    1957/     C7E : 42                             LDA     R2
-    1958/     C7F : FE                             SHL
-    1959/     C80 : 42                             LDA     R2         ;RECOVER D
-    1960/     C81 : 70                             RET                ;< EXIT
-    1961/     C82 : C4                  INTERUPT   NOP                ;> ENTRY DISPLAY INT. ROUTINE
-    1962/     C83 : 22                             DEC     R2
-    1963/     C84 : 78                             SAV                ;SAVE T
-    1964/     C85 : 22                             DEC     R2
-    1965/     C86 : 73                             STXD               ;SAVE D
-    1966/     C87 : F8 0D                          LDI     (BUFF)>>8
-    1967/     C89 : B0                             PHI     R0         ;SET UP R0 FOR DMA
-    1968/     C8A : F8 B0                          LDI     (BUFF)&255
-    1969/     C8C : A0                             PLO     R0
-    1970/     C8D : 34 8D               -          B1      -          ;SYNCHRONIZE
-    1971/     C8F : 80                  DISPLP     GLO     R0
-    1972/     C90 : 20                             DEC     R0
-    1973/     C91 : A0                             PLO     R0
-    1974/     C92 : E0                             SEX     R0         ;NOT A NOP
-    1975/     C93 : 20                             DEC     R0
-    1976/     C94 : A0                             PLO     R0         ;THREE LINES PER PIXEL
-    1977/     C95 : 90                             GHI     R0         ;LAST LINE
-    1978/     C96 : FB 0F                          XRI     (BUFE)>>8  ;IS NEW PAGE
-    1979/     C98 : 3A 8F                          BNZ     DISPLP
-    1980/     C9A : B0                             PHI     R0
-    1981/     C9B : F8 0F                          LDI     (TIME_+2)&255 ;NOW UPDATE CLOCK
-    1982/     C9D : A0                             PLO     R0
-    1983/     C9E : 76                             SHRC               ;SAVE CARRY
-    1984/     C9F : 52                             STR     R2
-    1985/     CA0 : F0                             LDX
-    1986/     CA1 : FC 01                          ADI     1          ;INCREMENT FRAME COUNT
-    1987/     CA3 : 50                             STR     R0
-    1988/     CA4 : FF 3D                          SMI     03Dh       ;ONE SECOND
-    1989/     CA6 : 3B 7A                          BNF     Z327       ;NOT YET
-    1990/     CA8 : 73                             STXD               ;IF YES,
-    1991/     CA9 : F0                             LDX                ;BUMP SECONDS
-    1992/     CAA : FC 01                          ADI     1
-    1993/     CAC : 50                             STR     R0
-    1994/     CAD : 30 7A                          BR      Z327
-    1995/     CAF : 86 08               CTBL       DW      08608h     ;SP MASK BYTE AND DATA POINTER
-    1996/     CB1 : 82 0A                          DW      0820Ah     ;! MASK BYTE AND DATA POINTER
-    1997/     CB3 : E5 08                          DW      0E508h     ;" MASK BYTE AND DATA POINTER
-    1998/     CB5 : F8 23                          DW      0F823h     ;# MASK BYTE AND DATA POINTER
-    1999/     CB7 : E4 35                          DW      0E435h     ;$ MASK BYTE AND DATA POINTER
-    2000/     CB9 : E5 5A                          DW      0E55Ah     ;% MASK BYTE AND DATA POINTER
-    2001/     CBB : F4 23                          DW      0F423h     ;& MASK BYTE AND DATA POINTER
-    2002/     CBD : C2 00                          DW      0C200h     ;' MASK BYTE AND DATA POINTER
-    2003/     CBF : C1 11                          DW      0C111h     ;( MASK BYTE AND DATA POINTER
-    2004/     CC1 : C2 11                          DW      0C211h     ;) MASK BYTE AND DATA POINTER
-    2005/     CC3 : E0 3C                          DW      0E03Ch     ;* MASK BYTE AND DATA POINTER
-    2006/     CC5 : E5 47                          DW      0E547h     ;+ MASK BYTE AND DATA POINTER
-    2007/     CC7 : C3 07                          DW      0C307h     ;, MASK BYTE AND DATA POINTER
-    2008/     CC9 : C4 41                          DW      0C441h     ;- MASK BYTE AND DATA POINTER
-    2009/     CCB : 84 07                          DW      08407h     ;. MASK BYTE AND DATA POINTER
-    2010/     CCD : E5 29                          DW      0E529h     ;/ MASK BYTE AND DATA POINTER
-    2011/     CCF : E1 11                          DW      0E111h     ;0 MASK BYTE AND DATA POINTER
-    2012/     CD1 : E2 43                          DW      0E243h     ;1 MASK BYTE AND DATA POINTER
- AS V1.42 Beta [Bld 172] - Source File Tinybasi_IL.asm - Page 60 - 10/06/2024 11:59:58 PM
+    1957/     C7E :                                ;Restore XX
+    1958/     C7E : 42                             LDA     R2
+    1959/     C7F : A8                             PLO     XX
+    1960/     C80 : 42                             LDA     R2
+    1961/     C81 : B8                             PHI     XX
+    1962/     C82 : 42                             LDA     R2         ;RECOVER D
+    1963/     C83 : 70                             RET                ;< EXIT
+    1964/     C84 : C4                  INTERUPT   NOP                ;> ENTRY DISPLAY INT. ROUTINE
+    1965/     C85 : 22                             DEC     R2
+    1966/     C86 : 78                             SAV                ;SAVE T
+    1967/     C87 : 22                             DEC     R2
+    1968/     C88 : 73                             STXD               ;SAVE D
+    1969/     C89 : F8 0D                          LDI     (BUFF)>>8
+    1970/     C8B : B0                             PHI     R0         ;SET UP R0 FOR DMA
+    1971/     C8C : F8 B0                          LDI     (BUFF)&255
+    1972/     C8E : A0                             PLO     R0
+    1973/     C8F : 34 8F               -          B1      -          ;SYNCHRONIZE
+    1974/     C91 : 80                  DISPLP     GLO     R0
+    1975/     C92 : 20                             DEC     R0
+    1976/     C93 : A0                             PLO     R0
+    1977/     C94 : E2                             SEX     R2         ;NOT A NOP
+    1978/     C95 : 20                             DEC     R0
+    1979/     C96 : A0                             PLO     R0         ;THREE LINES PER PIXEL
+    1980/     C97 : 90                             GHI     R0         ;LAST LINE
+    1981/     C98 : FB 0F                          XRI     (BUFE)>>8  ;IS NEW PAGE
+    1982/     C9A : 3A 91                          BNZ     DISPLP
+    1983/     C9C :                     ; Update Time
+    1984/     C9C : 98                             GHI     XX
+    1985/     C9D : 73                             STXD
+    1986/     C9E : 88                             GLO     XX
+    1987/     C9F : 52                             STR     R2
+    1988/     CA0 : F8 00                          LDI     0
+    1989/     CA2 : B8                             PHI     XX
+    1990/     CA3 : F8 0F                          LDI     (TIME_+2)&255 ;NOW UPDATE CLOCK
+    1991/     CA5 : A8                             PLO     XX
+    1992/     CA6 : 08                             LDN     XX
+    1993/     CA7 : FC 01                          ADI     1          ;INCREMENT FRAME COUNT
+    1994/     CA9 : 58                             STR     XX
+    1995/     CAA : FF 3D                          SMI     03Dh       ;ONE SECOND
+    1996/     CAC : 3B 7A                          BNF     Z327       ;NOT YET
+    1997/     CAE : 58                             STR     XX         ;IF YES,
+    1998/     CAF : 28                             DEC     XX
+    1999/     CB0 : 08                             LDN     XX           ;BUMP SECONDS
+    2000/     CB1 : FC 01                          ADI     1
+    2001/     CB3 : 58                             STR     XX
+    2002/     CB4 : 30 7A                          BR      Z327
+    2003/     CB6 : 86 08               CTBL       DW      08608h     ;SP MASK BYTE AND DATA POINTER
+    2004/     CB8 : 82 0A                          DW      0820Ah     ;! MASK BYTE AND DATA POINTER
+    2005/     CBA : E5 08                          DW      0E508h     ;" MASK BYTE AND DATA POINTER
+    2006/     CBC : F8 23                          DW      0F823h     ;# MASK BYTE AND DATA POINTER
+    2007/     CBE : E4 35                          DW      0E435h     ;$ MASK BYTE AND DATA POINTER
+    2008/     CC0 : E5 5A                          DW      0E55Ah     ;% MASK BYTE AND DATA POINTER
+    2009/     CC2 : F4 23                          DW      0F423h     ;& MASK BYTE AND DATA POINTER
+    2010/     CC4 : C2 00                          DW      0C200h     ;' MASK BYTE AND DATA POINTER
+    2011/     CC6 : C1 11                          DW      0C111h     ;( MASK BYTE AND DATA POINTER
+    2012/     CC8 : C2 11                          DW      0C211h     ;) MASK BYTE AND DATA POINTER
+ AS V1.42 Beta [Bld 172] - Source File Tinybasi_IL.asm - Page 60 - 10/07/24 19:32:40
 
 
-    2013/     CD3 : E4 4F                          DW      0E44Fh     ;2 MASK BYTE AND DATA POINTER
-    2014/     CD5 : E1 03                          DW      0E103h     ;3 MASK BYTE AND DATA POINTER
-    2015/     CD7 : E0 1D                          DW      0E01Dh     ;4 MASK BYTE AND DATA POINTER
-    2016/     CD9 : E0 42                          DW      0E042h     ;5 MASK BYTE AND DATA POINTER
-    2017/     CDB : E2 49                          DW      0E249h     ;6 MASK BYTE AND DATA POINTER
-    2018/     CDD : E0 73                          DW      0E073h     ;7 MASK BYTE AND DATA POINTER
-    2019/     CDF : E3 03                          DW      0E303h     ;8 MASK BYTE AND DATA POINTER
-    2020/     CE1 : E0 49                          DW      0E049h     ;9 MASK BYTE AND DATA POINTER
-    2021/     CE3 : 83 04                          DW      08304h     ;: MASK BYTE AND DATA POINTER
-    2022/     CE5 : C3 35                          DW      0C335h     ;; MASK BYTE AND DATA POINTER
-    2023/     CE7 : E5 41                          DW      0E541h     ;< MASK BYTE AND DATA POINTER
-    2024/     CE9 : E5 03                          DW      0E503h     ;= MASK BYTE AND DATA POINTER
-    2025/     CEB : E5 17                          DW      0E517h     ;> MASK BYTE AND DATA POINTER
-    2026/     CED : E0 5A                          DW      0E05Ah     ;? MASK BYTE AND DATA POINTER
-    2027/     CEF : E0 79                          DW      0E079h     ;@ MASK BYTE AND DATA POINTER
-    2028/     CF1 : E1 2F                          DW      0E12Fh     ;A MASK BYTE AND DATA POINTER
-    2029/     CF3 : E5 6D                          DW      0E56Dh     ;B MASK BYTE AND DATA POINTER
-    2030/     CF5 : E4 17                          DW      0E417h     ;C MASK BYTE AND DATA POINTER
-    2031/     CF7 : E2 17                          DW      0E217h     ;D MASK BYTE AND DATA POINTER
-    2032/     CF9 : E5 60                          DW      0E560h     ;E MASK BYTE AND DATA POINTER
-    2033/     CFB : E5 34                          DW      0E534h     ;F MASK BYTE AND DATA POINTER
-    2034/     CFD : E2 4F                          DW      0E24Fh     ;G MASK BYTE AND DATA POINTER
-    2035/     CFF : E3 3B                          DW      0E33Bh     ;H MASK BYTE AND DATA POINTER
-    2036/     D01 : 82 17                          DW      08217h     ;I MASK BYTE AND DATA POINTER
-    2037/     D03 : E1 55                          DW      0E155h     ;J MASK BYTE AND DATA POINTER
-    2038/     D05 : E0 60                          DW      0E060h     ;K MASK BYTE AND DATA POINTER
-    2039/     D07 : E3 43                          DW      0E343h     ;L MASK BYTE AND DATA POINTER
-    2040/     D09 : F9 6D                          DW      0F96Dh     ;M MASK BYTE AND DATA POINTER
-    2041/     D0B : F4 1D                          DW      0F41Dh     ;N MASK BYTE AND DATA POINTER
-    2042/     D0D : E0 17                          DW      0E017h     ;O MASK BYTE AND DATA POINTER
-    2043/     D0F : E5 73                          DW      0E573h     ;P MASK BYTE AND DATA POINTER
-    2044/     D11 : E0 0B                          DW      0E00Bh     ;Q MASK BYTE AND DATA POINTER
-    2045/     D13 : E5 3B                          DW      0E53Bh     ;R MASK BYTE AND DATA POINTER
-    2046/     D15 : E0 29                          DW      0E029h     ;S MASK BYTE AND DATA POINTER
-    2047/     D17 : E0 66                          DW      0E066h     ;T MASK BYTE AND DATA POINTER
-    2048/     D19 : E2 1D                          DW      0E21Dh     ;U MASK BYTE AND DATA POINTER
-    2049/     D1B : E3 79                          DW      0E379h     ;V MASK BYTE AND DATA POINTER
-    2050/     D1D : FB 2E                          DW      0FB2Eh     ;W MASK BYTE AND DATA POINTER
-    2051/     D1F : E2 60                          DW      0E260h     ;X MASK BYTE AND DATA POINTER
-    2052/     D21 : E2 73                          DW      0E273h     ;Y MASK BYTE AND DATA POINTER
-    2053/     D23 : E0 35                          DW      0E035h     ;Z MASK BYTE AND DATA POINTER
-    2054/     D25 : C0 17                          DW      0C017h     ;[ MASK BYTE AND DATA POINTER
-    2055/     D27 : E3 29                          DW      0E329h     ;\ MASK BYTE AND DATA POINTER
-    2056/     D29 : C1 17                          DW      0C117h     ;] MASK BYTE AND DATA POINTER
-    2057/     D2B : E2 00                          DW      0E200h     ;^ MASK BYTE AND DATA POINTER
-    2058/     D2D : E5 07                          DW      0E507h     ;_ MASK BYTE AND DATA POINTER
-    2059/     D2F : 00 00               DOTS       DW      00000h     ;START OF DOT TABLE
-    2060/     D31 : 80 80                          DW      08080h
-    2061/     D33 : E8 97                          DW      0E897h
-    2062/     D35 : A8 97                          DW      0A897h
-    2063/     D37 : 68 40                          DW      06840h
-    2064/     D39 : 40 20                          DW      04020h
-    2065/     D3B : 40 AD                          DW      040ADh
-    2066/     D3D : B6 AD                          DW      0B6ADh
-    2067/     D3F : 44 04                          DW      04404h
-    2068/     D41 : 20 56                          DW      02056h
-    2069/     D43 : DD 57                          DW      0DD57h
-    2070/     D45 : 20 00                          DW      02000h
-    2071/     D47 : F4 AA                          DW      0F4AAh
-    2072/     D49 : A9 AA                          DW      0A9AAh
- AS V1.42 Beta [Bld 172] - Source File Tinybasi_IL.asm - Page 61 - 10/06/2024 11:59:58 PM
+    2013/     CCA : E0 3C                          DW      0E03Ch     ;* MASK BYTE AND DATA POINTER
+    2014/     CCC : E5 47                          DW      0E547h     ;+ MASK BYTE AND DATA POINTER
+    2015/     CCE : C3 07                          DW      0C307h     ;, MASK BYTE AND DATA POINTER
+    2016/     CD0 : C4 41                          DW      0C441h     ;- MASK BYTE AND DATA POINTER
+    2017/     CD2 : 84 07                          DW      08407h     ;. MASK BYTE AND DATA POINTER
+    2018/     CD4 : E5 29                          DW      0E529h     ;/ MASK BYTE AND DATA POINTER
+    2019/     CD6 : E1 11                          DW      0E111h     ;0 MASK BYTE AND DATA POINTER
+    2020/     CD8 : E2 43                          DW      0E243h     ;1 MASK BYTE AND DATA POINTER
+    2021/     CDA : E4 4F                          DW      0E44Fh     ;2 MASK BYTE AND DATA POINTER
+    2022/     CDC : E1 03                          DW      0E103h     ;3 MASK BYTE AND DATA POINTER
+    2023/     CDE : E0 1D                          DW      0E01Dh     ;4 MASK BYTE AND DATA POINTER
+    2024/     CE0 : E0 42                          DW      0E042h     ;5 MASK BYTE AND DATA POINTER
+    2025/     CE2 : E2 49                          DW      0E249h     ;6 MASK BYTE AND DATA POINTER
+    2026/     CE4 : E0 73                          DW      0E073h     ;7 MASK BYTE AND DATA POINTER
+    2027/     CE6 : E3 03                          DW      0E303h     ;8 MASK BYTE AND DATA POINTER
+    2028/     CE8 : E0 49                          DW      0E049h     ;9 MASK BYTE AND DATA POINTER
+    2029/     CEA : 83 04                          DW      08304h     ;: MASK BYTE AND DATA POINTER
+    2030/     CEC : C3 35                          DW      0C335h     ;; MASK BYTE AND DATA POINTER
+    2031/     CEE : E5 41                          DW      0E541h     ;< MASK BYTE AND DATA POINTER
+    2032/     CF0 : E5 03                          DW      0E503h     ;= MASK BYTE AND DATA POINTER
+    2033/     CF2 : E5 17                          DW      0E517h     ;> MASK BYTE AND DATA POINTER
+    2034/     CF4 : E0 5A                          DW      0E05Ah     ;? MASK BYTE AND DATA POINTER
+    2035/     CF6 : E0 79                          DW      0E079h     ;@ MASK BYTE AND DATA POINTER
+    2036/     CF8 : E1 2F                          DW      0E12Fh     ;A MASK BYTE AND DATA POINTER
+    2037/     CFA : E5 6D                          DW      0E56Dh     ;B MASK BYTE AND DATA POINTER
+    2038/     CFC : E4 17                          DW      0E417h     ;C MASK BYTE AND DATA POINTER
+    2039/     CFE : E2 17                          DW      0E217h     ;D MASK BYTE AND DATA POINTER
+    2040/     D00 : E5 60                          DW      0E560h     ;E MASK BYTE AND DATA POINTER
+    2041/     D02 : E5 34                          DW      0E534h     ;F MASK BYTE AND DATA POINTER
+    2042/     D04 : E2 4F                          DW      0E24Fh     ;G MASK BYTE AND DATA POINTER
+    2043/     D06 : E3 3B                          DW      0E33Bh     ;H MASK BYTE AND DATA POINTER
+    2044/     D08 : 82 17                          DW      08217h     ;I MASK BYTE AND DATA POINTER
+    2045/     D0A : E1 55                          DW      0E155h     ;J MASK BYTE AND DATA POINTER
+    2046/     D0C : E0 60                          DW      0E060h     ;K MASK BYTE AND DATA POINTER
+    2047/     D0E : E3 43                          DW      0E343h     ;L MASK BYTE AND DATA POINTER
+    2048/     D10 : F9 6D                          DW      0F96Dh     ;M MASK BYTE AND DATA POINTER
+    2049/     D12 : F4 1D                          DW      0F41Dh     ;N MASK BYTE AND DATA POINTER
+    2050/     D14 : E0 17                          DW      0E017h     ;O MASK BYTE AND DATA POINTER
+    2051/     D16 : E5 73                          DW      0E573h     ;P MASK BYTE AND DATA POINTER
+    2052/     D18 : E0 0B                          DW      0E00Bh     ;Q MASK BYTE AND DATA POINTER
+    2053/     D1A : E5 3B                          DW      0E53Bh     ;R MASK BYTE AND DATA POINTER
+    2054/     D1C : E0 29                          DW      0E029h     ;S MASK BYTE AND DATA POINTER
+    2055/     D1E : E0 66                          DW      0E066h     ;T MASK BYTE AND DATA POINTER
+    2056/     D20 : E2 1D                          DW      0E21Dh     ;U MASK BYTE AND DATA POINTER
+    2057/     D22 : E3 79                          DW      0E379h     ;V MASK BYTE AND DATA POINTER
+    2058/     D24 : FB 2E                          DW      0FB2Eh     ;W MASK BYTE AND DATA POINTER
+    2059/     D26 : E2 60                          DW      0E260h     ;X MASK BYTE AND DATA POINTER
+    2060/     D28 : E2 73                          DW      0E273h     ;Y MASK BYTE AND DATA POINTER
+    2061/     D2A : E0 35                          DW      0E035h     ;Z MASK BYTE AND DATA POINTER
+    2062/     D2C : C0 17                          DW      0C017h     ;[ MASK BYTE AND DATA POINTER
+    2063/     D2E : E3 29                          DW      0E329h     ;\ MASK BYTE AND DATA POINTER
+    2064/     D30 : C1 17                          DW      0C117h     ;] MASK BYTE AND DATA POINTER
+    2065/     D32 : E2 00                          DW      0E200h     ;^ MASK BYTE AND DATA POINTER
+    2066/     D34 : E5 07                          DW      0E507h     ;_ MASK BYTE AND DATA POINTER
+    2067/     D36 : 00 00               DOTS       DW      00000h     ;START OF DOT TABLE
+    2068/     D38 : 80 80                          DW      08080h
+    2069/     D3A : E8 97                          DW      0E897h
+    2070/     D3C : A8 97                          DW      0A897h
+    2071/     D3E : 68 40                          DW      06840h
+    2072/     D40 : 40 20                          DW      04020h
+ AS V1.42 Beta [Bld 172] - Source File Tinybasi_IL.asm - Page 61 - 10/07/24 19:32:40
 
 
-    2073/     D4B : F4 00                          DW      0F400h
-    2074/     D4D : 39 E9                          DW      039E9h
-    2075/     D4F : AB AD                          DW      0ABADh
-    2076/     D51 : 29 00                          DW      02900h
-    2077/     D53 : 55 FA                          DW      055FAh
-    2078/     D55 : 54 F8                          DW      054F8h
-    2079/     D57 : 54 00                          DW      05400h
-    2080/     D59 : C0 24                          DW      0C024h
-    2081/     D5B : 4A 91                          DW      04A91h
-    2082/     D5D : 60 0A                          DW      0600Ah
-    2083/     D5F : 55 75                          DW      05575h
-    2084/     D61 : 51 51                          DW      05151h
-    2085/     D63 : 20 14                          DW      02014h
-    2086/     D65 : EC 86                          DW      0EC86h
-    2087/     D67 : 4C 27                          DW      04C27h
-    2088/     D69 : E4 00                          DW      0E400h
-    2089/     D6B : 15 15                          DW      01515h
-    2090/     D6D : BE 55                          DW      0BE55h
-    2091/     D6F : B6 00                          DW      0B600h
-    2092/     D71 : 01 C2                          DW      001C2h
-    2093/     D73 : 3C D2                          DW      03CD2h
-    2094/     D75 : 91 F0                          DW      091F0h
-    2095/     D77 : 10 02                          DW      01002h
-    2096/     D79 : 57 2A                          DW      0572Ah
-    2097/     D7B : 70 A0                          DW      070A0h
-    2098/     D7D : 58 00                          DW      05800h
-    2099/     D7F : DE 68                          DW      0DE68h
-    2100/     D81 : A4 62                          DW      0A462h
-    2101/     D83 : 1C 06                          DW      01C06h
-    2102/     D85 : 23 55                          DW      02355h
-    2103/     D87 : 15 18                          DW      01518h
-    2104/     D89 : 10 51                          DW      01051h
-    2105/     D8B : 04 22                          DW      00422h
-    2106/     D8D : A1 44                          DW      0A144h
-    2107/     D8F : 00 AF                          DW      000AFh
-    2108/     D91 : AC D6                          DW      0ACD6h
-    2109/     D93 : AC AF                          DW      0ACAFh
-    2110/     D95 : 00 42                          DW      00042h
-    2111/     D97 : 42 5F                          DW      0425Fh
-    2112/     D99 : 52 F9                          DW      052F9h
-    2113/     D9B : 10 00                          DW      01000h
-    2114/     D9D : 46 45                          DW      04645h
-    2115/     D9F : 56 6D                          DW      0566Dh
-    2116/     DA1 : 46 00                          DW      04600h
-    2117/     DA3 : 94 94                          DW      09494h
-    2118/     DA5 : 56 2D                          DW      0562Dh
-    2119/     DA7 : EE 00                          DW      0EE00h
-    2120/     DA9 : 68 94                          DW      06894h
-    2121/     DAB : B4 B4                          DW      0B4B4h
-    2122/     DAD : 54 00                          DW      05400h
-    2123/     DAF : DF                             SEP     RF
-    2124/     DB0 :                     
- AS V1.42 Beta [Bld 172] - Source File Tinybasi_IL.asm - Page 62 - 10/06/2024 11:59:58 PM
+    2073/     D42 : 40 AD                          DW      040ADh
+    2074/     D44 : B6 AD                          DW      0B6ADh
+    2075/     D46 : 44 04                          DW      04404h
+    2076/     D48 : 20 56                          DW      02056h
+    2077/     D4A : DD 57                          DW      0DD57h
+    2078/     D4C : 20 00                          DW      02000h
+    2079/     D4E : F4 AA                          DW      0F4AAh
+    2080/     D50 : A9 AA                          DW      0A9AAh
+    2081/     D52 : F4 00                          DW      0F400h
+    2082/     D54 : 39 E9                          DW      039E9h
+    2083/     D56 : AB AD                          DW      0ABADh
+    2084/     D58 : 29 00                          DW      02900h
+    2085/     D5A : 55 FA                          DW      055FAh
+    2086/     D5C : 54 F8                          DW      054F8h
+    2087/     D5E : 54 00                          DW      05400h
+    2088/     D60 : C0 24                          DW      0C024h
+    2089/     D62 : 4A 91                          DW      04A91h
+    2090/     D64 : 60 0A                          DW      0600Ah
+    2091/     D66 : 55 75                          DW      05575h
+    2092/     D68 : 51 51                          DW      05151h
+    2093/     D6A : 20 14                          DW      02014h
+    2094/     D6C : EC 86                          DW      0EC86h
+    2095/     D6E : 4C 27                          DW      04C27h
+    2096/     D70 : E4 00                          DW      0E400h
+    2097/     D72 : 15 15                          DW      01515h
+    2098/     D74 : BE 55                          DW      0BE55h
+    2099/     D76 : B6 00                          DW      0B600h
+    2100/     D78 : 01 C2                          DW      001C2h
+    2101/     D7A : 3C D2                          DW      03CD2h
+    2102/     D7C : 91 F0                          DW      091F0h
+    2103/     D7E : 10 02                          DW      01002h
+    2104/     D80 : 57 2A                          DW      0572Ah
+    2105/     D82 : 70 A0                          DW      070A0h
+    2106/     D84 : 58 00                          DW      05800h
+    2107/     D86 : DE 68                          DW      0DE68h
+    2108/     D88 : A4 62                          DW      0A462h
+    2109/     D8A : 1C 06                          DW      01C06h
+    2110/     D8C : 23 55                          DW      02355h
+    2111/     D8E : 15 18                          DW      01518h
+    2112/     D90 : 10 51                          DW      01051h
+    2113/     D92 : 04 22                          DW      00422h
+    2114/     D94 : A1 44                          DW      0A144h
+    2115/     D96 : 00 AF                          DW      000AFh
+    2116/     D98 : AC D6                          DW      0ACD6h
+    2117/     D9A : AC AF                          DW      0ACAFh
+    2118/     D9C : 00 42                          DW      00042h
+    2119/     D9E : 42 5F                          DW      0425Fh
+    2120/     DA0 : 52 F9                          DW      052F9h
+    2121/     DA2 : 10 00                          DW      01000h
+    2122/     DA4 : 46 45                          DW      04645h
+    2123/     DA6 : 56 6D                          DW      0566Dh
+    2124/     DA8 : 46 00                          DW      04600h
+    2125/     DAA : 94 94                          DW      09494h
+    2126/     DAC : 56 2D                          DW      0562Dh
+    2127/     DAE : EE 00                          DW      0EE00h
+    2128/     DB0 : 68 94                          DW      06894h
+    2129/     DB2 : B4 B4                          DW      0B4B4h
+    2130/     DB4 : 54 00                          DW      05400h
+    2131/     DB6 : DF                             SEP     RF
+    2132/     DB7 :                     
+ AS V1.42 Beta [Bld 172] - Source File Tinybasi_IL.asm - Page 62 - 10/07/24 19:32:40
+
+
+ AS V1.42 Beta [Bld 172] - Source File Tinybasi_IL.asm - Page 63 - 10/07/24 19:32:40
 
 
   Symbol Table (* = unused):
@@ -3863,12 +3874,12 @@
  COLDV :                        100 C |  CONST :                        11C C |
 *CONSTPI :        3.141592653589793 - |  CONT :                         538 C |
  CRLF :                         3D5 C |  CSTK :                        0C19 C |
- CTBL :                        0CAF C | *DATE :                "10/06/2024" - |
+ CTBL :                        0CB6 C | *DATE :                  "10/07/24" - |
  DFLT :                         8F0 C |  DISP :                        0AB9 C |
- DISPLP :                      0C8F C |  DIVL :                         4EA C |
+ DISPLP :                      0C91 C |  DIVL :                         4EA C |
  DNEG :                         513 C |  DOIT :                         242 C |
  DOTOFF :                      0B46 C |  DOTON :                       0B4E C |
- DOTS :                        0D2F C |  DUPS :                         34E C |
+ DOTS :                        0D36 C |  DUPS :                         34E C |
  END :                          7EC C | *ENDIL :                        9D5 C |
  ERR :                          37F C |  ERT :                          90B C |
  EX1 :                          8FB C |  EX2 :                          8FD C |
@@ -3896,7 +3907,7 @@
  ILLOAD :                       9F9 C |  ILPEEK :                       114 C |
  ILPOKE :                       118 C |  ILSAVE :                       9FC C |
  IMUL :                         4A7 C |  IND :                          367 C |
- AS V1.42 Beta [Bld 172] - Source File Tinybasi_IL.asm - Page 63 - 10/06/2024 11:59:58 PM
+ AS V1.42 Beta [Bld 172] - Source File Tinybasi_IL.asm - Page 64 - 10/07/24 19:32:40
 
 
  INEG :                         50E C | *INEXTMODE :                      0 - |
@@ -3904,7 +3915,7 @@
  INP :                          957 C |  INPT :                         7C7 C |
  INPUTR :                      0A59 C | *INSRCMODE :                      0 - |
  INSRT :                        6A2 C | *INSUPMODE :                      0 - |
- INSX :                         74E C |  INTERUPT :                    0C82 C |
+ INSX :                         74E C |  INTERUPT :                    0C84 C |
  IO :                           751 C |  ISUB :                         498 C |
 *JHOP :                         334 C |  JMP :                          27A C |
  KEYIN :                       0AAF C |  KEYV :                         106 C |
@@ -3959,7 +3970,7 @@
  R8 :                             8 - |  R9 :                             9 - |
  RA :                            0A - | *RB :                            0B - |
  RC :                            0C - |  RD :                            0D - |
- AS V1.42 Beta [Bld 172] - Source File Tinybasi_IL.asm - Page 64 - 10/06/2024 11:59:58 PM
+ AS V1.42 Beta [Bld 172] - Source File Tinybasi_IL.asm - Page 65 - 10/07/24 19:32:40
 
 
  RE :                            0E - | *RELAXED :                        0 - |
@@ -3994,7 +4005,7 @@
  TBERR :                        25C C |  TBR :                          24B C |
  TE1 :                          90E C |  TE2 :                          914 C |
  TEND :                         2D4 C |  TER :                          91A C |
- TERM :                         90C C | *TIME :               "11:59:58 PM" - |
+ TERM :                         90C C | *TIME :                  "19:32:40" - |
  TIME_ :                         0D C |  TJMP :                         26A C |
  TOPS :                          26 C | *TRUE :                           1 - |
  TSTN :                         2F0 C |  TSTR :                         3C2 C |
@@ -4022,7 +4033,7 @@
  Z292 :                        0A58 C |  Z293 :                        0A5C C |
  Z294 :                        0A6F C |  Z295 :                        0A70 C |
  Z297 :                        0A7A C |  Z298 :                        0A66 C |
- AS V1.42 Beta [Bld 172] - Source File Tinybasi_IL.asm - Page 65 - 10/06/2024 11:59:58 PM
+ AS V1.42 Beta [Bld 172] - Source File Tinybasi_IL.asm - Page 66 - 10/07/24 19:32:40
 
 
  Z299 :                        0A8A C |  Z300 :                        0A92 C |
@@ -4038,12 +4049,12 @@
  Z324 :                        0C1D C |  Z327 :                        0C7A C |
 *Z80SYNTAX :                      0 - |  __BACK0 :                      52E C |
  __BACK1 :                      9DC C |  __BACK2 :                     0ACB C |
- __BACK3 :                     0ACF C |  __BACK4 :                     0C8D C |
+ __BACK3 :                     0ACF C |  __BACK4 :                     0C8F C |
 
     381 symbols
      38 unused symbols
 
- AS V1.42 Beta [Bld 172] - Source File Tinybasi_IL.asm - Page 66 - 10/06/2024 11:59:58 PM
+ AS V1.42 Beta [Bld 172] - Source File Tinybasi_IL.asm - Page 67 - 10/07/24 19:32:40
 
 
   Defined Macros:
@@ -4078,7 +4089,7 @@ SERIAL_B                              | SERIAL_BN
 
      52 macros
 
- AS V1.42 Beta [Bld 172] - Source File Tinybasi_IL.asm - Page 67 - 10/06/2024 11:59:58 PM
+ AS V1.42 Beta [Bld 172] - Source File Tinybasi_IL.asm - Page 68 - 10/07/24 19:32:40
 
 
   Code Pages:
@@ -4090,8 +4101,8 @@ STANDARD (0 changed characters)
 
 0.04 seconds assembly time
 
-   2669 lines source file
-   3649 lines incl. macro expansions
+   2677 lines source file
+   3657 lines incl. macro expansions
       2 passes
       0 errors
       0 warnings

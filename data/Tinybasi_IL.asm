@@ -1953,10 +1953,12 @@ Z322       GLO     R8         ;GO TO NEXT LINE UP
 ;
 Z327       LDI     3
            PLO     R0
-           SEX     R2
+           SEX     R2         ;Restore XX
            LDA     R2
-           SHL
-           LDA     R2         ;RECOVER D
+           PLO     XX
+           LDA     R2
+           PHI     XX
+           LDA     R2         ;Restore D
            RET                ;< EXIT
 INTERUPT   NOP                ;> ENTRY DISPLAY INT. ROUTINE
            DEC     R2
@@ -1971,26 +1973,30 @@ INTERUPT   NOP                ;> ENTRY DISPLAY INT. ROUTINE
 DISPLP     GLO     R0
            DEC     R0
            PLO     R0
-           SEX     R0         ;NOT A NOP
+           SEX     R2         ;NOT A NOP
            DEC     R0
            PLO     R0         ;THREE LINES PER PIXEL
            GHI     R0         ;LAST LINE
            XRI     (BUFE)>>8  ;IS NEW PAGE
            BNZ     DISPLP
-           PHI     R0         ;R0.H to 0
-           LDI     (TIME_+2)&255 ;NOW UPDATE CLOCK
-           PLO     R0
-           SHRC               ;SAVE CARRY
+           GHI     XX         ;Update Time - Save XX
+           STXD
+           GLO     XX
            STR     R2
-           LDX
+           LDI     0          ;SETUP time address
+           PHI     XX
+           LDI     (TIME_+2)&255 ;NOW UPDATE CLOCK
+           PLO     XX
+           LDN     XX
            ADI     1          ;INCREMENT FRAME COUNT
-           STR     R0
+           STR     XX
            SMI     03Dh       ;ONE SECOND
            BNF     Z327       ;NOT YET
-           STXD               ;IF YES,
-           LDX                ;BUMP SECONDS
+           STR     XX         ;IF YES,
+           DEC     XX
+           LDN     XX           ;BUMP SECONDS
            ADI     1
-           STR     R0
+           STR     XX
            BR      Z327
 CTBL       DW      08608h     ;SP MASK BYTE AND DATA POINTER
            DW      0820Ah     ;! MASK BYTE AND DATA POINTER
